@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>391</width>
+    <width>399</width>
     <height>424</height>
    </rect>
   </property>
@@ -35,6 +35,13 @@
       </item>
       <item>
        <widget class="QComboBox" name="comboBox_port"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_COM_connect">
+        <property name="text">
+         <string>Подключиться</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -220,12 +227,12 @@
      </widget>
     </item>
     <item row="7" column="0">
-     <widget class="QPushButton" name="pushButton_flash_write">
+     <widget class="QPushButton" name="pushButton_calibrate_device">
       <property name="enabled">
        <bool>true</bool>
       </property>
       <property name="text">
-       <string>Записать настройки в память датчика</string>
+       <string>Калибровать датчик</string>
       </property>
      </widget>
     </item>
@@ -236,8 +243,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>391</width>
-     <height>21</height>
+     <width>399</width>
+     <height>20</height>
     </rect>
    </property>
   </widget>
