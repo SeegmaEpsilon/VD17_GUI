@@ -220,12 +220,19 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
 void MainWindow::receiveMessage()
 {
+    QString code = "***";
+    int codeSize = code.size();
     QByteArray dataBA = serialPort.readAll();
     QString data(QString::fromUtf8(dataBA));
+    serialBuffer.append(data);
+    int index = serialBuffer.indexOf(code);
 
-    qDebug() << data;
-
-    printConsole(data);
+    if(index != -1)
+    {
+        QString message = serialBuffer.mid(0, index);
+        printConsole(message);
+        serialBuffer.remove(0, index + codeSize);
+    }
 }
 
 void MainWindow::printConsole(QString string)
