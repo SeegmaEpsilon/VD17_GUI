@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QTime>
 #include <QDebug>
+#include <QKeyEvent>
 
 #define CMD_DL_CALIBRATION "DLSS"
 #define CMD_DL_WRITE "DLW"
@@ -239,4 +240,14 @@ void MainWindow::printConsole(QString string)
 {
     ui->UART_output->setTextColor(Qt::blue); // Receieved message's color is blue.
     ui->UART_output->append(QTime::currentTime().toString("HH:mm:ss.zzz    |    ") + string);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+        case Qt::Key_Control:
+        ui->UART_output->clear();
+        break;
+    }
 }

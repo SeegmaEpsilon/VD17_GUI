@@ -20,6 +20,8 @@ public:
     void printConsole(QString string);
 
 private slots:
+    void keyPressEvent(QKeyEvent *event);
+
     void on_pushButton_DL_calibration_clicked();
 
     void disable_all_widgets();
