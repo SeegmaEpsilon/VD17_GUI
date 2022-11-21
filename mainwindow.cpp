@@ -7,15 +7,22 @@
 #include <QDebug>
 #include <QKeyEvent>
 
-#define CMD_DL_CALIBRATION "DLSS"
-#define CMD_DL_WRITE "DLW"
-#define CMD_UL_CALIBRATION "ULSS"
-#define CMD_UL_WRITE "ULWW"
-#define CMD_MMPS_SET "MMSS"
-#define CMD_MMPS_WRITE "MMW"
+#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "DLSS"
+#define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLW"
+
+#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "ULSS"
+#define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
+
+#define CMD_MM_PER_SEC_SET "MMSS"
+#define CMD_MM_PER_SEC_WRITE "MMW"
+
+#define CMD_DYNAMIC_MODE_SET "MDRS"
+#define CMD_DYNAMIC_MODE_WRITE "MW"
+
 #define CMD_FLASH_WRITE "WSTF"
 #define CMD_CALIBRATE_DEVICE "CLBR"
 #define CMD_MCU_RESTART "REST"
+
 
 enum BUTTON_STATE
 {
@@ -33,12 +40,15 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_UL_calibration->setEnabled(false);
     ui->pushButton_UL_multimeter->setEnabled(false);
     ui->pushButton_UL_write->setEnabled(false);
+    ui->pushButton_dynamic_range_set->setEnabled(false);
+    ui->pushButton_dynamic_range_write->setEnabled(false);
     ui->pushButton_mmpersec_calibration->setEnabled(false);
     ui->pushButton_mmpersec_write->setEnabled(false);
     ui->pushButton_calibrate_device->setEnabled(false);
     ui->lineEdit_DL_value->setEnabled(false);
     ui->lineEdit_UL_value->setEnabled(false);
     ui->cmb_mmpersec->setEnabled(false);
+    ui->cmb_dynamic_ranges->setEnabled(false);
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -57,10 +67,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
 
-    ui->cmb_mmpersec->addItem("020");
-    ui->cmb_mmpersec->addItem("050");
-    ui->cmb_mmpersec->addItem("100");
-    ui->cmb_mmpersec->addItem("200");
+    counter = 0;
+    ui->canvas->addGraph();
+    ui->canvas->setInteraction(QCP::iRangeDrag, true);
+    ui->canvas->setInteraction(QCP::iRangeZoom, true);
+    ui->canvas->xAxis->setLabel("t");
+    ui->canvas->yAxis->setLabel("V");
 }
 
 MainWindow::~MainWindow()
@@ -75,7 +87,7 @@ void MainWindow::on_pushButton_DL_calibration_clicked()
     ui->pushButton_DL_multimeter->setEnabled(true);
     ui->pushButton_DL_write->setEnabled(true);
 
-    serialPort.write(CMD_DL_CALIBRATION);
+    serialPort.write(CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION);
 }
 
 void MainWindow::on_pushButton_DL_multimeter_clicked()
@@ -104,11 +116,12 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
 
 void MainWindow::on_pushButton_DL_write_clicked()
 {
-    serialPort.write(CMD_DL_WRITE);
+    serialPort.write(CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE);
 
     disable_all_widgets();
     ui->pushButton_DL_calibration->setEnabled(true);
     ui->pushButton_UL_calibration->setEnabled(true);
+    ui->pushButton_dynamic_range_set->setEnabled(true);
     ui->pushButton_mmpersec_calibration->setEnabled(true);
     ui->pushButton_calibrate_device->setEnabled(true);
 }
@@ -120,7 +133,7 @@ void MainWindow::on_pushButton_UL_calibration_clicked()
     ui->pushButton_UL_multimeter->setEnabled(true);
     ui->pushButton_UL_write->setEnabled(true);
 
-    serialPort.write(CMD_UL_CALIBRATION);
+    serialPort.write(CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION);
 }
 
 void MainWindow::on_pushButton_UL_multimeter_clicked()
@@ -155,10 +168,11 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
 
 void MainWindow::on_pushButton_UL_write_clicked()
 {
-    serialPort.write(CMD_UL_WRITE);
+    serialPort.write(CMD_UP_LIMIT_CURRENT_LOOP_WRITE);
     disable_all_widgets();
     ui->pushButton_DL_calibration->setEnabled(true);
     ui->pushButton_UL_calibration->setEnabled(true);
+    ui->pushButton_dynamic_range_set->setEnabled(true);
     ui->pushButton_mmpersec_calibration->setEnabled(true);
     ui->pushButton_calibrate_device->setEnabled(true);
 }
@@ -169,22 +183,46 @@ void MainWindow::on_pushButton_mmpersec_calibration_clicked()
     ui->cmb_mmpersec->setEnabled(true);
     ui->pushButton_mmpersec_write->setEnabled(true);
 
-    serialPort.write(CMD_MMPS_SET);
+    serialPort.write(CMD_MM_PER_SEC_SET);
 }
 
 void MainWindow::on_pushButton_mmpersec_write_clicked()
 {
     const char* pcData = ui->cmb_mmpersec->currentText().toStdString().c_str();
     serialPort.write(pcData);
-    serialPort.write(CMD_MMPS_WRITE);
+    serialPort.write(CMD_MM_PER_SEC_WRITE);
 
     disable_all_widgets();
     ui->pushButton_DL_calibration->setEnabled(true);
     ui->pushButton_UL_calibration->setEnabled(true);
+    ui->pushButton_dynamic_range_set->setEnabled(true);
     ui->pushButton_mmpersec_calibration->setEnabled(true);
     ui->pushButton_calibrate_device->setEnabled(true);
 }
 
+
+void MainWindow::on_pushButton_dynamic_range_set_clicked()
+{
+    disable_all_widgets();
+    ui->cmb_dynamic_ranges->setEnabled(true);
+    ui->pushButton_dynamic_range_write->setEnabled(true);
+
+    serialPort.write(CMD_DYNAMIC_MODE_SET);
+}
+
+void MainWindow::on_pushButton_dynamic_range_write_clicked()
+{
+    const char* pcData = ui->cmb_dynamic_ranges->currentText().toStdString().c_str();
+    serialPort.write(pcData);
+    serialPort.write(CMD_DYNAMIC_MODE_WRITE);
+
+    disable_all_widgets();
+    ui->pushButton_DL_calibration->setEnabled(true);
+    ui->pushButton_UL_calibration->setEnabled(true);
+    ui->pushButton_dynamic_range_set->setEnabled(true);
+    ui->pushButton_mmpersec_calibration->setEnabled(true);
+    ui->pushButton_calibrate_device->setEnabled(true);
+}
 
 void MainWindow::on_pushButton_calibrate_device_clicked()
 {
@@ -219,6 +257,21 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
+void MainWindow::plotGraph(QString msg)
+{
+    QString strToFind = "= ";
+    QString value = msg.mid(msg.indexOf(strToFind) + 2, 8);
+
+    counter++;
+    X_Axis.append(counter);
+    Y_Axis.append(value.toDouble());
+
+    ui->canvas->graph(0)->setData(X_Axis, Y_Axis);
+    ui->canvas->graph(0)->rescaleAxes(true);
+    ui->canvas->replot();
+    ui->canvas->update();
+}
+
 void MainWindow::receiveMessage()
 {
     QString code = "***";
@@ -232,6 +285,7 @@ void MainWindow::receiveMessage()
     {
         QString message = serialBuffer.mid(0, index);
         printConsole(message);
+        plotGraph(message);
         serialBuffer.remove(0, index + codeSize);
     }
 }
@@ -246,8 +300,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
     {
-        case Qt::Key_Control:
+        case Qt::Key_Alt:
         ui->UART_output->clear();
         break;
     }
+}
+
+void MainWindow::on_pushButton_clear_canvas_clicked()
+{
+    X_Axis.clear();
+    Y_Axis.clear();
 }

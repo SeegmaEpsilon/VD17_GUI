@@ -46,7 +46,15 @@ private slots:
 
     void receiveMessage();
 
+    void plotGraph(QString msg);
+
     void on_comboBox_port_activated(const QString &arg1);
+
+    void on_pushButton_dynamic_range_set_clicked();
+
+    void on_pushButton_dynamic_range_write_clicked();
+
+    void on_pushButton_clear_canvas_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -56,6 +64,10 @@ private:
     QByteArray serialData;
     QString serialBuffer;
     QStringList serialList;
+
+    QVector<double> X_Axis;
+    QVector<double> Y_Axis;
+    unsigned counter;
 };
 
 
