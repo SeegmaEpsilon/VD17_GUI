@@ -48,13 +48,13 @@ private slots:
 
     void plotGraph(QString msg);
 
-    void on_comboBox_port_activated(const QString &arg1);
-
     void on_pushButton_dynamic_range_set_clicked();
 
     void on_pushButton_dynamic_range_write_clicked();
 
     void on_pushButton_clear_canvas_clicked();
+
+    void on_pushButton_clear_console_clicked();
 
 private:
     Ui::MainWindow *ui;

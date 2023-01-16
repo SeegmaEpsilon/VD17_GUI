@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Mon 21. Nov 20:46:37 2022
+** Created: Mon 16. Jan 19:42:25 2023
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -45,10 +45,10 @@ static const uint qt_meta_data_MainWindow[] = {
      411,   11,   11,   11, 0x08,
      447,   11,   11,   11, 0x08,
      468,  464,   11,   11, 0x08,
-     492,  487,   11,   11, 0x08,
-     528,   11,   11,   11, 0x08,
-     570,   11,   11,   11, 0x08,
-     614,   11,   11,   11, 0x08,
+     487,   11,   11,   11, 0x08,
+     529,   11,   11,   11, 0x08,
+     573,   11,   11,   11, 0x08,
+     610,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -67,10 +67,10 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_pushButton_calibrate_device_clicked()\0"
     "on_pushButton_COM_connect_clicked()\0"
     "receiveMessage()\0msg\0plotGraph(QString)\0"
-    "arg1\0on_comboBox_port_activated(QString)\0"
     "on_pushButton_dynamic_range_set_clicked()\0"
     "on_pushButton_dynamic_range_write_clicked()\0"
     "on_pushButton_clear_canvas_clicked()\0"
+    "on_pushButton_clear_console_clicked()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -93,9 +93,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 11: _t->on_pushButton_COM_connect_clicked(); break;
         case 12: _t->receiveMessage(); break;
         case 13: _t->plotGraph((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 15: _t->on_pushButton_dynamic_range_set_clicked(); break;
-        case 16: _t->on_pushButton_dynamic_range_write_clicked(); break;
-        case 17: _t->on_pushButton_clear_canvas_clicked(); break;
+        case 14: _t->on_pushButton_dynamic_range_set_clicked(); break;
+        case 15: _t->on_pushButton_dynamic_range_write_clicked(); break;
+        case 16: _t->on_pushButton_clear_canvas_clicked(); break;
+        case 17: _t->on_pushButton_clear_console_clicked(); break;
         default: ;
         }
     }

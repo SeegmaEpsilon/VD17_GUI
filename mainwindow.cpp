@@ -4,6 +4,7 @@
 #include <QSerialPortInfo>
 #include <QMessageBox>
 #include <QTime>
+#include <QTimer>
 #include <QDebug>
 #include <QKeyEvent>
 
@@ -59,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
     {
-        ui->comboBox_port->addItem(serialPortInfo.portName());
+        ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
     this->setWindowTitle(QString::fromUtf8("ВД17 - Настройки"));
@@ -77,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    serialPort.close();
     delete ui;
 }
 
@@ -190,7 +192,6 @@ void MainWindow::on_pushButton_mmpersec_write_clicked()
 {
     const char* pcData = ui->cmb_mmpersec->currentText().toStdString().c_str();
     serialPort.write(pcData);
-    serialPort.write(CMD_MM_PER_SEC_WRITE);
 
     disable_all_widgets();
     ui->pushButton_DL_calibration->setEnabled(true);
@@ -214,7 +215,6 @@ void MainWindow::on_pushButton_dynamic_range_write_clicked()
 {
     const char* pcData = ui->cmb_dynamic_ranges->currentText().toStdString().c_str();
     serialPort.write(pcData);
-    serialPort.write(CMD_DYNAMIC_MODE_WRITE);
 
     disable_all_widgets();
     ui->pushButton_DL_calibration->setEnabled(true);
@@ -233,34 +233,62 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 {
     if(buttonState == COM_PORT_DISCONNECTED)
     {
-        serialPort.setPortName(ui->comboBox_port->currentText().toStdString().c_str());
-        serialPort.setBaudRate(QSerialPort::Baud115200);
+        QString numStr;
+
+        /* finding a double value in the string */
+        foreach(numStr, ui->comboBox_port->currentText().split(" ", QString::SkipEmptyParts))
+        {
+            if(numStr.contains("COM")) break;
+            else continue;
+        }
+
+        serialPort.setPortName(numStr);
+        serialPort.setBaudRate(QSerialPort::Baud9600);
         serialPort.setDataBits(QSerialPort::Data8);
         serialPort.setParity(QSerialPort::NoParity);
         serialPort.setStopBits(QSerialPort::OneStop);
         serialPort.setFlowControl(QSerialPort::NoFlowControl);
 
-        if (!serialPort.open(QIODevice::ReadWrite)) {
+        if (!serialPort.open(QIODevice::ReadWrite))
+        {
             QMessageBox::warning(this, QString::fromUtf8("Ошибка"), QString::fromUtf8("Выбранный порт недоступен"));
             return;
         }
-
-        connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
-        buttonState = COM_PORT_CONNECTED;
-        ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
+        else
+        {
+            connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+            buttonState = COM_PORT_CONNECTED;
+            ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
+            serialPort.write("0000");
+            serialPort.waitForBytesWritten(10);
+        }
     }
     else if(buttonState == COM_PORT_CONNECTED)
     {
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
         serialPort.close();
         buttonState = COM_PORT_DISCONNECTED;
+        ui->comboBox_port->clear();
+        foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
+        {
+            ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
+        }
     }
 }
 
 void MainWindow::plotGraph(QString msg)
 {
-    QString strToFind = "= ";
-    QString value = msg.mid(msg.indexOf(strToFind) + 2, 8);
+    QString value;
+
+    /* finding a double value in the string */
+    foreach(QString numStr, msg.split(" ", QString::SkipEmptyParts))
+    {
+        if(numStr == "[INFO]" || numStr == "[INIT]" || numStr == "[ERROR]") return;
+        bool check = false;
+        numStr.toDouble(&check);
+        if(check) value = numStr;
+        else continue;
+    }
 
     counter++;
     X_Axis.append(counter);
@@ -292,16 +320,19 @@ void MainWindow::receiveMessage()
 
 void MainWindow::printConsole(QString string)
 {
-    ui->UART_output->setTextColor(Qt::blue); // Receieved message's color is blue.
-    ui->UART_output->append(QTime::currentTime().toString("HH:mm:ss.zzz    |    ") + string);
+    ui->UART_output->setTextColor(Qt::blue); // Received message's color is blue.
+    ui->UART_output->append(QTime::currentTime().toString("HH:mm:ss.zzz    |  ") + string);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
     {
+        case Qt::Key_Control:
+        on_pushButton_clear_console_clicked();
+        break;
         case Qt::Key_Alt:
-        ui->UART_output->clear();
+        on_pushButton_clear_canvas_clicked();
         break;
     }
 }
@@ -310,4 +341,13 @@ void MainWindow::on_pushButton_clear_canvas_clicked()
 {
     X_Axis.clear();
     Y_Axis.clear();
+    ui->canvas->graph(0)->setData(X_Axis, Y_Axis);
+    ui->canvas->graph(0)->rescaleAxes(true);
+    ui->canvas->replot();
+    ui->canvas->update();
+}
+
+void MainWindow::on_pushButton_clear_console_clicked()
+{
+    ui->UART_output->clear();
 }
