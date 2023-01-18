@@ -69,11 +69,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
 
     counter = 0;
-    ui->canvas->addGraph();
     ui->canvas->setInteraction(QCP::iRangeDrag, true);
     ui->canvas->setInteraction(QCP::iRangeZoom, true);
     ui->canvas->xAxis->setLabel("t");
-    ui->canvas->yAxis->setLabel("V");
+    ui->canvas->yAxis->setLabel("V, A");
 }
 
 MainWindow::~MainWindow()
@@ -243,11 +242,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
         }
 
         serialPort.setPortName(numStr);
-        serialPort.setBaudRate(QSerialPort::Baud9600);
-        serialPort.setDataBits(QSerialPort::Data8);
-        serialPort.setParity(QSerialPort::NoParity);
-        serialPort.setStopBits(QSerialPort::OneStop);
-        serialPort.setFlowControl(QSerialPort::NoFlowControl);
 
         if (!serialPort.open(QIODevice::ReadWrite))
         {
@@ -256,11 +250,16 @@ void MainWindow::on_pushButton_COM_connect_clicked()
         }
         else
         {
-            connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+            serialPort.setBaudRate(QSerialPort::Baud115200);
+            serialPort.setDataBits(QSerialPort::Data8);
+            serialPort.setParity(QSerialPort::NoParity);
+            serialPort.setStopBits(QSerialPort::OneStop);
+            serialPort.setFlowControl(QSerialPort::NoFlowControl);
+
             buttonState = COM_PORT_CONNECTED;
             ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
-            serialPort.write("0000");
-            serialPort.waitForBytesWritten(10);
+
+            connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
         }
     }
     else if(buttonState == COM_PORT_CONNECTED)
@@ -276,26 +275,75 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
+unsigned int flag_measure_done = 0;
 void MainWindow::plotGraph(QString msg)
 {
     QString value;
+
+    unsigned int flag_select_value = 0;
 
     /* finding a double value in the string */
     foreach(QString numStr, msg.split(" ", QString::SkipEmptyParts))
     {
         if(numStr == "[INFO]" || numStr == "[INIT]" || numStr == "[ERROR]") return;
+        if(numStr == "A(RMS)") flag_select_value = 1;
+        if(numStr == "V(RMS)") flag_select_value = 2;
+
         bool check = false;
         numStr.toDouble(&check);
-        if(check) value = numStr;
+        if(check)
+        {
+            if(flag_select_value == 1)
+            {
+                flag_measure_done++;
+                value = numStr;
+                Y_Acceleration.append(value.toDouble());
+            }
+            if(flag_select_value == 2)
+            {
+                flag_measure_done++;
+                value = numStr;
+                Y_Velocity.append(value.toDouble());
+            }
+            else
+            {
+                value = numStr;
+                X_Axis.append(counter);
+                Y_Axis.append(value.toDouble());
+            }
+        }
         else continue;
     }
 
-    counter++;
-    X_Axis.append(counter);
-    Y_Axis.append(value.toDouble());
+    if(flag_measure_done == 2)
+    {
+        counter++;
+        X_Acceleration.append(counter);
+        X_Velocity.append(counter);
+        flag_measure_done = 0;
+    }
 
-    ui->canvas->graph(0)->setData(X_Axis, Y_Axis);
+    ui->canvas->clearGraphs();
+
+    ui->canvas->legend->clear();
+    ui->canvas->legend->setVisible(true);
+    QFont legendFont = font();
+    legendFont.setPointSize(8);
+    ui->canvas->legend->setFont(legendFont);
+    ui->canvas->legend->setBrush(QBrush(QColor(255,255,255,230)));
+
+    ui->canvas->addGraph();
+    ui->canvas->graph(0)->setName("Acceleration (RMS)");
+    ui->canvas->graph(0)->setPen(QPen(Qt::blue));
+    ui->canvas->graph(0)->setData(X_Acceleration, Y_Acceleration);
     ui->canvas->graph(0)->rescaleAxes(true);
+
+    ui->canvas->addGraph();
+    ui->canvas->graph(1)->setName("Velocity (RMS)");
+    ui->canvas->graph(1)->setPen(QPen(Qt::red));
+    ui->canvas->graph(1)->setData(X_Velocity, Y_Velocity);
+    ui->canvas->graph(1)->rescaleAxes(true);
+
     ui->canvas->replot();
     ui->canvas->update();
 }
@@ -305,7 +353,7 @@ void MainWindow::receiveMessage()
     QString code = "***";
     int codeSize = code.size();
     QByteArray dataBA = serialPort.readAll();
-    QString data(QString::fromUtf8(dataBA));
+    QString data(dataBA);
     serialBuffer.append(data);
     int index = serialBuffer.indexOf(code);
 
@@ -329,21 +377,34 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
         case Qt::Key_Control:
-        on_pushButton_clear_console_clicked();
+            on_pushButton_clear_console_clicked();
         break;
         case Qt::Key_Alt:
-        on_pushButton_clear_canvas_clicked();
+            on_pushButton_clear_canvas_clicked();
         break;
     }
 }
 
 void MainWindow::on_pushButton_clear_canvas_clicked()
 {
+    counter = 0;
+
     X_Axis.clear();
     Y_Axis.clear();
-    ui->canvas->graph(0)->setData(X_Axis, Y_Axis);
-    ui->canvas->graph(0)->rescaleAxes(true);
+
+    X_Acceleration.clear();
+    Y_Acceleration.clear();
+
+    X_Velocity.clear();
+    Y_Velocity.clear();
+
+    ui->canvas->clearGraphs();
     ui->canvas->replot();
+    ui->canvas->rescaleAxes();
+
+    ui->canvas->xAxis->setRange(0, 20);
+    ui->canvas->yAxis->setRange(0, 20);
+
     ui->canvas->update();
 }
 

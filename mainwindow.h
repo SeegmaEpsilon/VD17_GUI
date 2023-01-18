@@ -67,6 +67,13 @@ private:
 
     QVector<double> X_Axis;
     QVector<double> Y_Axis;
+
+    QVector<double> X_Acceleration;
+    QVector<double> Y_Acceleration;
+
+    QVector<double> X_Velocity;
+    QVector<double> Y_Velocity;
+
     unsigned counter;
 };
 
