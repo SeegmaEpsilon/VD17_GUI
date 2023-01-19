@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,8 @@ public:
     void printConsole(QString string);
 
 private slots:
+    void slotTimerTimeout();
+
     void keyPressEvent(QKeyEvent *event);
 
     void on_pushButton_DL_calibration_clicked();
@@ -56,6 +59,8 @@ private slots:
 
     void on_pushButton_clear_console_clicked();
 
+    void on_comboBox_port_highlighted(int index);
+
 private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
@@ -65,9 +70,6 @@ private:
     QString serialBuffer;
     QStringList serialList;
 
-    QVector<double> X_Axis;
-    QVector<double> Y_Axis;
-
     QVector<double> X_Acceleration;
     QVector<double> Y_Acceleration;
 
@@ -75,6 +77,12 @@ private:
     QVector<double> Y_Velocity;
 
     unsigned counter;
+
+    QTimer timer;
+
+    unsigned int flag_measure_done;
+
+    int highlighted_index;
 };
 
 

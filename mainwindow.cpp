@@ -58,17 +58,23 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    connect(&timer, SIGNAL(timeout()), this, SLOT(slotTimerTimeout()));
+    timer.start(500);
+
+    highlighted_index = 0;
+    flag_measure_done = 0;
+    counter = 0;
+
     foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
     {
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17 - Настройки"));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.4"));
 
     ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
 
-    counter = 0;
     ui->canvas->setInteraction(QCP::iRangeDrag, true);
     ui->canvas->setInteraction(QCP::iRangeZoom, true);
     ui->canvas->xAxis->setLabel("t");
@@ -267,15 +273,9 @@ void MainWindow::on_pushButton_COM_connect_clicked()
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
         serialPort.close();
         buttonState = COM_PORT_DISCONNECTED;
-        ui->comboBox_port->clear();
-        foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
-        {
-            ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
-        }
     }
 }
 
-unsigned int flag_measure_done = 0;
 void MainWindow::plotGraph(QString msg)
 {
     QString value;
@@ -285,7 +285,6 @@ void MainWindow::plotGraph(QString msg)
     /* finding a double value in the string */
     foreach(QString numStr, msg.split(" ", QString::SkipEmptyParts))
     {
-        if(numStr == "[INFO]" || numStr == "[INIT]" || numStr == "[ERROR]") return;
         if(numStr == "A(RMS)") flag_select_value = 1;
         if(numStr == "V(RMS)") flag_select_value = 2;
 
@@ -297,19 +296,15 @@ void MainWindow::plotGraph(QString msg)
             {
                 flag_measure_done++;
                 value = numStr;
+                ui->lineEdit_RMS_A->setText(QString(value));
                 Y_Acceleration.append(value.toDouble());
             }
             if(flag_select_value == 2)
             {
                 flag_measure_done++;
                 value = numStr;
+                ui->lineEdit_RMS_V->setText(QString(value));
                 Y_Velocity.append(value.toDouble());
-            }
-            else
-            {
-                value = numStr;
-                X_Axis.append(counter);
-                Y_Axis.append(value.toDouble());
             }
         }
         else continue;
@@ -360,8 +355,14 @@ void MainWindow::receiveMessage()
     if(index != -1)
     {
         QString message = serialBuffer.mid(0, index);
-        printConsole(message);
-        plotGraph(message);
+        if(message.contains("[DEBUG]"))
+        {
+            plotGraph(message);
+        }
+        else
+        {
+            printConsole(message);
+        }
         serialBuffer.remove(0, index + codeSize);
     }
 }
@@ -389,9 +390,6 @@ void MainWindow::on_pushButton_clear_canvas_clicked()
 {
     counter = 0;
 
-    X_Axis.clear();
-    Y_Axis.clear();
-
     X_Acceleration.clear();
     Y_Acceleration.clear();
 
@@ -402,8 +400,8 @@ void MainWindow::on_pushButton_clear_canvas_clicked()
     ui->canvas->replot();
     ui->canvas->rescaleAxes();
 
-    ui->canvas->xAxis->setRange(0, 20);
-    ui->canvas->yAxis->setRange(0, 20);
+    ui->canvas->xAxis->setRange(0, 1);
+    ui->canvas->yAxis->setRange(0, 1);
 
     ui->canvas->update();
 }
@@ -411,4 +409,25 @@ void MainWindow::on_pushButton_clear_canvas_clicked()
 void MainWindow::on_pushButton_clear_console_clicked()
 {
     ui->UART_output->clear();
+}
+
+void MainWindow::slotTimerTimeout()
+{
+    if(highlighted_index || ui->comboBox_port->underMouse())
+    {
+        highlighted_index = 0;
+        return;
+    }
+    QString previous_name = ui->comboBox_port->currentText();
+    ui->comboBox_port->clear();
+    foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
+    {
+        ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
+    }
+    ui->comboBox_port->setCurrentIndex(ui->comboBox_port->findText(previous_name));
+}
+
+void MainWindow::on_comboBox_port_highlighted(int index)
+{
+    highlighted_index = index;
 }
