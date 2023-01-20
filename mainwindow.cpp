@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.4"));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.5"));
 
     ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
@@ -99,25 +99,22 @@ void MainWindow::on_pushButton_DL_calibration_clicked()
 
 void MainWindow::on_pushButton_DL_multimeter_clicked()
 {
-    if  (ui->lineEdit_DL_value->text().size() == 0)
+    QString str_temp = ui->lineEdit_DL_value->text();
+    switch(str_temp.size())
     {
-            QString str_temp = "113";
-            ui->lineEdit_DL_value->setText(str_temp);
-    }
-    else if(ui->lineEdit_DL_value->text().size() == 1)
-    {
-        QString str_temp = ui->lineEdit_DL_value->text();
+    case 0:
+        str_temp = "110";
+        ui->lineEdit_DL_value->setText(str_temp);
+        break;
+    case 1:
         str_temp = "00" + str_temp;
-        ui->lineEdit_DL_value->setText(str_temp);
-    }
-    else if(ui->lineEdit_DL_value->text().size() == 2)
-    {
-        QString str_temp = ui->lineEdit_DL_value->text();
+        break;
+    case 2:
         str_temp = "0" + str_temp;
-        ui->lineEdit_DL_value->setText(str_temp);
+        break;
     }
 
-    const char* pcData = ui->lineEdit_DL_value->text().toStdString().c_str();
+    const char* pcData = str_temp.toStdString().c_str();
     serialPort.write(pcData);
 }
 
@@ -145,31 +142,25 @@ void MainWindow::on_pushButton_UL_calibration_clicked()
 
 void MainWindow::on_pushButton_UL_multimeter_clicked()
 {
-    if(ui->lineEdit_UL_value->text().size() == 0)
+    QString str_temp = ui->lineEdit_UL_value->text();
+    switch(str_temp.size())
     {
-        QString str_temp = "1576";
+    case 0:
+        str_temp = "1580";
         ui->lineEdit_UL_value->setText(str_temp);
-    }
-    if(ui->lineEdit_UL_value->text().size() == 1)
-    {
-        QString str_temp = ui->lineEdit_UL_value->text();
+        break;
+    case 1:
         str_temp = "000" + str_temp;
-        ui->lineEdit_UL_value->setText(str_temp);
-    }
-    if(ui->lineEdit_UL_value->text().size() == 2)
-    {
-        QString str_temp = ui->lineEdit_UL_value->text();
+        break;
+    case 2:
         str_temp = "00" + str_temp;
-        ui->lineEdit_UL_value->setText(str_temp);
-    }
-    if(ui->lineEdit_UL_value->text().size() == 3)
-    {
-        QString str_temp = ui->lineEdit_UL_value->text();
+        break;
+    case 3:
         str_temp = "0" + str_temp;
-        ui->lineEdit_UL_value->setText(str_temp);
+        break;
     }
 
-    const char* pcData = ui->lineEdit_UL_value->text().toStdString().c_str();
+    const char* pcData = str_temp.toStdString().c_str();
     serialPort.write(pcData);
 }
 
@@ -195,7 +186,13 @@ void MainWindow::on_pushButton_mmpersec_calibration_clicked()
 
 void MainWindow::on_pushButton_mmpersec_write_clicked()
 {
-    const char* pcData = ui->cmb_mmpersec->currentText().toStdString().c_str();
+    QString serialData;
+    if(ui->cmb_mmpersec->currentIndex() == 0) serialData = "020";
+    if(ui->cmb_mmpersec->currentIndex() == 1) serialData = "050";
+    if(ui->cmb_mmpersec->currentIndex() == 2) serialData = "100";
+    if(ui->cmb_mmpersec->currentIndex() == 3) serialData = "200";
+
+    const char* pcData = serialData.toStdString().c_str();
     serialPort.write(pcData);
 
     disable_all_widgets();
@@ -359,6 +356,50 @@ void MainWindow::receiveMessage()
         {
             plotGraph(message);
         }
+        else if(message.contains("[INIT]"))
+        {
+            printConsole(message);
+            if(message.contains("Correction ratio of 4mA"))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    bool check = false;
+                    numStr.toInt(&check);
+                    if(check)
+                    {
+                        ui->lineEdit_DL_value->setText(numStr);
+                    }
+                }
+            }
+            if(message.contains("Correction ratio of 20mA"))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    bool check = false;
+                    numStr.toInt(&check);
+                    if(check)
+                    {
+                        ui->lineEdit_UL_value->setText(numStr);
+                    }
+                }
+            }
+            if(message.contains("Max mm per sec"))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    int index = ui->cmb_mmpersec->findText(numStr, Qt::MatchContains);
+                    if(index != -1) ui->cmb_mmpersec->setCurrentIndex(index);
+                }
+            }
+            if(message.contains("Dynamic range"))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    int index = ui->cmb_dynamic_ranges->findText(numStr);
+                    if(index != -1) ui->cmb_dynamic_ranges->setCurrentIndex(index);
+                }
+            }
+        }
         else
         {
             printConsole(message);
@@ -425,6 +466,10 @@ void MainWindow::slotTimerTimeout()
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
     ui->comboBox_port->setCurrentIndex(ui->comboBox_port->findText(previous_name));
+    if(ui->comboBox_port->currentText().isEmpty() && buttonState == COM_PORT_CONNECTED)
+    {
+        on_pushButton_COM_connect_clicked();
+    }
 }
 
 void MainWindow::on_comboBox_port_highlighted(int index)
