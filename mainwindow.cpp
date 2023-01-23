@@ -70,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.5"));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.6"));
 
     ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
@@ -315,8 +315,23 @@ void MainWindow::plotGraph(QString msg)
         flag_measure_done = 0;
     }
 
-    ui->canvas->clearGraphs();
+    if(!Y_Acceleration.isEmpty())
+    {
+        double average_A = 0.0f;
+        for(int i = 0; i < Y_Acceleration.size(); i++) average_A += Y_Acceleration[i];
+        average_A /= Y_Acceleration.size();
+        ui->lineEdit_average_A->setText(QString::number(average_A, 'f', 2));
+    }
 
+    if(!Y_Velocity.isEmpty())
+    {
+        double average_V = 0.0f;
+        for(int i = 0; i < Y_Velocity.size(); i++) average_V += Y_Velocity[i];
+        average_V /= Y_Velocity.size();
+        ui->lineEdit_average_V->setText(QString::number(average_V, 'f', 2));
+    }
+
+    ui->canvas->clearGraphs();
     ui->canvas->legend->clear();
     ui->canvas->legend->setVisible(true);
     QFont legendFont = font();
