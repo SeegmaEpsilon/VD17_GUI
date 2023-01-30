@@ -8,22 +8,17 @@
 #include <QDebug>
 #include <QKeyEvent>
 
-#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "DLSS"
+#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "D"
+#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "U"
+#define CMD_DYNAMIC_MODE_SET "M"
+#define CMD_MM_PER_SEC_SET "V"
+#define CMD_CALIBRATE_DEVICE "C"
+
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLW"
-
-#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "ULSS"
 #define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
-
-#define CMD_MM_PER_SEC_SET "MMSS"
 #define CMD_MM_PER_SEC_WRITE "MMW"
-
-#define CMD_DYNAMIC_MODE_SET "MDRS"
 #define CMD_DYNAMIC_MODE_WRITE "MW"
-
-#define CMD_FLASH_WRITE "WSTF"
-#define CMD_CALIBRATE_DEVICE "CLBR"
-#define CMD_MCU_RESTART "REST"
-
+#define CMD_FLASH_WRITE "WS"
 
 enum BUTTON_STATE
 {
@@ -70,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.6"));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.6.1"));
 
     ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
