@@ -1,18 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QSerialPort>
-#include <QSerialPortInfo>
-#include <QMessageBox>
-#include <QTime>
-#include <QTimer>
-#include <QDebug>
-#include <QKeyEvent>
 
-#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "D"
-#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "U"
-#define CMD_DYNAMIC_MODE_SET "M"
-#define CMD_MM_PER_SEC_SET "V"
-#define CMD_CALIBRATE_DEVICE "C"
+#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "D" // calibration of down limit current loop (4mA)
+#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "U"   // calibration of up limit current loop (20mA)
+#define CMD_DYNAMIC_MODE_SET "M"                    // setting dynamic range of accelerometer
+#define CMD_MM_PER_SEC_SET "V"                      // setting max mm/s of device
+#define CMD_CALIBRATE_DEVICE "C"                    // calibrate the device (10.1 m/s^2)
+#define CMD_GET_CONFIG "G"                          // get config data
 
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLW"
 #define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
@@ -65,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.6.1"));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.6.2"));
 
     ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
     ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
@@ -102,6 +96,12 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
         ui->lineEdit_DL_value->setText(str_temp);
         break;
     case 1:
+        if(str_temp == "0")
+        {
+          str_temp == "001";
+          ui->lineEdit_DL_value->setText(str_temp);
+          break;
+        }
         str_temp = "00" + str_temp;
         break;
     case 2:
@@ -354,9 +354,12 @@ void MainWindow::receiveMessage()
 {
     QString code = "***";
     int codeSize = code.size();
+
     QByteArray dataBA = serialPort.readAll();
     QString data(dataBA);
+
     serialBuffer.append(data);
+
     int index = serialBuffer.indexOf(code);
 
     if(index != -1)
@@ -440,6 +443,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::on_pushButton_clear_canvas_clicked()
 {
     counter = 0;
+    flag_measure_done = 0;
+
+    serialData.clear();
+    serialBuffer.clear();
+    serialList.clear();
 
     X_Acceleration.clear();
     Y_Acceleration.clear();
@@ -453,6 +461,11 @@ void MainWindow::on_pushButton_clear_canvas_clicked()
 
     ui->canvas->xAxis->setRange(0, 1);
     ui->canvas->yAxis->setRange(0, 1);
+
+    ui->lineEdit_RMS_A->clear();
+    ui->lineEdit_RMS_V->clear();
+    ui->lineEdit_average_A->clear();
+    ui->lineEdit_average_V->clear();
 
     ui->canvas->update();
 }
@@ -485,4 +498,9 @@ void MainWindow::slotTimerTimeout()
 void MainWindow::on_comboBox_port_highlighted(int index)
 {
     highlighted_index = index;
+}
+
+void MainWindow::on_pushButton_get_config_clicked()
+{
+    serialPort.write(CMD_GET_CONFIG);
 }

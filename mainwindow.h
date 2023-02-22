@@ -2,9 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSerialPort>
-#include <QSerialPortInfo>
+#include <qserialport.h>
+#include <qserialportinfo.h>
 #include <QTimer>
+#include <QTextCodec>
+#include <QMessageBox>
+#include <QTime>
+#include <QTimer>
+#include <QDebug>
+#include <QKeyEvent>
+#include <QApplication>
+#include <QTextCodec>
 
 namespace Ui {
 class MainWindow;
@@ -60,6 +68,8 @@ private slots:
     void on_pushButton_clear_console_clicked();
 
     void on_comboBox_port_highlighted(int index);
+
+    void on_pushButton_get_config_clicked();
 
 private:
     Ui::MainWindow *ui;

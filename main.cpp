@@ -1,12 +1,19 @@
 #include "mainwindow.h"
-#include <QApplication>
-#include <QTextCodec>
+
+#define ORGANIZATION_NAME "Micronix"
+#define ORGANIZATION_DOMAIN "www.mx-omsk.ru"
+#define APPLICATION_NAME "VD17_Service"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+  QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
+  QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
+  QCoreApplication::setApplicationName(APPLICATION_NAME);
 
-    return a.exec();
+  QApplication a(argc, argv);
+
+  MainWindow w;
+  w.show();
+
+  return a.exec();
 }
