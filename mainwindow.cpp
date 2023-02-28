@@ -8,7 +8,7 @@
 #define CMD_CALIBRATE_DEVICE "C"                    // calibrate the device (10.1 m/s^2)
 #define CMD_GET_CONFIG "G"                          // get config data
 
-#define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLW"
+#define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLWW"
 #define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
 #define CMD_MM_PER_SEC_WRITE "MMW"
 #define CMD_DYNAMIC_MODE_WRITE "MW"
@@ -21,25 +21,6 @@ enum BUTTON_STATE
 };
 
 int buttonState = 0;
-
-void MainWindow::disable_all_widgets()
-{
-    ui->pushButton_DL_calibration->setEnabled(false);
-    ui->pushButton_DL_multimeter->setEnabled(false);
-    ui->pushButton_DL_write->setEnabled(false);
-    ui->pushButton_UL_calibration->setEnabled(false);
-    ui->pushButton_UL_multimeter->setEnabled(false);
-    ui->pushButton_UL_write->setEnabled(false);
-    ui->pushButton_dynamic_range_set->setEnabled(false);
-    ui->pushButton_dynamic_range_write->setEnabled(false);
-    ui->pushButton_mmpersec_calibration->setEnabled(false);
-    ui->pushButton_mmpersec_write->setEnabled(false);
-    ui->pushButton_calibrate_device->setEnabled(false);
-    ui->lineEdit_DL_value->setEnabled(false);
-    ui->lineEdit_UL_value->setEnabled(false);
-    ui->cmb_mmpersec->setEnabled(false);
-    ui->cmb_dynamic_ranges->setEnabled(false);
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -59,21 +40,81 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.6.2"));
-
-    ui->lineEdit_DL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
-    ui->lineEdit_UL_value->setValidator(new QRegExpValidator(QRegExp("[0-9]\\d{0,3}"), this));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.7"));
 
     ui->canvas->setInteraction(QCP::iRangeDrag, true);
     ui->canvas->setInteraction(QCP::iRangeZoom, true);
     ui->canvas->xAxis->setLabel("t");
     ui->canvas->yAxis->setLabel("V, A");
+
+    disable_all_widgets();
 }
 
 MainWindow::~MainWindow()
 {
     serialPort.close();
     delete ui;
+}
+
+
+void MainWindow::disable_all_widgets()
+{
+    ui->pushButton_DL_calibration->setEnabled(false);
+    ui->pushButton_DL_multimeter->setEnabled(false);
+    ui->pushButton_DL_write->setEnabled(false);
+    ui->pushButton_UL_calibration->setEnabled(false);
+    ui->pushButton_UL_multimeter->setEnabled(false);
+    ui->pushButton_UL_write->setEnabled(false);
+    ui->pushButton_dynamic_range_set->setEnabled(false);
+    ui->pushButton_dynamic_range_write->setEnabled(false);
+    ui->pushButton_mmpersec_calibration->setEnabled(false);
+    ui->pushButton_mmpersec_write->setEnabled(false);
+    ui->pushButton_calibrate_device->setEnabled(false);
+    ui->lineEdit_DL_value->setEnabled(false);
+    ui->lineEdit_UL_value->setEnabled(false);
+    ui->cmb_mmpersec->setEnabled(false);
+    ui->cmb_dynamic_ranges->setEnabled(false);
+    ui->pushButton_get_config->setEnabled(false);
+}
+
+void MainWindow::enable_all_widgets()
+{
+    ui->pushButton_DL_calibration->setEnabled(true);
+    ui->pushButton_DL_multimeter->setEnabled(true);
+    ui->pushButton_DL_write->setEnabled(true);
+    ui->pushButton_UL_calibration->setEnabled(true);
+    ui->pushButton_UL_multimeter->setEnabled(true);
+    ui->pushButton_UL_write->setEnabled(true);
+    ui->pushButton_dynamic_range_set->setEnabled(true);
+    ui->pushButton_dynamic_range_write->setEnabled(true);
+    ui->pushButton_mmpersec_calibration->setEnabled(true);
+    ui->pushButton_mmpersec_write->setEnabled(true);
+    ui->pushButton_calibrate_device->setEnabled(true);
+    ui->lineEdit_DL_value->setEnabled(true);
+    ui->lineEdit_UL_value->setEnabled(true);
+    ui->cmb_mmpersec->setEnabled(true);
+    ui->cmb_dynamic_ranges->setEnabled(true);
+    ui->pushButton_get_config->setEnabled(true);
+}
+
+void MainWindow::reset_all_widgets()
+{
+  disable_all_widgets();
+  enable_all_widgets();
+
+  ui->lineEdit_DL_value->setEnabled(false);
+  ui->pushButton_DL_multimeter->setEnabled(false);
+  ui->pushButton_DL_write->setEnabled(false);
+
+  ui->lineEdit_UL_value->setEnabled(false);
+  ui->pushButton_UL_multimeter->setEnabled(false);
+  ui->pushButton_UL_write->setEnabled(false);
+
+  ui->cmb_mmpersec->setEnabled(false);
+  ui->pushButton_mmpersec_write->setEnabled(false);
+
+  ui->cmb_dynamic_ranges->setEnabled(false);
+  ui->pushButton_dynamic_range_write->setEnabled(false);
 }
 
 void MainWindow::on_pushButton_DL_calibration_clicked()
@@ -89,22 +130,20 @@ void MainWindow::on_pushButton_DL_calibration_clicked()
 void MainWindow::on_pushButton_DL_multimeter_clicked()
 {
     QString str_temp = ui->lineEdit_DL_value->text();
+
     switch(str_temp.size())
     {
     case 0:
-        str_temp = "110";
-        ui->lineEdit_DL_value->setText(str_temp);
+        str_temp = "0100";
+        ui->lineEdit_DL_value->setValue(str_temp.toInt());
         break;
     case 1:
-        if(str_temp == "0")
-        {
-          str_temp == "001";
-          ui->lineEdit_DL_value->setText(str_temp);
-          break;
-        }
-        str_temp = "00" + str_temp;
+        str_temp = "000" + str_temp;
         break;
     case 2:
+        str_temp = "00" + str_temp;
+        break;
+    case 3:
         str_temp = "0" + str_temp;
         break;
     }
@@ -116,13 +155,7 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
 void MainWindow::on_pushButton_DL_write_clicked()
 {
     serialPort.write(CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE);
-
-    disable_all_widgets();
-    ui->pushButton_DL_calibration->setEnabled(true);
-    ui->pushButton_UL_calibration->setEnabled(true);
-    ui->pushButton_dynamic_range_set->setEnabled(true);
-    ui->pushButton_mmpersec_calibration->setEnabled(true);
-    ui->pushButton_calibrate_device->setEnabled(true);
+    reset_all_widgets();
 }
 
 void MainWindow::on_pushButton_UL_calibration_clicked()
@@ -142,7 +175,7 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
     {
     case 0:
         str_temp = "1580";
-        ui->lineEdit_UL_value->setText(str_temp);
+        ui->lineEdit_UL_value->setValue(str_temp.toInt());
         break;
     case 1:
         str_temp = "000" + str_temp;
@@ -162,12 +195,7 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
 void MainWindow::on_pushButton_UL_write_clicked()
 {
     serialPort.write(CMD_UP_LIMIT_CURRENT_LOOP_WRITE);
-    disable_all_widgets();
-    ui->pushButton_DL_calibration->setEnabled(true);
-    ui->pushButton_UL_calibration->setEnabled(true);
-    ui->pushButton_dynamic_range_set->setEnabled(true);
-    ui->pushButton_mmpersec_calibration->setEnabled(true);
-    ui->pushButton_calibrate_device->setEnabled(true);
+    reset_all_widgets();
 }
 
 void MainWindow::on_pushButton_mmpersec_calibration_clicked()
@@ -189,13 +217,7 @@ void MainWindow::on_pushButton_mmpersec_write_clicked()
 
     const char* pcData = serialData.toStdString().c_str();
     serialPort.write(pcData);
-
-    disable_all_widgets();
-    ui->pushButton_DL_calibration->setEnabled(true);
-    ui->pushButton_UL_calibration->setEnabled(true);
-    ui->pushButton_dynamic_range_set->setEnabled(true);
-    ui->pushButton_mmpersec_calibration->setEnabled(true);
-    ui->pushButton_calibrate_device->setEnabled(true);
+    reset_all_widgets();
 }
 
 
@@ -212,13 +234,7 @@ void MainWindow::on_pushButton_dynamic_range_write_clicked()
 {
     const char* pcData = ui->cmb_dynamic_ranges->currentText().toStdString().c_str();
     serialPort.write(pcData);
-
-    disable_all_widgets();
-    ui->pushButton_DL_calibration->setEnabled(true);
-    ui->pushButton_UL_calibration->setEnabled(true);
-    ui->pushButton_dynamic_range_set->setEnabled(true);
-    ui->pushButton_mmpersec_calibration->setEnabled(true);
-    ui->pushButton_calibrate_device->setEnabled(true);
+    reset_all_widgets();
 }
 
 void MainWindow::on_pushButton_calibrate_device_clicked()
@@ -257,6 +273,7 @@ void MainWindow::on_pushButton_COM_connect_clicked()
             buttonState = COM_PORT_CONNECTED;
             ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
 
+            reset_all_widgets();
             connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
         }
     }
@@ -265,6 +282,7 @@ void MainWindow::on_pushButton_COM_connect_clicked()
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
         serialPort.close();
         buttonState = COM_PORT_DISCONNECTED;
+        disable_all_widgets();
     }
 }
 
@@ -372,6 +390,7 @@ void MainWindow::receiveMessage()
         else if(message.contains("[INIT]"))
         {
             printConsole(message);
+            reset_all_widgets();
             if(message.contains("Correction ratio of 4mA"))
             {
                 foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
@@ -380,7 +399,7 @@ void MainWindow::receiveMessage()
                     numStr.toInt(&check);
                     if(check)
                     {
-                        ui->lineEdit_DL_value->setText(numStr);
+                        ui->lineEdit_DL_value->setValue(numStr.toInt());
                     }
                 }
             }
@@ -392,7 +411,7 @@ void MainWindow::receiveMessage()
                     numStr.toInt(&check);
                     if(check)
                     {
-                        ui->lineEdit_UL_value->setText(numStr);
+                        ui->lineEdit_UL_value->setValue(numStr.toInt());
                     }
                 }
             }
@@ -503,4 +522,46 @@ void MainWindow::on_comboBox_port_highlighted(int index)
 void MainWindow::on_pushButton_get_config_clicked()
 {
     serialPort.write(CMD_GET_CONFIG);
+}
+
+void MainWindow::on_pushButton_manual_clicked()
+{
+  QString instruction = QString("1 Закрепите датчик на вибростоле.\n\n"
+                        "2 Подведите провода питания к датчику, подключите по схеме, само питание не включайте. Наличие миллиамперметра обязательно.\n\n"
+                        "3 Подсоедините переходник USB-UART сначала к компьютеру, потом к датчику.\n\n"
+                        "4 В программе, в выпадающем окне рядом с надписью \"COM-Порт\", выберете COM-порт используемого UART-преобразователя.\n\n"
+                        "5 Нажмите кнопку \"Подключиться\".\n\n"
+                        "6 Подайте питание на датчик. \nВНИМАНИЕ: Блок питания должен быть ОБЯЗАТЕЛЬНО заземлен и настроен на 24 вольта.\n\n"
+                        "7 В случае успешного подключения в консоли приложения будет показана текущая конфигурация датчика и начнет строиться график в правой части интерфейса.\n"
+                        "Если этого не произошло, начните с шага 2.\n\n"
+                        "8 Откалибруйте нижний предел токовой петли.\n"
+                        "Для этого необходимо подобрать такое число, при котором значение тока на миллиамперметре будет в районе 4.1 миллиампера (мА):\n"
+                        "8.1 Нажмите на кнопку \"Калибровка нижнего предела ТП\".\n"
+                        "8.2 В случае начала калибровки нижнего предела ТП датчик отправит соответствующее сообщение в консоль.\n"
+                        "Если этого не произошло, начните с шага 2.\n"
+                        "8.3 Введите число в разблокировавшемся окне и нажмите кнопку \"Мультиметр\".\n"
+                        "8.4 Сравните текущее значение тока на миллиамперметре с необходимым (4.1 мА), "
+                        "если ток больше необходимого значения, уменьшите число, если ниже - увеличьте число и снова нажмите \"Мультиметр\".\n"
+                        "8.5 Когда значение на миллиамперметре совпадет с необходимым (4.1 мА), нажмите кнопку \"Записать\".\n\n"
+                        "9 Настройку верхнего предела токовой петли проведите так же, как и нижнего, но теперь необходимое значение тока на миллиамперметре будет 20.1 миллиампер (мА).\n\n"
+                        "10 Выберете значение виброскорости, которое будет соответствовать значению тока в 20 мА.\n"
+                        "Для этого нажмите на кнопку \"Установка максимальной виброскорости\", из разблокировавшегося выпадающего списка выберете нужное значение и нажмите кнопку \"Записать\".\n\n"
+                        "11 Выберете динамический диапазон акселерометра.\n"
+                        "Для этого нажмите на кнопку \"Установка динамического диапазона\", из разблокировавшегося выпадающего списка выберете нужное значение и нажмите кнопку \"Записать\".\n\n"
+                        "12 Для калибровки датчика необходимо:\n"
+                        "12.1 Включить вибростол.\n"
+                        "12.2 Подождать, пока датчик выйдет на режим. Датчик выйдет на режим, когда на графике в правой части интерфейса синия и красная линии перестанут расти и станут околопрямой линией.\n"
+                        "12.3 Нажать на кнопку \"Калибровать датчик\".");
+
+  QDialog *msgDialog = new QDialog();
+  QLayout *layout = new QVBoxLayout();
+  QLabel *label = new QLabel(instruction);
+
+  label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  label->setStyleSheet("QLabel{border: 1px solid gray;background-color:rgba(255, 255, 255, 20);border-radius: 5px;}");
+  layout->addWidget(label);
+
+  msgDialog->setLayout(layout);
+  msgDialog->setWindowTitle(tr("Инструкция по настройке ВД17"));
+  msgDialog->open();
 }

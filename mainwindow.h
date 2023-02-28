@@ -37,6 +37,10 @@ private slots:
 
     void disable_all_widgets();
 
+    void enable_all_widgets();
+
+    void reset_all_widgets();
+
     void on_pushButton_DL_write_clicked();
 
     void on_pushButton_DL_multimeter_clicked();
@@ -71,7 +75,9 @@ private slots:
 
     void on_pushButton_get_config_clicked();
 
-private:
+    void on_pushButton_manual_clicked();
+
+  private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
     QSerialPortInfo info;

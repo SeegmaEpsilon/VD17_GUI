@@ -10,6 +10,11 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
   QCoreApplication::setApplicationName(APPLICATION_NAME);
 
+  QTextCodec* tc = QTextCodec::codecForName("UTF-8");
+  QTextCodec::setCodecForTr(tc);
+  QTextCodec::setCodecForCStrings(tc);
+  QTextCodec::setCodecForLocale(tc);
+
   QApplication a(argc, argv);
 
   MainWindow w;
