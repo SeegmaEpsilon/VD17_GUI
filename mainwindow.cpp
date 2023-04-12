@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "D" // calibration of down limit current loop (4mA)
-#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "U"   // calibration of up limit current loop (20mA)
-#define CMD_DYNAMIC_MODE_SET "M"                    // setting dynamic range of accelerometer
-#define CMD_MM_PER_SEC_SET "V"                      // setting max mm/s of device
-#define CMD_CALIBRATE_DEVICE "C"                    // calibrate the device (10.1 m/s^2)
-#define CMD_GET_CONFIG "G"                          // get config data
+#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "DL" // calibration of down limit current loop (4mA)
+#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "UL"   // calibration of up limit current loop (20mA)
+#define CMD_DYNAMIC_MODE_SET "DR"                    // setting dynamic range of accelerometer
+#define CMD_MM_PER_SEC_SET "MV"                      // setting max mm/s of device
+#define CMD_CALIBRATE_DEVICE "CD"                    // calibrate the device (10.1 m/s^2)
+#define CMD_GET_CONFIG "GC"                          // get config data
 
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLWW"
 #define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.7"));
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.8"));
 
     ui->canvas->setInteraction(QCP::iRangeDrag, true);
     ui->canvas->setInteraction(QCP::iRangeZoom, true);
@@ -320,14 +320,6 @@ void MainWindow::plotGraph(QString msg)
         else continue;
     }
 
-    if(flag_measure_done == 2)
-    {
-        counter++;
-        X_Acceleration.append(counter);
-        X_Velocity.append(counter);
-        flag_measure_done = 0;
-    }
-
     if(!Y_Acceleration.isEmpty())
     {
         double average_A = 0.0f;
@@ -342,6 +334,19 @@ void MainWindow::plotGraph(QString msg)
         for(int i = 0; i < Y_Velocity.size(); i++) average_V += Y_Velocity[i];
         average_V /= Y_Velocity.size();
         ui->lineEdit_average_V->setText(QString::number(average_V, 'f', 2));
+    }
+
+    if(flag_measure_done == 2)
+    {
+        counter++;
+        X_Acceleration.append(counter);
+        X_Velocity.append(counter);
+        flag_measure_done = 0;
+    }
+
+    if(ui->checkBox_need_plot->isChecked() == false)
+    {
+      return;
     }
 
     ui->canvas->clearGraphs();
@@ -385,7 +390,7 @@ void MainWindow::receiveMessage()
         QString message = serialBuffer.mid(0, index);
         if(message.contains("[DEBUG]"))
         {
-            plotGraph(message);
+          plotGraph(message);
         }
         else if(message.contains("[INIT]"))
         {
@@ -403,7 +408,7 @@ void MainWindow::receiveMessage()
                     }
                 }
             }
-            if(message.contains("Correction ratio of 20mA"))
+            else if(message.contains("Correction ratio of 20mA"))
             {
                 foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
                 {
@@ -415,7 +420,7 @@ void MainWindow::receiveMessage()
                     }
                 }
             }
-            if(message.contains("Max mm per sec"))
+            else if(message.contains("Max mm per sec"))
             {
                 foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
                 {
@@ -423,7 +428,7 @@ void MainWindow::receiveMessage()
                     if(index != -1) ui->cmb_mmpersec->setCurrentIndex(index);
                 }
             }
-            if(message.contains("Dynamic range"))
+            else if(message.contains("Dynamic range"))
             {
                 foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
                 {
@@ -526,42 +531,28 @@ void MainWindow::on_pushButton_get_config_clicked()
 
 void MainWindow::on_pushButton_manual_clicked()
 {
-  QString instruction = QString("1 Закрепите датчик на вибростоле.\n\n"
-                        "2 Подведите провода питания к датчику, подключите по схеме, само питание не включайте. Наличие миллиамперметра обязательно.\n\n"
-                        "3 Подсоедините переходник USB-UART сначала к компьютеру, потом к датчику.\n\n"
-                        "4 В программе, в выпадающем окне рядом с надписью \"COM-Порт\", выберете COM-порт используемого UART-преобразователя.\n\n"
-                        "5 Нажмите кнопку \"Подключиться\".\n\n"
-                        "6 Подайте питание на датчик. \nВНИМАНИЕ: Блок питания должен быть ОБЯЗАТЕЛЬНО заземлен и настроен на 24 вольта.\n\n"
-                        "7 В случае успешного подключения в консоли приложения будет показана текущая конфигурация датчика и начнет строиться график в правой части интерфейса.\n"
-                        "Если этого не произошло, начните с шага 2.\n\n"
-                        "8 Откалибруйте нижний предел токовой петли.\n"
-                        "Для этого необходимо подобрать такое число, при котором значение тока на миллиамперметре будет в районе 4.1 миллиампера (мА):\n"
-                        "8.1 Нажмите на кнопку \"Калибровка нижнего предела ТП\".\n"
-                        "8.2 В случае начала калибровки нижнего предела ТП датчик отправит соответствующее сообщение в консоль.\n"
-                        "Если этого не произошло, начните с шага 2.\n"
-                        "8.3 Введите число в разблокировавшемся окне и нажмите кнопку \"Мультиметр\".\n"
-                        "8.4 Сравните текущее значение тока на миллиамперметре с необходимым (4.1 мА), "
-                        "если ток больше необходимого значения, уменьшите число, если ниже - увеличьте число и снова нажмите \"Мультиметр\".\n"
-                        "8.5 Когда значение на миллиамперметре совпадет с необходимым (4.1 мА), нажмите кнопку \"Записать\".\n\n"
-                        "9 Настройку верхнего предела токовой петли проведите так же, как и нижнего, но теперь необходимое значение тока на миллиамперметре будет 20.1 миллиампер (мА).\n\n"
-                        "10 Выберете значение виброскорости, которое будет соответствовать значению тока в 20 мА.\n"
-                        "Для этого нажмите на кнопку \"Установка максимальной виброскорости\", из разблокировавшегося выпадающего списка выберете нужное значение и нажмите кнопку \"Записать\".\n\n"
-                        "11 Выберете динамический диапазон акселерометра.\n"
-                        "Для этого нажмите на кнопку \"Установка динамического диапазона\", из разблокировавшегося выпадающего списка выберете нужное значение и нажмите кнопку \"Записать\".\n\n"
-                        "12 Для калибровки датчика необходимо:\n"
-                        "12.1 Включить вибростол.\n"
-                        "12.2 Подождать, пока датчик выйдет на режим. Датчик выйдет на режим, когда на графике в правой части интерфейса синия и красная линии перестанут расти и станут околопрямой линией.\n"
-                        "12.3 Нажать на кнопку \"Калибровать датчик\".");
+  QDialog* historyDialog = new QDialog(this);
+  historyDialog->setWindowTitle("Инструкция по настройке");
 
-  QDialog *msgDialog = new QDialog();
-  QLayout *layout = new QVBoxLayout();
-  QLabel *label = new QLabel(instruction);
+  QTextEdit* historyTextEdit = new QTextEdit(historyDialog);
+  QVBoxLayout* layout = new QVBoxLayout(historyDialog);
+  layout->addWidget(historyTextEdit);
+  historyTextEdit->setReadOnly(true);
 
-  label->setTextInteractionFlags(Qt::TextSelectableByMouse);
-  label->setStyleSheet("QLabel{border: 1px solid gray;background-color:rgba(255, 255, 255, 20);border-radius: 5px;}");
-  layout->addWidget(label);
+  QFile file(QApplication::applicationDirPath() + "/Инструкция.txt");
+  if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+      QString content = file.readAll();
+      qDebug() << content;
+      historyTextEdit->append(content);
+  }
+  else
+  {
+    qDebug() << "File cannot be open";
+  }
 
-  msgDialog->setLayout(layout);
-  msgDialog->setWindowTitle(tr("Инструкция по настройке ВД17"));
-  msgDialog->open();
+  QSize mainWindowSize = this->size();
+  historyDialog->resize(mainWindowSize);
+
+  historyDialog->exec();
 }

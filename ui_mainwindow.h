@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 28. Feb 19:25:24 2023
+** Created: Wed 12. Apr 16:01:59 2023
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
@@ -36,28 +37,28 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
+    QPushButton *pushButton_DL_write;
     QComboBox *cmb_dynamic_ranges;
     QLineEdit *lineEdit_average_A;
     QPushButton *pushButton_UL_multimeter;
-    QLineEdit *lineEdit_average_V;
+    QPushButton *pushButton_get_config;
     QPushButton *pushButton_clear_canvas;
     QTextEdit *UART_output;
-    QPushButton *pushButton_get_config;
-    QSpinBox *lineEdit_DL_value;
+    QLineEdit *lineEdit_average_V;
     QPushButton *pushButton_COM_connect;
     QSpinBox *lineEdit_UL_value;
     QPushButton *pushButton_DL_multimeter;
     QPushButton *pushButton_clear_console;
-    QLabel *label;
+    QSpinBox *lineEdit_DL_value;
     QLabel *label_acceleration_RMS;
     QPushButton *pushButton_dynamic_range_write;
+    QLabel *label;
     QComboBox *cmb_mmpersec;
-    QPushButton *pushButton_DL_write;
-    QPushButton *pushButton_UL_calibration;
     QPushButton *pushButton_dynamic_range_set;
-    QPushButton *pushButton_DL_calibration;
-    QLineEdit *lineEdit_RMS_V;
     QLineEdit *lineEdit_RMS_A;
+    QPushButton *pushButton_DL_calibration;
+    QPushButton *pushButton_UL_calibration;
+    QLineEdit *lineEdit_RMS_V;
     QPushButton *pushButton_UL_write;
     QLabel *label_port;
     QPushButton *pushButton_mmpersec_write;
@@ -65,6 +66,7 @@ public:
     QPushButton *pushButton_calibrate_device;
     QComboBox *comboBox_port;
     QPushButton *pushButton_manual;
+    QCheckBox *checkBox_need_plot;
     QCustomPlot *canvas;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -74,13 +76,24 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1085, 560);
+        MainWindow->resize(1086, 560);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        pushButton_DL_write = new QPushButton(centralWidget);
+        pushButton_DL_write->setObjectName(QString::fromUtf8("pushButton_DL_write"));
+        pushButton_DL_write->setEnabled(false);
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(pushButton_DL_write->sizePolicy().hasHeightForWidth());
+        pushButton_DL_write->setSizePolicy(sizePolicy);
+
+        gridLayout->addWidget(pushButton_DL_write, 2, 4, 1, 1);
+
         cmb_dynamic_ranges = new QComboBox(centralWidget);
         cmb_dynamic_ranges->setObjectName(QString::fromUtf8("cmb_dynamic_ranges"));
         cmb_dynamic_ranges->setEnabled(false);
@@ -89,9 +102,6 @@ public:
 
         lineEdit_average_A = new QLineEdit(centralWidget);
         lineEdit_average_A->setObjectName(QString::fromUtf8("lineEdit_average_A"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(lineEdit_average_A->sizePolicy().hasHeightForWidth());
         lineEdit_average_A->setSizePolicy(sizePolicy);
         lineEdit_average_A->setMaximumSize(QSize(80, 16777215));
@@ -108,15 +118,10 @@ public:
 
         gridLayout->addWidget(pushButton_UL_multimeter, 3, 3, 1, 1);
 
-        lineEdit_average_V = new QLineEdit(centralWidget);
-        lineEdit_average_V->setObjectName(QString::fromUtf8("lineEdit_average_V"));
-        sizePolicy.setHeightForWidth(lineEdit_average_V->sizePolicy().hasHeightForWidth());
-        lineEdit_average_V->setSizePolicy(sizePolicy);
-        lineEdit_average_V->setMaximumSize(QSize(80, 16777215));
-        lineEdit_average_V->setAlignment(Qt::AlignCenter);
-        lineEdit_average_V->setReadOnly(true);
+        pushButton_get_config = new QPushButton(centralWidget);
+        pushButton_get_config->setObjectName(QString::fromUtf8("pushButton_get_config"));
 
-        gridLayout->addWidget(lineEdit_average_V, 7, 4, 1, 1);
+        gridLayout->addWidget(pushButton_get_config, 1, 0, 1, 3);
 
         pushButton_clear_canvas = new QPushButton(centralWidget);
         pushButton_clear_canvas->setObjectName(QString::fromUtf8("pushButton_clear_canvas"));
@@ -127,7 +132,7 @@ public:
         pushButton_clear_canvas->setSizePolicy(sizePolicy1);
         pushButton_clear_canvas->setMinimumSize(QSize(0, 0));
 
-        gridLayout->addWidget(pushButton_clear_canvas, 9, 6, 1, 1);
+        gridLayout->addWidget(pushButton_clear_canvas, 9, 7, 1, 1);
 
         UART_output = new QTextEdit(centralWidget);
         UART_output->setObjectName(QString::fromUtf8("UART_output"));
@@ -141,19 +146,15 @@ public:
 
         gridLayout->addWidget(UART_output, 8, 0, 2, 5);
 
-        pushButton_get_config = new QPushButton(centralWidget);
-        pushButton_get_config->setObjectName(QString::fromUtf8("pushButton_get_config"));
+        lineEdit_average_V = new QLineEdit(centralWidget);
+        lineEdit_average_V->setObjectName(QString::fromUtf8("lineEdit_average_V"));
+        sizePolicy.setHeightForWidth(lineEdit_average_V->sizePolicy().hasHeightForWidth());
+        lineEdit_average_V->setSizePolicy(sizePolicy);
+        lineEdit_average_V->setMaximumSize(QSize(80, 16777215));
+        lineEdit_average_V->setAlignment(Qt::AlignCenter);
+        lineEdit_average_V->setReadOnly(true);
 
-        gridLayout->addWidget(pushButton_get_config, 1, 0, 1, 3);
-
-        lineEdit_DL_value = new QSpinBox(centralWidget);
-        lineEdit_DL_value->setObjectName(QString::fromUtf8("lineEdit_DL_value"));
-        lineEdit_DL_value->setEnabled(false);
-        lineEdit_DL_value->setAlignment(Qt::AlignCenter);
-        lineEdit_DL_value->setMaximum(9999);
-        lineEdit_DL_value->setValue(100);
-
-        gridLayout->addWidget(lineEdit_DL_value, 2, 2, 1, 1);
+        gridLayout->addWidget(lineEdit_average_V, 7, 4, 1, 1);
 
         pushButton_COM_connect = new QPushButton(centralWidget);
         pushButton_COM_connect->setObjectName(QString::fromUtf8("pushButton_COM_connect"));
@@ -185,13 +186,16 @@ public:
         pushButton_clear_console->setSizePolicy(sizePolicy1);
         pushButton_clear_console->setMinimumSize(QSize(0, 0));
 
-        gridLayout->addWidget(pushButton_clear_console, 9, 5, 1, 1);
+        gridLayout->addWidget(pushButton_clear_console, 9, 6, 1, 1);
 
-        label = new QLabel(centralWidget);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+        lineEdit_DL_value = new QSpinBox(centralWidget);
+        lineEdit_DL_value->setObjectName(QString::fromUtf8("lineEdit_DL_value"));
+        lineEdit_DL_value->setEnabled(false);
+        lineEdit_DL_value->setAlignment(Qt::AlignCenter);
+        lineEdit_DL_value->setMaximum(9999);
+        lineEdit_DL_value->setValue(100);
 
-        gridLayout->addWidget(label, 7, 0, 1, 3);
+        gridLayout->addWidget(lineEdit_DL_value, 2, 2, 1, 1);
 
         label_acceleration_RMS = new QLabel(centralWidget);
         label_acceleration_RMS->setObjectName(QString::fromUtf8("label_acceleration_RMS"));
@@ -207,26 +211,17 @@ public:
 
         gridLayout->addWidget(pushButton_dynamic_range_write, 5, 3, 1, 2);
 
+        label = new QLabel(centralWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(label, 7, 0, 1, 3);
+
         cmb_mmpersec = new QComboBox(centralWidget);
         cmb_mmpersec->setObjectName(QString::fromUtf8("cmb_mmpersec"));
         cmb_mmpersec->setEnabled(false);
 
         gridLayout->addWidget(cmb_mmpersec, 4, 2, 1, 1);
-
-        pushButton_DL_write = new QPushButton(centralWidget);
-        pushButton_DL_write->setObjectName(QString::fromUtf8("pushButton_DL_write"));
-        pushButton_DL_write->setEnabled(false);
-        sizePolicy.setHeightForWidth(pushButton_DL_write->sizePolicy().hasHeightForWidth());
-        pushButton_DL_write->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(pushButton_DL_write, 2, 4, 1, 1);
-
-        pushButton_UL_calibration = new QPushButton(centralWidget);
-        pushButton_UL_calibration->setObjectName(QString::fromUtf8("pushButton_UL_calibration"));
-        sizePolicy.setHeightForWidth(pushButton_UL_calibration->sizePolicy().hasHeightForWidth());
-        pushButton_UL_calibration->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(pushButton_UL_calibration, 3, 0, 1, 2);
 
         pushButton_dynamic_range_set = new QPushButton(centralWidget);
         pushButton_dynamic_range_set->setObjectName(QString::fromUtf8("pushButton_dynamic_range_set"));
@@ -236,6 +231,16 @@ public:
         pushButton_dynamic_range_set->setLayoutDirection(Qt::LeftToRight);
 
         gridLayout->addWidget(pushButton_dynamic_range_set, 5, 0, 1, 2);
+
+        lineEdit_RMS_A = new QLineEdit(centralWidget);
+        lineEdit_RMS_A->setObjectName(QString::fromUtf8("lineEdit_RMS_A"));
+        sizePolicy.setHeightForWidth(lineEdit_RMS_A->sizePolicy().hasHeightForWidth());
+        lineEdit_RMS_A->setSizePolicy(sizePolicy);
+        lineEdit_RMS_A->setMaximumSize(QSize(80, 16777215));
+        lineEdit_RMS_A->setAlignment(Qt::AlignCenter);
+        lineEdit_RMS_A->setReadOnly(true);
+
+        gridLayout->addWidget(lineEdit_RMS_A, 6, 3, 1, 1);
 
         pushButton_DL_calibration = new QPushButton(centralWidget);
         pushButton_DL_calibration->setObjectName(QString::fromUtf8("pushButton_DL_calibration"));
@@ -249,6 +254,13 @@ public:
 
         gridLayout->addWidget(pushButton_DL_calibration, 2, 0, 1, 2);
 
+        pushButton_UL_calibration = new QPushButton(centralWidget);
+        pushButton_UL_calibration->setObjectName(QString::fromUtf8("pushButton_UL_calibration"));
+        sizePolicy.setHeightForWidth(pushButton_UL_calibration->sizePolicy().hasHeightForWidth());
+        pushButton_UL_calibration->setSizePolicy(sizePolicy);
+
+        gridLayout->addWidget(pushButton_UL_calibration, 3, 0, 1, 2);
+
         lineEdit_RMS_V = new QLineEdit(centralWidget);
         lineEdit_RMS_V->setObjectName(QString::fromUtf8("lineEdit_RMS_V"));
         sizePolicy.setHeightForWidth(lineEdit_RMS_V->sizePolicy().hasHeightForWidth());
@@ -258,16 +270,6 @@ public:
         lineEdit_RMS_V->setReadOnly(true);
 
         gridLayout->addWidget(lineEdit_RMS_V, 7, 3, 1, 1);
-
-        lineEdit_RMS_A = new QLineEdit(centralWidget);
-        lineEdit_RMS_A->setObjectName(QString::fromUtf8("lineEdit_RMS_A"));
-        sizePolicy.setHeightForWidth(lineEdit_RMS_A->sizePolicy().hasHeightForWidth());
-        lineEdit_RMS_A->setSizePolicy(sizePolicy);
-        lineEdit_RMS_A->setMaximumSize(QSize(80, 16777215));
-        lineEdit_RMS_A->setAlignment(Qt::AlignCenter);
-        lineEdit_RMS_A->setReadOnly(true);
-
-        gridLayout->addWidget(lineEdit_RMS_A, 6, 3, 1, 1);
 
         pushButton_UL_write = new QPushButton(centralWidget);
         pushButton_UL_write->setObjectName(QString::fromUtf8("pushButton_UL_write"));
@@ -317,7 +319,7 @@ public:
 
         pushButton_manual = new QPushButton(centralWidget);
         pushButton_manual->setObjectName(QString::fromUtf8("pushButton_manual"));
-        pushButton_manual->setMinimumSize(QSize(300, 21));
+        pushButton_manual->setMinimumSize(QSize(180, 21));
         pushButton_manual->setStyleSheet(QString::fromUtf8("QPushButton\n"
 "{\n"
 "  border: 1px solid gray;\n"
@@ -330,7 +332,12 @@ public:
 "   border: 1px solid gray;\n"
 "}"));
 
-        gridLayout->addWidget(pushButton_manual, 9, 7, 1, 1);
+        gridLayout->addWidget(pushButton_manual, 9, 8, 1, 1);
+
+        checkBox_need_plot = new QCheckBox(centralWidget);
+        checkBox_need_plot->setObjectName(QString::fromUtf8("checkBox_need_plot"));
+
+        gridLayout->addWidget(checkBox_need_plot, 9, 5, 1, 1);
 
         canvas = new QCustomPlot(centralWidget);
         canvas->setObjectName(QString::fromUtf8("canvas"));
@@ -341,12 +348,12 @@ public:
         canvas->setSizePolicy(sizePolicy3);
         canvas->setMinimumSize(QSize(0, 0));
 
-        gridLayout->addWidget(canvas, 0, 5, 9, 3);
+        gridLayout->addWidget(canvas, 0, 5, 9, 4);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1085, 20));
+        menuBar->setGeometry(QRect(0, 0, 1086, 20));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -367,6 +374,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0, QApplication::UnicodeUTF8));
+        pushButton_DL_write->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
         cmb_dynamic_ranges->clear();
         cmb_dynamic_ranges->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "2g", 0, QApplication::UnicodeUTF8)
@@ -375,14 +383,14 @@ public:
          << QApplication::translate("MainWindow", "16g", 0, QApplication::UnicodeUTF8)
         );
         pushButton_UL_multimeter->setText(QApplication::translate("MainWindow", "\320\234\321\203\320\273\321\214\321\202\320\270\320\274\320\265\321\202\321\200", 0, QApplication::UnicodeUTF8));
-        pushButton_clear_canvas->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\263\321\200\320\260\321\204\320\270\320\272 \320\270 \320\264\320\260\320\275\320\275\321\213\320\265", 0, QApplication::UnicodeUTF8));
         pushButton_get_config->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\273\321\203\321\207\320\270\321\202\321\214 \320\272\320\276\320\275\321\204\320\270\320\263\321\203\321\200\320\260\321\206\320\270\321\216 \320\264\320\260\321\202\321\207\320\270\320\272\320\260", 0, QApplication::UnicodeUTF8));
+        pushButton_clear_canvas->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\263\321\200\320\260\321\204\320\270\320\272 \320\270 \320\264\320\260\320\275\320\275\321\213\320\265", 0, QApplication::UnicodeUTF8));
         pushButton_COM_connect->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\264\320\272\320\273\321\216\321\207\320\270\321\202\321\214\321\201\321\217", 0, QApplication::UnicodeUTF8));
         pushButton_DL_multimeter->setText(QApplication::translate("MainWindow", "\320\234\321\203\320\273\321\214\321\202\320\270\320\274\320\265\321\202\321\200", 0, QApplication::UnicodeUTF8));
         pushButton_clear_console->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\272\320\276\320\275\321\201\320\276\320\273\321\214", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "\320\234\320\263\320\275\320\276\320\262\320\265\320\275\320\275\320\276\320\265/\321\201\321\200\320\265\320\264\320\275\320\265\320\265 \320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\241\320\232\320\227 \321\201\320\272\320\276\321\200\320\276\321\201\321\202\320\270   V [\320\274\320\274/\321\201] =", 0, QApplication::UnicodeUTF8));
         label_acceleration_RMS->setText(QApplication::translate("MainWindow", "\320\234\320\263\320\275\320\276\320\262\320\265\320\275\320\275\320\276\320\265/\321\201\321\200\320\265\320\264\320\275\320\265\320\265 \320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\241\320\232\320\227 \321\203\321\201\320\272\320\276\321\200\320\265\320\275\320\270\321\217 A [\320\274/\321\2012] =", 0, QApplication::UnicodeUTF8));
         pushButton_dynamic_range_write->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("MainWindow", "\320\234\320\263\320\275\320\276\320\262\320\265\320\275\320\275\320\276\320\265/\321\201\321\200\320\265\320\264\320\275\320\265\320\265 \320\267\320\275\320\260\321\207\320\265\320\275\320\270\320\265 \320\241\320\232\320\227 \321\201\320\272\320\276\321\200\320\276\321\201\321\202\320\270   V [\320\274\320\274/\321\201] =", 0, QApplication::UnicodeUTF8));
         cmb_mmpersec->clear();
         cmb_mmpersec->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "20 \320\274\320\274/\321\201", 0, QApplication::UnicodeUTF8)
@@ -390,16 +398,16 @@ public:
          << QApplication::translate("MainWindow", "100 \320\274\320\274/\321\201", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "200 \320\274\320\274/\321\201", 0, QApplication::UnicodeUTF8)
         );
-        pushButton_DL_write->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
-        pushButton_UL_calibration->setText(QApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\272\320\260 \320\262\320\265\321\200\321\205\320\275\320\265\320\263\320\276 \320\277\321\200\320\265\320\264\320\265\320\273\320\260 \320\242\320\237", 0, QApplication::UnicodeUTF8));
         pushButton_dynamic_range_set->setText(QApplication::translate("MainWindow", "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\272\320\260 \320\264\320\270\320\275\320\260\320\274\320\270\321\207\320\265\321\201\320\272\320\276\320\263\320\276 \320\264\320\270\320\260\320\277\320\260\320\267\320\276\320\275\320\260", 0, QApplication::UnicodeUTF8));
         pushButton_DL_calibration->setText(QApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\272\320\260 \320\275\320\270\320\266\320\275\320\265\320\263\320\276 \320\277\321\200\320\265\320\264\320\265\320\273\320\260 \320\242\320\237", 0, QApplication::UnicodeUTF8));
+        pushButton_UL_calibration->setText(QApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\272\320\260 \320\262\320\265\321\200\321\205\320\275\320\265\320\263\320\276 \320\277\321\200\320\265\320\264\320\265\320\273\320\260 \320\242\320\237", 0, QApplication::UnicodeUTF8));
         pushButton_UL_write->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
         label_port->setText(QApplication::translate("MainWindow", "COM-\320\237\320\276\321\200\321\202", 0, QApplication::UnicodeUTF8));
         pushButton_mmpersec_write->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
         pushButton_mmpersec_calibration->setText(QApplication::translate("MainWindow", "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\272\320\260 \320\274\320\260\320\272\321\201\320\270\320\274\320\260\320\273\321\214\320\275\320\276\320\271 \320\262\320\270\320\261\321\200\320\276\321\201\320\272\320\276\321\200\320\276\321\201\321\202\320\270", 0, QApplication::UnicodeUTF8));
         pushButton_calibrate_device->setText(QApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\260\321\202\321\214 \320\264\320\260\321\202\321\207\320\270\320\272", 0, QApplication::UnicodeUTF8));
         pushButton_manual->setText(QApplication::translate("MainWindow", "\320\230\320\275\321\201\321\202\321\200\321\203\320\272\321\206\320\270\321\217 \320\277\320\276 \320\275\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\265 \320\222\320\22417", 0, QApplication::UnicodeUTF8));
+        checkBox_need_plot->setText(QApplication::translate("MainWindow", "\320\241\321\202\321\200\320\276\320\270\321\202\321\214 \320\263\321\200\320\260\321\204\320\270\320\272", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
