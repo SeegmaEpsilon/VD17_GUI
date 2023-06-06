@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed 12. Apr 16:01:59 2023
+** Created: Mon 5. Jun 16:51:22 2023
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -41,7 +41,6 @@ public:
     QComboBox *cmb_dynamic_ranges;
     QLineEdit *lineEdit_average_A;
     QPushButton *pushButton_UL_multimeter;
-    QPushButton *pushButton_get_config;
     QPushButton *pushButton_clear_canvas;
     QTextEdit *UART_output;
     QLineEdit *lineEdit_average_V;
@@ -63,11 +62,11 @@ public:
     QLabel *label_port;
     QPushButton *pushButton_mmpersec_write;
     QPushButton *pushButton_mmpersec_calibration;
-    QPushButton *pushButton_calibrate_device;
     QComboBox *comboBox_port;
     QPushButton *pushButton_manual;
     QCheckBox *checkBox_need_plot;
     QCustomPlot *canvas;
+    QPushButton *pushButton_calibrate_device;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -117,11 +116,6 @@ public:
         pushButton_UL_multimeter->setSizePolicy(sizePolicy);
 
         gridLayout->addWidget(pushButton_UL_multimeter, 3, 3, 1, 1);
-
-        pushButton_get_config = new QPushButton(centralWidget);
-        pushButton_get_config->setObjectName(QString::fromUtf8("pushButton_get_config"));
-
-        gridLayout->addWidget(pushButton_get_config, 1, 0, 1, 3);
 
         pushButton_clear_canvas = new QPushButton(centralWidget);
         pushButton_clear_canvas->setObjectName(QString::fromUtf8("pushButton_clear_canvas"));
@@ -304,14 +298,6 @@ public:
 
         gridLayout->addWidget(pushButton_mmpersec_calibration, 4, 0, 1, 2);
 
-        pushButton_calibrate_device = new QPushButton(centralWidget);
-        pushButton_calibrate_device->setObjectName(QString::fromUtf8("pushButton_calibrate_device"));
-        pushButton_calibrate_device->setEnabled(true);
-        sizePolicy.setHeightForWidth(pushButton_calibrate_device->sizePolicy().hasHeightForWidth());
-        pushButton_calibrate_device->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(pushButton_calibrate_device, 1, 3, 1, 2);
-
         comboBox_port = new QComboBox(centralWidget);
         comboBox_port->setObjectName(QString::fromUtf8("comboBox_port"));
 
@@ -336,6 +322,7 @@ public:
 
         checkBox_need_plot = new QCheckBox(centralWidget);
         checkBox_need_plot->setObjectName(QString::fromUtf8("checkBox_need_plot"));
+        checkBox_need_plot->setChecked(true);
 
         gridLayout->addWidget(checkBox_need_plot, 9, 5, 1, 1);
 
@@ -349,6 +336,14 @@ public:
         canvas->setMinimumSize(QSize(0, 0));
 
         gridLayout->addWidget(canvas, 0, 5, 9, 4);
+
+        pushButton_calibrate_device = new QPushButton(centralWidget);
+        pushButton_calibrate_device->setObjectName(QString::fromUtf8("pushButton_calibrate_device"));
+        pushButton_calibrate_device->setEnabled(true);
+        sizePolicy.setHeightForWidth(pushButton_calibrate_device->sizePolicy().hasHeightForWidth());
+        pushButton_calibrate_device->setSizePolicy(sizePolicy);
+
+        gridLayout->addWidget(pushButton_calibrate_device, 1, 0, 1, 2);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -365,7 +360,7 @@ public:
         retranslateUi(MainWindow);
 
         cmb_dynamic_ranges->setCurrentIndex(3);
-        cmb_mmpersec->setCurrentIndex(2);
+        cmb_mmpersec->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -383,7 +378,6 @@ public:
          << QApplication::translate("MainWindow", "16g", 0, QApplication::UnicodeUTF8)
         );
         pushButton_UL_multimeter->setText(QApplication::translate("MainWindow", "\320\234\321\203\320\273\321\214\321\202\320\270\320\274\320\265\321\202\321\200", 0, QApplication::UnicodeUTF8));
-        pushButton_get_config->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\273\321\203\321\207\320\270\321\202\321\214 \320\272\320\276\320\275\321\204\320\270\320\263\321\203\321\200\320\260\321\206\320\270\321\216 \320\264\320\260\321\202\321\207\320\270\320\272\320\260", 0, QApplication::UnicodeUTF8));
         pushButton_clear_canvas->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\263\321\200\320\260\321\204\320\270\320\272 \320\270 \320\264\320\260\320\275\320\275\321\213\320\265", 0, QApplication::UnicodeUTF8));
         pushButton_COM_connect->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\264\320\272\320\273\321\216\321\207\320\270\321\202\321\214\321\201\321\217", 0, QApplication::UnicodeUTF8));
         pushButton_DL_multimeter->setText(QApplication::translate("MainWindow", "\320\234\321\203\320\273\321\214\321\202\320\270\320\274\320\265\321\202\321\200", 0, QApplication::UnicodeUTF8));
@@ -405,9 +399,9 @@ public:
         label_port->setText(QApplication::translate("MainWindow", "COM-\320\237\320\276\321\200\321\202", 0, QApplication::UnicodeUTF8));
         pushButton_mmpersec_write->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
         pushButton_mmpersec_calibration->setText(QApplication::translate("MainWindow", "\320\243\321\201\321\202\320\260\320\275\320\276\320\262\320\272\320\260 \320\274\320\260\320\272\321\201\320\270\320\274\320\260\320\273\321\214\320\275\320\276\320\271 \320\262\320\270\320\261\321\200\320\276\321\201\320\272\320\276\321\200\320\276\321\201\321\202\320\270", 0, QApplication::UnicodeUTF8));
-        pushButton_calibrate_device->setText(QApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\260\321\202\321\214 \320\264\320\260\321\202\321\207\320\270\320\272", 0, QApplication::UnicodeUTF8));
         pushButton_manual->setText(QApplication::translate("MainWindow", "\320\230\320\275\321\201\321\202\321\200\321\203\320\272\321\206\320\270\321\217 \320\277\320\276 \320\275\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\265 \320\222\320\22417", 0, QApplication::UnicodeUTF8));
         checkBox_need_plot->setText(QApplication::translate("MainWindow", "\320\241\321\202\321\200\320\276\320\270\321\202\321\214 \320\263\321\200\320\260\321\204\320\270\320\272", 0, QApplication::UnicodeUTF8));
+        pushButton_calibrate_device->setText(QApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\260\321\202\321\214 \320\264\320\260\321\202\321\207\320\270\320\272", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

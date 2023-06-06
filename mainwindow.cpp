@@ -6,7 +6,6 @@
 #define CMD_DYNAMIC_MODE_SET "DR"                    // setting dynamic range of accelerometer
 #define CMD_MM_PER_SEC_SET "MV"                      // setting max mm/s of device
 #define CMD_CALIBRATE_DEVICE "CD"                    // calibrate the device (10.1 m/s^2)
-#define CMD_GET_CONFIG "GC"                          // get config data
 
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLWW"
 #define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
@@ -28,24 +27,37 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    counter = 0;
+    valueA = 0;
+    valueV = 0;
+    highlightedIndex = 0;
+    flagMeasureDone = 0;
+
+    averageBufferA.resize(16);
+    averageBufferA.resize(16);
+
     connect(&timer, SIGNAL(timeout()), this, SLOT(slotTimerTimeout()));
     timer.start(500);
-
-    highlighted_index = 0;
-    flag_measure_done = 0;
-    counter = 0;
 
     foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
     {
         ui->comboBox_port->addItem(QString("%1 (%2)").arg(serialPortInfo.portName(), serialPortInfo.description()));
     }
 
-    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.8"));
+    QString textToFind = "Prolific";
+    int index = ui->comboBox_port->findText(textToFind, Qt::MatchContains);
+
+    if(index != -1)
+    {
+      ui->comboBox_port->setCurrentIndex(index);
+    }
+
+    this->setWindowTitle(QString::fromUtf8("ВД17-Сервис v1.9"));
 
     ui->canvas->setInteraction(QCP::iRangeDrag, true);
     ui->canvas->setInteraction(QCP::iRangeZoom, true);
-    ui->canvas->xAxis->setLabel("t");
-    ui->canvas->yAxis->setLabel("V, A");
+    ui->canvas->xAxis->setLabel("Точки отсчета");
+    ui->canvas->yAxis->setLabel("A, V");
 
     disable_all_widgets();
 }
@@ -74,7 +86,6 @@ void MainWindow::disable_all_widgets()
     ui->lineEdit_UL_value->setEnabled(false);
     ui->cmb_mmpersec->setEnabled(false);
     ui->cmb_dynamic_ranges->setEnabled(false);
-    ui->pushButton_get_config->setEnabled(false);
 }
 
 void MainWindow::enable_all_widgets()
@@ -94,7 +105,6 @@ void MainWindow::enable_all_widgets()
     ui->lineEdit_UL_value->setEnabled(true);
     ui->cmb_mmpersec->setEnabled(true);
     ui->cmb_dynamic_ranges->setEnabled(true);
-    ui->pushButton_get_config->setEnabled(true);
 }
 
 void MainWindow::reset_all_widgets()
@@ -133,19 +143,19 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
 
     switch(str_temp.size())
     {
-    case 0:
-        str_temp = "0100";
-        ui->lineEdit_DL_value->setValue(str_temp.toInt());
-        break;
-    case 1:
-        str_temp = "000" + str_temp;
-        break;
-    case 2:
-        str_temp = "00" + str_temp;
-        break;
-    case 3:
-        str_temp = "0" + str_temp;
-        break;
+      case 0:
+          str_temp = "0100";
+          ui->lineEdit_DL_value->setValue(str_temp.toInt());
+          break;
+      case 1:
+          str_temp = "000" + str_temp;
+          break;
+      case 2:
+          str_temp = "00" + str_temp;
+          break;
+      case 3:
+          str_temp = "0" + str_temp;
+          break;
     }
 
     const char* pcData = str_temp.toStdString().c_str();
@@ -173,19 +183,19 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
     QString str_temp = ui->lineEdit_UL_value->text();
     switch(str_temp.size())
     {
-    case 0:
-        str_temp = "1580";
-        ui->lineEdit_UL_value->setValue(str_temp.toInt());
-        break;
-    case 1:
-        str_temp = "000" + str_temp;
-        break;
-    case 2:
-        str_temp = "00" + str_temp;
-        break;
-    case 3:
-        str_temp = "0" + str_temp;
-        break;
+      case 0:
+          str_temp = "1580";
+          ui->lineEdit_UL_value->setValue(str_temp.toInt());
+          break;
+      case 1:
+          str_temp = "000" + str_temp;
+          break;
+      case 2:
+          str_temp = "00" + str_temp;
+          break;
+      case 3:
+          str_temp = "0" + str_temp;
+          break;
     }
 
     const char* pcData = str_temp.toStdString().c_str();
@@ -247,7 +257,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     if(buttonState == COM_PORT_DISCONNECTED)
     {
         QString numStr;
-
         /* finding a double value in the string */
         foreach(numStr, ui->comboBox_port->currentText().split(" ", QString::SkipEmptyParts))
         {
@@ -286,11 +295,9 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
-void MainWindow::plotGraph(QString msg)
+void MainWindow::plotGraph(QString &msg)
 {
-    QString value;
-
-    unsigned int flag_select_value = 0;
+    uint8_t flag_select_value = 0;
 
     /* finding a double value in the string */
     foreach(QString numStr, msg.split(" ", QString::SkipEmptyParts))
@@ -304,79 +311,66 @@ void MainWindow::plotGraph(QString msg)
         {
             if(flag_select_value == 1)
             {
-                flag_measure_done++;
-                value = numStr;
-                ui->lineEdit_RMS_A->setText(QString(value));
-                Y_Acceleration.append(value.toDouble());
+                flagMeasureDone = 1;
+                valueA = numStr.toDouble();
             }
             if(flag_select_value == 2)
             {
-                flag_measure_done++;
-                value = numStr;
-                ui->lineEdit_RMS_V->setText(QString(value));
-                Y_Velocity.append(value.toDouble());
+                if(flagMeasureDone == 1) flagMeasureDone = 2;
+                valueV = numStr.toDouble();
             }
         }
         else continue;
     }
 
-    if(!Y_Acceleration.isEmpty())
+    if(flagMeasureDone == 2)
     {
-        double average_A = 0.0f;
-        for(int i = 0; i < Y_Acceleration.size(); i++) average_A += Y_Acceleration[i];
-        average_A /= Y_Acceleration.size();
-        ui->lineEdit_average_A->setText(QString::number(average_A, 'f', 2));
-    }
+        flagMeasureDone = 0;
 
-    if(!Y_Velocity.isEmpty())
-    {
-        double average_V = 0.0f;
-        for(int i = 0; i < Y_Velocity.size(); i++) average_V += Y_Velocity[i];
-        average_V /= Y_Velocity.size();
-        ui->lineEdit_average_V->setText(QString::number(average_V, 'f', 2));
-    }
+        static CircularBuffer cbA(32);
+        static CircularBuffer cbV(32);
 
-    if(flag_measure_done == 2)
-    {
+        cbA.push(valueA);
+        cbV.push(valueV);
+
+        ui->lineEdit_RMS_A->setText(QString::number(valueA, 'f', 2));
+        ui->lineEdit_RMS_V->setText(QString::number(valueV, 'f', 2));
+
+        ui->lineEdit_average_A->setText(QString::number(cbA.average(), 'f', 2));
+        ui->lineEdit_average_V->setText(QString::number(cbV.average(), 'f', 2));
+
+        if(ui->checkBox_need_plot->isChecked() == false) return;
         counter++;
-        X_Acceleration.append(counter);
-        X_Velocity.append(counter);
-        flag_measure_done = 0;
+
+        if(ui->canvas->graphCount() < 2)
+        {
+          ui->canvas->addGraph();
+          ui->canvas->addGraph();
+        }
+
+        ui->canvas->legend->setVisible(true);
+        QFont legendFont = font();
+        legendFont.setPointSize(8);
+        ui->canvas->legend->setFont(legendFont);
+        ui->canvas->legend->setBrush(QBrush(QColor(255,255,255,230)));
+
+        ui->canvas->graph(0)->setName("Виброускорение (СКЗ)");
+        ui->canvas->graph(0)->setPen(QPen(Qt::blue));
+        ui->canvas->graph(0)->addData(counter, valueA);
+        ui->canvas->graph(0)->rescaleAxes(true);
+
+        ui->canvas->graph(1)->setName("Виброскорость (СКЗ)");
+        ui->canvas->graph(1)->setPen(QPen(Qt::red));
+        ui->canvas->graph(1)->addData(counter, valueV);
+        ui->canvas->graph(1)->rescaleAxes(true);
+
+        ui->canvas->replot();
     }
-
-    if(ui->checkBox_need_plot->isChecked() == false)
-    {
-      return;
-    }
-
-    ui->canvas->clearGraphs();
-    ui->canvas->legend->clear();
-    ui->canvas->legend->setVisible(true);
-    QFont legendFont = font();
-    legendFont.setPointSize(8);
-    ui->canvas->legend->setFont(legendFont);
-    ui->canvas->legend->setBrush(QBrush(QColor(255,255,255,230)));
-
-    ui->canvas->addGraph();
-    ui->canvas->graph(0)->setName("Acceleration (RMS)");
-    ui->canvas->graph(0)->setPen(QPen(Qt::blue));
-    ui->canvas->graph(0)->setData(X_Acceleration, Y_Acceleration);
-    ui->canvas->graph(0)->rescaleAxes(true);
-
-    ui->canvas->addGraph();
-    ui->canvas->graph(1)->setName("Velocity (RMS)");
-    ui->canvas->graph(1)->setPen(QPen(Qt::red));
-    ui->canvas->graph(1)->setData(X_Velocity, Y_Velocity);
-    ui->canvas->graph(1)->rescaleAxes(true);
-
-    ui->canvas->replot();
-    ui->canvas->update();
 }
 
 void MainWindow::receiveMessage()
 {
     QString code = "***";
-    int codeSize = code.size();
 
     QByteArray dataBA = serialPort.readAll();
     QString data(dataBA);
@@ -437,47 +431,24 @@ void MainWindow::receiveMessage()
                 }
             }
         }
-        else
-        {
-            printConsole(message);
-        }
-        serialBuffer.remove(0, index + codeSize);
+        serialBuffer.remove(0, index + code.size());
     }
 }
 
-void MainWindow::printConsole(QString string)
+void MainWindow::printConsole(const QString& string)
 {
     ui->UART_output->setTextColor(Qt::blue); // Received message's color is blue.
     ui->UART_output->append(QTime::currentTime().toString("HH:mm:ss.zzz    |  ") + string);
 }
 
-void MainWindow::keyPressEvent(QKeyEvent *event)
-{
-    switch(event->key())
-    {
-        case Qt::Key_Control:
-            on_pushButton_clear_console_clicked();
-        break;
-        case Qt::Key_Alt:
-            on_pushButton_clear_canvas_clicked();
-        break;
-    }
-}
-
 void MainWindow::on_pushButton_clear_canvas_clicked()
 {
     counter = 0;
-    flag_measure_done = 0;
+    flagMeasureDone = 0;
+    valueA = 0;
+    valueV = 0;
 
-    serialData.clear();
     serialBuffer.clear();
-    serialList.clear();
-
-    X_Acceleration.clear();
-    Y_Acceleration.clear();
-
-    X_Velocity.clear();
-    Y_Velocity.clear();
 
     ui->canvas->clearGraphs();
     ui->canvas->replot();
@@ -501,9 +472,9 @@ void MainWindow::on_pushButton_clear_console_clicked()
 
 void MainWindow::slotTimerTimeout()
 {
-    if(highlighted_index || ui->comboBox_port->underMouse())
+    if(highlightedIndex || ui->comboBox_port->underMouse())
     {
-        highlighted_index = 0;
+        highlightedIndex = 0;
         return;
     }
     QString previous_name = ui->comboBox_port->currentText();
@@ -519,19 +490,15 @@ void MainWindow::slotTimerTimeout()
     }
 }
 
-void MainWindow::on_comboBox_port_highlighted(int index)
+void MainWindow::on_comboBox_port_highlighted(const int &index)
 {
-    highlighted_index = index;
-}
-
-void MainWindow::on_pushButton_get_config_clicked()
-{
-    serialPort.write(CMD_GET_CONFIG);
+    highlightedIndex = index;
 }
 
 void MainWindow::on_pushButton_manual_clicked()
 {
   QDialog* historyDialog = new QDialog(this);
+
   historyDialog->setWindowTitle("Инструкция по настройке");
 
   QTextEdit* historyTextEdit = new QTextEdit(historyDialog);
@@ -543,7 +510,6 @@ void MainWindow::on_pushButton_manual_clicked()
   if(file.open(QIODevice::ReadOnly | QIODevice::Text))
   {
       QString content = file.readAll();
-      qDebug() << content;
       historyTextEdit->append(content);
   }
   else
@@ -554,5 +520,5 @@ void MainWindow::on_pushButton_manual_clicked()
   QSize mainWindowSize = this->size();
   historyDialog->resize(mainWindowSize);
 
-  historyDialog->exec();
+  historyDialog->show();
 }

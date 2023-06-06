@@ -14,6 +14,51 @@
 #include <QApplication>
 #include <QTextCodec>
 
+class CircularBuffer {
+public:
+    explicit CircularBuffer(int size) : size_(size), buffer_(size), head_(0), tail_(0), count_(0) {}
+
+    void push(double value) {
+        buffer_[head_] = value;
+        head_ = (head_ + 1) % size_;
+        if (head_ == tail_) {
+            tail_ = (tail_ + 1) % size_;
+        } else {
+            count_ = std::min(count_ + 1, size_);
+        }
+    }
+
+    double at(int index) const {
+        if (index >= 0 && index < count_) {
+            int bufferIndex = (tail_ + index) % size_;
+            return buffer_[bufferIndex];
+        }
+        return 0;
+    }
+
+    double average()
+    {
+      average_ = 0.0;
+      for(int i = 0; i < count_; i++)
+      {
+        average_ += buffer_.at(i);
+      }
+      return average_/count_;
+    }
+
+    int size() const {
+        return count_;
+    }
+
+private:
+    int size_;
+    std::vector<double> buffer_;
+    int head_;
+    int tail_;
+    int count_;
+    double average_;
+};
+
 namespace Ui {
 class MainWindow;
 }
@@ -26,12 +71,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void printConsole(QString string);
-
 private slots:
     void slotTimerTimeout();
 
-    void keyPressEvent(QKeyEvent *event);
+    void printConsole(const QString& string);
 
     void on_pushButton_DL_calibration_clicked();
 
@@ -61,7 +104,7 @@ private slots:
 
     void receiveMessage();
 
-    void plotGraph(QString msg);
+    void plotGraph(QString& msg);
 
     void on_pushButton_dynamic_range_set_clicked();
 
@@ -71,9 +114,7 @@ private slots:
 
     void on_pushButton_clear_console_clicked();
 
-    void on_comboBox_port_highlighted(int index);
-
-    void on_pushButton_get_config_clicked();
+    void on_comboBox_port_highlighted(const int &index);
 
     void on_pushButton_manual_clicked();
 
@@ -82,23 +123,21 @@ private slots:
     QSerialPort serialPort;
     QSerialPortInfo info;
 
-    QByteArray serialData;
     QString serialBuffer;
-    QStringList serialList;
 
-    QVector<double> X_Acceleration;
-    QVector<double> Y_Acceleration;
+    double valueA;
+    double valueV;
 
-    QVector<double> X_Velocity;
-    QVector<double> Y_Velocity;
+    QVector<double> averageBufferA;
+    QVector<double> averageBufferV;
 
     unsigned counter;
 
     QTimer timer;
 
-    unsigned int flag_measure_done;
+    unsigned int flagMeasureDone;
 
-    int highlighted_index;
+    int highlightedIndex;
 };
 
 
