@@ -7,13 +7,17 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-TARGET = GUI_CurrentLoop
+TARGET = "VD17 Service"
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    serialcommands.cpp \
+    supportfunctions.cpp \
+    mouseprocessing.cpp \
+    plotprocessing.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h
