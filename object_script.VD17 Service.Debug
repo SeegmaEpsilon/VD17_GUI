@@ -1,0 +1,13 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\qcustomplot.o
+./debug\serialcommands.o
+./debug\supportfunctions.o
+./debug\mouseprocessing.o
+./debug\plotprocessing.o
+./debug\appsettings.o
+./debug\moc_mainwindow.o
+./debug\moc_qcustomplot.o
+./debug\moc_appsettings.o
+);

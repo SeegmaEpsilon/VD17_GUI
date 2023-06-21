@@ -17,12 +17,16 @@ SOURCES += main.cpp\
     serialcommands.cpp \
     supportfunctions.cpp \
     mouseprocessing.cpp \
-    plotprocessing.cpp
+    plotprocessing.cpp \
+    appsettings.cpp
 
 HEADERS  += mainwindow.h \
-    qcustomplot.h
+    qcustomplot.h \
+    appsettings.h \
+    support.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    appsettings.ui
 
 win32 {
     RC_FILE = myicon.rc

@@ -1,6 +1,13 @@
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 
+
+// TODO реализовать пользовательские команды
+void MainWindow::on_pushButton_userCommand_clicked()
+{
+
+}
+
 void MainWindow::on_pushButton_DL_calibration_clicked()
 {
     disable_all_widgets();

@@ -18,72 +18,10 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QMenu>
+#include <QSettings>
+#include <appsettings.h>
 
-#define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "DL" // calibration of down limit current loop (4mA)
-#define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "UL"   // calibration of up limit current loop (20mA)
-#define CMD_DYNAMIC_MODE_SET "DR"                    // setting dynamic range of accelerometer
-#define CMD_MM_PER_SEC_SET "MV"                      // setting max mm/s of device
-#define CMD_CALIBRATE_DEVICE "CD"                    // calibrate the device (10.1 m/s^2)
-
-#define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLWW"
-#define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
-#define CMD_MM_PER_SEC_WRITE "MMW"
-#define CMD_DYNAMIC_MODE_WRITE "MW"
-#define CMD_FLASH_WRITE "WS"
-
-#define MS_DATA_TIMEOUT 5000
-#define MS_SERIAL_TIMEOUT 2500
-
-enum BUTTON_STATE
-{
-    COM_PORT_DISCONNECTED = 0,
-    COM_PORT_CONNECTED = 1
-};
-
-class CircularBuffer {
-public:
-    explicit CircularBuffer(int size) : size_(size), buffer_(size), head_(0), tail_(0), count_(0) {}
-
-    void push(double value) {
-        buffer_[head_] = value;
-        head_ = (head_ + 1) % size_;
-        if (head_ == tail_) {
-            tail_ = (tail_ + 1) % size_;
-        } else {
-            count_ = std::min(count_ + 1, size_);
-        }
-    }
-
-    double at(int index) const {
-        if (index >= 0 && index < count_) {
-            int bufferIndex = (tail_ + index) % size_;
-            return buffer_[bufferIndex];
-        }
-        return 0;
-    }
-
-    double average()
-    {
-      average_ = 0.0;
-      for(int i = 0; i < count_; i++)
-      {
-        average_ += buffer_.at(i);
-      }
-      return average_/count_;
-    }
-
-    int size() const {
-        return count_;
-    }
-
-private:
-    int size_;
-    std::vector<double> buffer_;
-    int head_;
-    int tail_;
-    int count_;
-    double average_;
-};
+#include <support.h>
 
 namespace Ui {
 class MainWindow;
@@ -96,6 +34,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+signals:
+    void setSettingsUI(appSettingsStruct settings);
 
 private slots:
     void printConsole(const QString& string);
@@ -151,6 +92,13 @@ private slots:
     void slotResetCanvas();
     void slotSaveDataFromPlot();
 
+    void on_pushButton_settings_clicked();
+
+    void initializeAppSettings();
+    void saveAppSettings(appSettingsStruct tempSettings);
+
+    void on_pushButton_userCommand_clicked();
+
   private:
     Ui::MainWindow *ui;
     QSerialPort serialPort;
@@ -177,6 +125,18 @@ private slots:
     QPoint mDragStart_;
     bool isMouseHold_;
     QElapsedTimer mouseHoldTimer_;
+
+    appSettings settingsUI_;
+
+    /* Необходимые настройки для COM-порта */
+    int bufferSize_;
+    QString messageCode_;
+
+    int baudRate_;
+    int dataBits_;
+    int parityControl_;
+    int stopBits_;
+    int flowControl_;
 };
 
 #endif // MAINWINDOW_H

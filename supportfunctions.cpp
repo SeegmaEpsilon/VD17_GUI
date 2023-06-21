@@ -15,6 +15,7 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_mmpersec_calibration->setEnabled(false);
     ui->pushButton_mmpersec_write->setEnabled(false);
     ui->pushButton_calibrate_device->setEnabled(false);
+    ui->pushButton_userCommand->setEnabled(false);
     ui->lineEdit_DL_value->setEnabled(false);
     ui->lineEdit_UL_value->setEnabled(false);
     ui->cmb_mmpersec->setEnabled(false);
@@ -34,6 +35,7 @@ void MainWindow::enable_all_widgets()
     ui->pushButton_mmpersec_calibration->setEnabled(true);
     ui->pushButton_mmpersec_write->setEnabled(true);
     ui->pushButton_calibrate_device->setEnabled(true);
+    ui->pushButton_userCommand->setEnabled(true);
     ui->lineEdit_DL_value->setEnabled(true);
     ui->lineEdit_UL_value->setEnabled(true);
     ui->cmb_mmpersec->setEnabled(true);
@@ -174,4 +176,79 @@ bool MainWindow::serialPortCheckout()
   }
 
   return findSerialCOM;
+}
+
+/* Сохраняем настройки в приложение */
+void MainWindow::saveAppSettings(appSettingsStruct tempSettings)
+{
+  /* Путь до настроек в .ini формате */
+  QSettings settingsQt(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+
+  settingsQt.beginGroup("settings");
+  settingsQt.setValue("baudRate", tempSettings.baudRate);
+  settingsQt.setValue("bufferSize", tempSettings.bufferSize);
+  settingsQt.setValue("messageCode", tempSettings.messageCode);
+  settingsQt.setValue("dataBits", tempSettings.dataBits);
+  settingsQt.setValue("parityControl", tempSettings.parityControl);
+  settingsQt.setValue("stopBits", tempSettings.stopBits);
+  settingsQt.setValue("flowControl", tempSettings.flowControl);
+  settingsQt.endGroup();
+
+  settingsQt.sync();
+
+  initializeAppSettings();
+}
+
+void MainWindow::initializeAppSettings()
+{
+  /* Путь до настроек в .ini формате */
+  QSettings settingsQt(QApplication::applicationDirPath() + "/settings.ini", QSettings::IniFormat);
+  appSettingsStruct tempStruct;
+
+  settingsQt.beginGroup("settings");
+
+  baudRate_ = settingsQt.value("baudRate", 115200).toInt();
+  bufferSize_ = settingsQt.value("bufferSize", 32).toInt();
+  messageCode_ = settingsQt.value("messageCode", "***").toString();
+  dataBits_ = settingsQt.value("dataBits", 8).toInt();
+
+  QString tempParity = settingsQt.value("parityControl", "Не используется").toString();
+  if(tempParity == "Не используется") parityControl_ = QSerialPort::NoParity;
+  else if(tempParity == "Четность") parityControl_ = QSerialPort::EvenParity;
+  else if(tempParity == "Нечетность") parityControl_ = QSerialPort::OddParity;
+  else if(tempParity == "Пространственный") parityControl_ = QSerialPort::SpaceParity;
+  else if(tempParity == "Маркировочный") parityControl_ = QSerialPort::MarkParity;
+
+  QString tempStopBits = settingsQt.value("stopBits", "1").toString();
+  if(tempStopBits == "1") stopBits_ = QSerialPort::OneStop;
+  else if(tempStopBits == "1.5") stopBits_ = QSerialPort::OneAndHalfStop;
+  else if(tempStopBits == "2") stopBits_ = QSerialPort::TwoStop;
+
+  QString tempFlowControl = settingsQt.value("flowControl", "Не используется").toString();
+  if (tempFlowControl == "Не используется") flowControl_ = QSerialPort::NoFlowControl;
+  else if (tempFlowControl == "Аппаратный") flowControl_ = QSerialPort::HardwareControl;
+  else if (tempFlowControl == "Программный") flowControl_ = QSerialPort::SoftwareControl;
+
+  settingsQt.endGroup();
+
+  cbA.resize(bufferSize_);
+  cbV.resize(bufferSize_);
+
+  if(serialPort.isOpen()) serialPort.close();
+  /* Настройка последовательного порта необходимыми значениями */
+  serialPort.setBaudRate(static_cast<QSerialPort::BaudRate>(baudRate_));
+  serialPort.setDataBits(static_cast<QSerialPort::DataBits>(dataBits_));
+  serialPort.setParity(static_cast<QSerialPort::Parity>(parityControl_));
+  serialPort.setStopBits(static_cast<QSerialPort::StopBits>(stopBits_));
+  serialPort.setFlowControl(static_cast<QSerialPort::FlowControl>(flowControl_));
+
+  tempStruct.baudRate = QString::number(baudRate_);
+  tempStruct.bufferSize = QString::number(bufferSize_);
+  tempStruct.messageCode = QString(messageCode_);
+  tempStruct.dataBits = QString::number(dataBits_);
+  tempStruct.parityControl = QString::number(parityControl_);
+  tempStruct.stopBits = QString::number(stopBits_);
+  tempStruct.flowControl = QString::number(flowControl_);
+
+  emit setSettingsUI(tempStruct);
 }

@@ -1,10 +1,11 @@
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 
-/* обрабатываем движение мыши */
+/* Обрабатываем движение мыши */
 void MainWindow::slotMouseMove(QMouseEvent *event)
 {
-  /* реализация сжатия-растяжение зажатой ПКМ по графику */
+  /* Реализация сжатия-растяжение зажатой ПКМ по графику
+     Её работу рекомендую принять на веру */
   if(isMouseHold_)
   {
     QCPAxis* Haxis = ui->canvas->axisRect()->rangeDragAxis(Qt::Horizontal);
@@ -24,10 +25,10 @@ void MainWindow::slotMouseMove(QMouseEvent *event)
   }
 }
 
-/* обрабатываем нажатие кнопок мыши */
+/* Ообрабатываем нажатие кнопок мыши */
 void MainWindow::slotMousePress(QMouseEvent *event)
 {
-  /* реализация сжатия-растяжение зажатой ПКМ по графику */
+  /* Реализация сжатия-растяжение зажатой ПКМ по графику */
   if(event->button() == Qt::RightButton)
   {
     mouseHoldTimer_.start();
@@ -39,7 +40,7 @@ void MainWindow::slotMousePress(QMouseEvent *event)
   }
 }
 
-/* обрабатываем отпускание кнопок мыши */
+/* Обрабатываем отпускание кнопок мыши */
 void MainWindow::slotMouseRelease(QMouseEvent *event)
 {
   if(event->button() == Qt::RightButton)
@@ -71,7 +72,7 @@ void MainWindow::slotMouseRelease(QMouseEvent *event)
   }
 }
 
-/* обрабатываем (?) двойной щелчок мыши */
+/* Обрабатываем (?) двойной щелчок мыши */
 void MainWindow::slotMouseDoubleClick(QMouseEvent * event)
 {
   if(event->button() == Qt::LeftButton) {};

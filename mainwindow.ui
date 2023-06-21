@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1086</width>
-    <height>562</height>
+    <width>1000</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="5" rowspan="9" colspan="4">
+    <item row="0" column="5" rowspan="12" colspan="4">
      <widget class="QCustomPlot" name="canvas" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -28,224 +28,6 @@
         <width>0</width>
         <height>0</height>
        </size>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="4">
-     <widget class="QPushButton" name="pushButton_DL_write">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Записать</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="2">
-     <widget class="QComboBox" name="cmb_dynamic_ranges">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="currentIndex">
-       <number>3</number>
-      </property>
-      <item>
-       <property name="text">
-        <string>2g</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>4g</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>8g</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>16g</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="3" column="3">
-     <widget class="QPushButton" name="pushButton_UL_multimeter">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Мультиметр</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="7">
-     <widget class="QPushButton" name="pushButton_clear_canvas">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Очистить график и данные</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="4">
-     <widget class="QLineEdit" name="lineEdit_average_A">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>80</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="8" column="0" rowspan="2" colspan="5">
-     <widget class="QTextEdit" name="UART_output">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="3">
-     <widget class="QPushButton" name="pushButton_DL_multimeter">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Мультиметр</string>
-      </property>
-     </widget>
-    </item>
-    <item row="9" column="6">
-     <widget class="QPushButton" name="pushButton_clear_console">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Очистить консоль</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="2">
-     <widget class="QSpinBox" name="lineEdit_UL_value">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="maximum">
-       <number>9999</number>
-      </property>
-      <property name="value">
-       <number>1600</number>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="4">
-     <widget class="QLineEdit" name="lineEdit_average_V">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>80</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3" colspan="2">
-     <widget class="QPushButton" name="pushButton_COM_connect">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Подключиться</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0" colspan="3">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Мгновенное/среднее значение СКЗ скорости   V [мм/с] =</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -265,8 +47,8 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="3" colspan="2">
-     <widget class="QPushButton" name="pushButton_dynamic_range_write">
+    <item row="2" column="4">
+     <widget class="QPushButton" name="pushButton_DL_write">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -276,18 +58,103 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>21</height>
+       </size>
+      </property>
       <property name="text">
        <string>Записать</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0" colspan="3">
-     <widget class="QLabel" name="label_acceleration_RMS">
+    <item row="3" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton_UL_calibration">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
-       <string>Мгновенное/среднее значение СКЗ ускорения A [м/с2] =</string>
+       <string>Калибровка верхнего предела ТП</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="3">
+     <widget class="QPushButton" name="pushButton_UL_multimeter">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Мультиметр</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="4">
+     <widget class="QPushButton" name="pushButton_UL_write">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Записать</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton_mmpersec_calibration">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Установка максимальной виброскорости</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QSpinBox" name="lineEdit_UL_value">
+      <property name="enabled">
+       <bool>false</bool>
       </property>
       <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="maximum">
+       <number>9999</number>
+      </property>
+      <property name="value">
+       <number>1600</number>
       </property>
      </widget>
     </item>
@@ -321,63 +188,6 @@
       </item>
      </widget>
     </item>
-    <item row="6" column="3">
-     <widget class="QLineEdit" name="lineEdit_RMS_A">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>80</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButton_UL_calibration">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Калибровка верхнего предела ТП</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="3">
-     <widget class="QLineEdit" name="lineEdit_RMS_V">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>80</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="5" column="0" colspan="2">
      <widget class="QPushButton" name="pushButton_dynamic_range_set">
       <property name="sizePolicy">
@@ -398,6 +208,36 @@
       <property name="text">
        <string>Установка динамического диапазона</string>
       </property>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <widget class="QComboBox" name="cmb_dynamic_ranges">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="currentIndex">
+       <number>3</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>2g</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>4g</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>8g</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>16g</string>
+       </property>
+      </item>
      </widget>
     </item>
     <item row="2" column="0" colspan="2">
@@ -428,11 +268,8 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QComboBox" name="comboBox_port"/>
-    </item>
-    <item row="4" column="3" colspan="2">
-     <widget class="QPushButton" name="pushButton_mmpersec_write">
+    <item row="2" column="3">
+     <widget class="QPushButton" name="pushButton_DL_multimeter">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -442,24 +279,24 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>21</height>
+       </size>
+      </property>
       <property name="text">
-       <string>Записать</string>
+       <string>Мультиметр</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="4">
-     <widget class="QPushButton" name="pushButton_UL_write">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="6" column="0" colspan="3">
+     <widget class="QLabel" name="label_acceleration_RMS">
       <property name="text">
-       <string>Записать</string>
+       <string>Мгновенные значения СКЗ ускорения A [м/с2] и скорости V [мм/с]</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -485,11 +322,11 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButton_mmpersec_calibration">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
+    <item row="0" column="1" colspan="2">
+     <widget class="QComboBox" name="comboBox_port"/>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton_userCommand">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -497,11 +334,11 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Установка максимальной виброскорости</string>
+       <string>Пользовательская команда</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="2">
+    <item row="1" column="2">
      <widget class="QPushButton" name="pushButton_calibrate_device">
       <property name="enabled">
        <bool>true</bool>
@@ -517,7 +354,26 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="5">
+    <item row="12" column="7">
+     <widget class="QPushButton" name="pushButton_clear_canvas">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Очистить график и данные</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="5">
      <widget class="QCheckBox" name="checkBox_need_plot">
       <property name="text">
        <string>Строить график</string>
@@ -527,11 +383,172 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2" colspan="3">
-     <widget class="QPushButton" name="pushButton_manual">
+    <item row="12" column="6">
+     <widget class="QPushButton" name="pushButton_clear_console">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
-        <width>180</width>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Очистить консоль</string>
+      </property>
+     </widget>
+    </item>
+    <item row="12" column="8">
+     <widget class="QPushButton" name="pushButton_settings">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Настройки...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0" colspan="3">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Средние значения СКЗ ускорения A [м/с2] и скорости V [мм/с]</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="3">
+     <widget class="QLineEdit" name="lineEdit_average_A">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="3">
+     <widget class="QLineEdit" name="lineEdit_RMS_A">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="4">
+     <widget class="QLineEdit" name="lineEdit_RMS_V">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="4">
+     <widget class="QLineEdit" name="lineEdit_average_V">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>80</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" rowspan="5" colspan="5">
+     <widget class="QTextEdit" name="UART_output">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3" colspan="2">
+     <widget class="QPushButton" name="pushButton_manual">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>166</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>166</width>
         <height>21</height>
        </size>
       </property>
@@ -553,19 +570,66 @@ QPushButton:hover
       </property>
      </widget>
     </item>
-    <item row="9" column="8">
-     <widget class="QLabel" name="label_aboutSoftware">
+    <item row="0" column="3" colspan="2">
+     <widget class="QPushButton" name="pushButton_COM_connect">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
+        <width>166</width>
         <height>21</height>
        </size>
       </property>
       <property name="text">
-       <string>Микроникс, Омск 2023. Версия 2.0</string>
+       <string>Подключиться</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </widget>
+    </item>
+    <item row="4" column="3" colspan="2">
+     <widget class="QPushButton" name="pushButton_mmpersec_write">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>166</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Записать</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="3" colspan="2">
+     <widget class="QPushButton" name="pushButton_dynamic_range_write">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>166</width>
+        <height>21</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Записать</string>
       </property>
      </widget>
     </item>

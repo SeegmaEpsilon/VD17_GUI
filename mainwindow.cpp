@@ -4,43 +4,44 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    cbA(32),
-    cbV(32),
-    counter(0),
-    valueA(0),
-    valueV(0),
-    flagMeasureDone(0),
-    buttonState(0),
-    isMouseHold_(false)
+    cbA(32),            // Кольцевой буфер на 32 элемента
+    cbV(32),            // Кольцевой буфер на 32 элемента
+    counter(0),         // Счетчик принятых значений
+    valueA(0),          // Текущее значение виброускорения
+    valueV(0),          // Текущее значение виброскорости
+    flagMeasureDone(0), // Флаг, показывающий, что текущее измерение закончено
+    buttonState(0),     // Состояние кнопки подключиться/отключиться
+    isMouseHold_(false) // Отслеживает, зажата ли ЛКМ или нет (для графика)
+
 {
     ui->setupUi(this);
-
-    QString aboutSoftware = "Микроникс, Омск 2023. Версия 2.0";
-    ui->label_aboutSoftware->setText(aboutSoftware);
-
-    serialPort.setBaudRate(QSerialPort::Baud115200);
-    serialPort.setDataBits(QSerialPort::Data8);
-    serialPort.setParity(QSerialPort::NoParity);
-    serialPort.setStopBits(QSerialPort::OneStop);
-    serialPort.setFlowControl(QSerialPort::NoFlowControl);
-
-    ui->canvas->setInteraction(QCP::iRangeDrag, true);
-    ui->canvas->setInteraction(QCP::iRangeZoom, true);
-    ui->canvas->xAxis->setLabel("Точки отсчета");
-    ui->canvas->yAxis->setLabel("A, V");
-
-    serialPortCheckout();
-
-    connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
-    serialTimer.start(MS_SERIAL_TIMEOUT);
-
-    disable_all_widgets();
 
     /* Коннекты связей между плоттером графиков и GUI */
     connect(ui->canvas, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(slotMouseMove(QMouseEvent*)));
     connect(ui->canvas, SIGNAL(mouseDoubleClick(QMouseEvent*)), this, SLOT(slotMouseDoubleClick(QMouseEvent*)));
     connect(ui->canvas, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(slotMousePress(QMouseEvent*)));
     connect(ui->canvas, SIGNAL(mouseRelease(QMouseEvent*)), this, SLOT(slotMouseRelease(QMouseEvent*)));
+
+    connect(&settingsUI_, SIGNAL(needSaveSettings(appSettingsStruct)), this, SLOT(saveAppSettings(appSettingsStruct)));
+    connect(this, SIGNAL(setSettingsUI(appSettingsStruct)), &settingsUI_, SLOT(setVisibleSettings(appSettingsStruct)));
+
+    initializeAppSettings();
+
+    /* Настройка холста, на котором будет отрисовываться график
+       Разрешаем зум и перемещение по графику */
+    ui->canvas->setInteraction(QCP::iRangeDrag, true);
+    ui->canvas->setInteraction(QCP::iRangeZoom, true);
+    ui->canvas->xAxis->setLabel("Точки отсчета");
+    ui->canvas->yAxis->setLabel("A, V");
+
+    /* Первое сканирование на наличие COM-портов */
+    serialPortCheckout();
+
+    /* Инициализация таймера, по которому будут сканироваться COM-порты */
+    connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
+    serialTimer.start(MS_SERIAL_TIMEOUT);
+
+    disable_all_widgets();
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +55,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_COM_connect_clicked()
 {
+    /* В случае, если подключения не было, то находит в текущем значении комбобокса имя COM-порта */
     if(buttonState == COM_PORT_DISCONNECTED)
     {
         QString numStr;
@@ -63,6 +65,7 @@ void MainWindow::on_pushButton_COM_connect_clicked()
             else continue;
         }
 
+        /* Задаем имя последовательному интерфейсу */
         serialPort.setPortName(numStr);
 
         if (!serialPort.open(QIODevice::ReadWrite))
@@ -74,8 +77,10 @@ void MainWindow::on_pushButton_COM_connect_clicked()
         {
             ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
 
+            /* Если подключение осуществлено, то сигнал готовности о чтении связываем с функцием-обработчиком */
             connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
             buttonState = COM_PORT_CONNECTED;
+            ui->pushButton_userCommand->setEnabled(true);
         }
     }
     else if(buttonState == COM_PORT_CONNECTED)
@@ -84,6 +89,7 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
       disable_all_widgets();
       buttonState = COM_PORT_DISCONNECTED;
+      ui->pushButton_userCommand->setEnabled(false);
 
       if(serialPort.isOpen())
       {
@@ -92,27 +98,28 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
+/* Функция обработчик сообщений через UART */
 void MainWindow::receiveMessage()
 {
-    QString code = "***";
 
-    QByteArray dataBA = serialPort.readAll();
-    QString data(dataBA);
+    QByteArray dataBA = serialPort.readAll(); // Получаем массив байтов с данными
+    QString data(dataBA); // Преобразуем байты в строку
 
-    serialBuffer.append(data);
+    serialBuffer.append(data); // Добавляем в буфер данные
 
-    int index = serialBuffer.indexOf(code);
+    int index = serialBuffer.indexOf(messageCode_); // Ищем индекс кодовой последовательности в строке
 
+    /* Если нашли, то обрабатываем */
     if(index != -1)
     {
-        QString message = serialBuffer.mid(0, index);
+        QString message = serialBuffer.mid(0, index); // Получаем строку от 0 до искомого кода
         if(message.contains("[DEBUG]", Qt::CaseInsensitive))
         {
-          plotGraph(message);
+          plotGraph(message); // Если в сообщении есть отладка, то строим график по входящим данным
         }
         else if(message.contains("[INIT]", Qt::CaseInsensitive))
         {
-            printConsole(message);
+            printConsole(message); // Выводим сообщения об инициализации
             if(message.contains("Waiting for a command", Qt::CaseInsensitive))
             {
               reset_all_widgets();
@@ -162,6 +169,11 @@ void MainWindow::receiveMessage()
                 }
             }
         }
-        serialBuffer.remove(0, index + code.size());
+        serialBuffer.remove(0, index + messageCode_.size()); // Удаляем обработанное сообщение из очереди
     }
+}
+
+void MainWindow::on_pushButton_settings_clicked()
+{
+    settingsUI_.show();
 }
