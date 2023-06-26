@@ -9,6 +9,9 @@ appSettings::appSettings(QWidget *parent) :
   this->setWindowTitle("Настройки");
   ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сохранить");
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Отмена");
+  QString labelText = "Настройки приложения ВД17-Сервис";
+  QString version = "(версия 2.1)";
+  ui->label->setText(labelText + " " + version);
 }
 
 appSettings::~appSettings()
@@ -42,8 +45,6 @@ void appSettings::on_buttonBox_accepted()
 
 void appSettings::setVisibleSettings(appSettingsStruct settings)
 {
-  settings.print();
-
   ui->lineEdit_bufferSize->setText(settings.bufferSize);
   ui->lineEdit_messageCode->setText(settings.messageCode);
 

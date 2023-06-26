@@ -5,7 +5,18 @@
 // TODO реализовать пользовательские команды
 void MainWindow::on_pushButton_userCommand_clicked()
 {
-
+  bool ok;
+  // Ask for birth date as a string.
+  QString text = QInputDialog::getText(this, "Пользовательская команда",
+                                       "Введите команду:", QLineEdit::Normal,
+                                       "", &ok);
+  if (ok && !text.isEmpty())
+  {
+    QString uiNotification = "Отправлена команда ";
+    uiNotification += text;
+    serialPort.write(text.toStdString().c_str());
+    printConsole(uiNotification);
+  }
 }
 
 void MainWindow::on_pushButton_DL_calibration_clicked()

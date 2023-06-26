@@ -116,7 +116,7 @@ void MainWindow::on_pushButton_manual_clicked()
   }
   else
   {
-    qDebug() << "File cannot be open";
+    QMessageBox::critical(this, "Ошибка", "Файл не найден или поврежден");
   }
 
   QSize mainWindowSize = this->size();
@@ -234,7 +234,13 @@ void MainWindow::initializeAppSettings()
   cbA.resize(bufferSize_);
   cbV.resize(bufferSize_);
 
-  if(serialPort.isOpen()) serialPort.close();
+  bool serialWasOpened = false;
+  if(serialPort.isOpen())
+  {
+    serialWasOpened = true;
+    serialPort.close();
+  }
+
   /* Настройка последовательного порта необходимыми значениями */
   serialPort.setBaudRate(static_cast<QSerialPort::BaudRate>(baudRate_));
   serialPort.setDataBits(static_cast<QSerialPort::DataBits>(dataBits_));
@@ -249,6 +255,8 @@ void MainWindow::initializeAppSettings()
   tempStruct.parityControl = QString::number(parityControl_);
   tempStruct.stopBits = QString::number(stopBits_);
   tempStruct.flowControl = QString::number(flowControl_);
+
+  if(serialWasOpened) serialPort.open(QSerialPort::ReadWrite);
 
   emit setSettingsUI(tempStruct);
 }

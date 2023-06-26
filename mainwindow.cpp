@@ -101,7 +101,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 /* Функция обработчик сообщений через UART */
 void MainWindow::receiveMessage()
 {
-
     QByteArray dataBA = serialPort.readAll(); // Получаем массив байтов с данными
     QString data(dataBA); // Преобразуем байты в строку
 
@@ -169,6 +168,7 @@ void MainWindow::receiveMessage()
                 }
             }
         }
+        else printConsole(message);
         serialBuffer.remove(0, index + messageCode_.size()); // Удаляем обработанное сообщение из очереди
     }
 }

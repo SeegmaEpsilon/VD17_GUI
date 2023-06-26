@@ -20,6 +20,7 @@
 #include <QMenu>
 #include <QSettings>
 #include <appsettings.h>
+#include <QInputDialog>
 
 #include <support.h>
 
