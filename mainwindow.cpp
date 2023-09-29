@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&settingsUI_, SIGNAL(needSaveSettings(appSettingsStruct)), this, SLOT(saveAppSettings(appSettingsStruct)));
     connect(this, SIGNAL(setSettingsUI(appSettingsStruct)), &settingsUI_, SLOT(setVisibleSettings(appSettingsStruct)));
 
+    connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
+
     initializeAppSettings();
 
     /* Настройка холста, на котором будет отрисовываться график
@@ -38,71 +40,107 @@ MainWindow::MainWindow(QWidget *parent) :
     serialPortCheckout();
 
     /* Инициализация таймера, по которому будут сканироваться COM-порты */
-    connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
-    serialTimer.start(MS_SERIAL_TIMEOUT);
 
+    serialTimer.start(MS_SERIAL_TIMEOUT);
     disable_all_widgets();
 }
 
 MainWindow::~MainWindow()
 {
-  if(serialPort.isOpen())
+  if(serialPort->isOpen())
   {
-    serialPort.close();
+    serialPort->close();
   }
     delete ui;
 }
 
 void MainWindow::on_pushButton_COM_connect_clicked()
 {
-    /* В случае, если подключения не было, то находит в текущем значении комбобокса имя COM-порта */
-    if(buttonState == COM_PORT_DISCONNECTED)
+    if (buttonState == COM_PORT_DISCONNECTED)
     {
-        QString numStr;
-        foreach(numStr, ui->comboBox_port->currentText().split(" ", QString::SkipEmptyParts))
+        QString comPortName;
+
+        // Extract the COM port name from the combo box
+        foreach (const QString &str, ui->comboBox_port->currentText().split(" ", QString::SkipEmptyParts))
         {
-            if(numStr.contains("COM")) break;
-            else continue;
+            if (str.contains("COM"))
+            {
+                comPortName = str;
+                break;
+            }
         }
 
-        /* Задаем имя последовательному интерфейсу */
-        serialPort.setPortName(numStr);
-
-        if (!serialPort.open(QIODevice::ReadWrite))
+        if (comPortName.isEmpty())
         {
-            QMessageBox::warning(this, QString::fromUtf8("Ошибка"), QString::fromUtf8("Выбранный порт недоступен"));
+            QMessageBox::warning(this, QString::fromUtf8("Ошибка"), QString::fromUtf8("Недопустимое имя порта"));
             return;
         }
-        else
+
+        // Initialize the serial port
+        serialPort = new QSerialPort(comPortName);
+
+        if (!serialPort->open(QIODevice::ReadWrite))
         {
-            ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
-
-            /* Если подключение осуществлено, то сигнал готовности о чтении связываем с функцием-обработчиком */
-            connect(&serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
-            buttonState = COM_PORT_CONNECTED;
-            ui->pushButton_userCommand->setEnabled(true);
+            QMessageBox::warning(this, QString::fromUtf8("Ошибка"), QString::fromUtf8("Выбранный порт недоступен"));
+            delete serialPort;
+            serialPort = NULL; // Use NULL here
+            return;
         }
+
+        // Configure the serial port
+        serialPort->setBaudRate(baudRate_);
+        serialPort->setDataBits(dataBits_);
+        serialPort->setParity(parityControl_);
+        serialPort->setStopBits(stopBits_);
+        serialPort->setFlowControl(flowControl_);
+
+        if (serialPort->error() != QSerialPort::NoError)
+        {
+            qDebug() << "Ошибка установки скорости передачи: " << serialPort->errorString();
+            serialPort->close();
+            delete serialPort;
+            serialPort = NULL; // Use NULL here
+            return;
+        }
+
+        // Successfully connected
+        qDebug() << "baudRate:" << serialPort->baudRate();
+        qDebug() << "parity:" << serialPort->parity();
+        qDebug() << "stopBits:" << serialPort->stopBits();
+        qDebug() << "dataBits:" << serialPort->dataBits();
+        qDebug() << "flowControl:" << serialPort->flowControl();
+
+        connect(serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+        buttonState = COM_PORT_CONNECTED;
+        ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
+        ui->pushButton_userCommand->setEnabled(true);
     }
-    else if(buttonState == COM_PORT_CONNECTED)
+    else if (buttonState == COM_PORT_CONNECTED)
     {
-      ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
+        // Disconnect and clean up resources
+        if (serialPort)
+        {
+            serialPort->close();
+            delete serialPort;
+            serialPort = NULL; // Use NULL here
+        }
 
-      disable_all_widgets();
-      buttonState = COM_PORT_DISCONNECTED;
-      ui->pushButton_userCommand->setEnabled(false);
-
-      if(serialPort.isOpen())
-      {
-        serialPort.close();
-      }
+        buttonState = COM_PORT_DISCONNECTED;
+        ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
+        disable_all_widgets();
+        ui->pushButton_userCommand->setEnabled(false);
     }
 }
+
+
 
 /* Функция обработчик сообщений через UART */
 void MainWindow::receiveMessage()
 {
-    QByteArray dataBA = serialPort.readAll(); // Получаем массив байтов с данными
+    QByteArray dataBA = serialPort->readAll(); // Получаем массив байтов с данными
     QString data(dataBA); // Преобразуем байты в строку
+
+    qDebug() << data;
 
     serialBuffer.append(data); // Добавляем в буфер данные
 

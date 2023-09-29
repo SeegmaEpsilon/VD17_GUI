@@ -207,10 +207,10 @@ void MainWindow::initializeAppSettings()
 
   settingsQt.beginGroup("settings");
 
-  baudRate_ = settingsQt.value("baudRate", 115200).toInt();
+  baudRate_ = static_cast<QSerialPort::BaudRate>(settingsQt.value("baudRate", 115200).toInt());
   bufferSize_ = settingsQt.value("bufferSize", 32).toInt();
   messageCode_ = settingsQt.value("messageCode", "***").toString();
-  dataBits_ = settingsQt.value("dataBits", 8).toInt();
+  dataBits_ = static_cast<QSerialPort::DataBits>(settingsQt.value("dataBits", 8).toInt());
 
   QString tempParity = settingsQt.value("parityControl", "Не используется").toString();
   if(tempParity == "Не используется") parityControl_ = QSerialPort::NoParity;
@@ -234,20 +234,6 @@ void MainWindow::initializeAppSettings()
   cbA.resize(bufferSize_);
   cbV.resize(bufferSize_);
 
-  bool serialWasOpened = false;
-  if(serialPort.isOpen())
-  {
-    serialWasOpened = true;
-    serialPort.close();
-  }
-
-  /* Настройка последовательного порта необходимыми значениями */
-  serialPort.setBaudRate(static_cast<QSerialPort::BaudRate>(baudRate_));
-  serialPort.setDataBits(static_cast<QSerialPort::DataBits>(dataBits_));
-  serialPort.setParity(static_cast<QSerialPort::Parity>(parityControl_));
-  serialPort.setStopBits(static_cast<QSerialPort::StopBits>(stopBits_));
-  serialPort.setFlowControl(static_cast<QSerialPort::FlowControl>(flowControl_));
-
   tempStruct.baudRate = QString::number(baudRate_);
   tempStruct.bufferSize = QString::number(bufferSize_);
   tempStruct.messageCode = QString(messageCode_);
@@ -255,8 +241,6 @@ void MainWindow::initializeAppSettings()
   tempStruct.parityControl = QString::number(parityControl_);
   tempStruct.stopBits = QString::number(stopBits_);
   tempStruct.flowControl = QString::number(flowControl_);
-
-  if(serialWasOpened) serialPort.open(QSerialPort::ReadWrite);
 
   emit setSettingsUI(tempStruct);
 }

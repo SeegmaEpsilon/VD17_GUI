@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <qserialport.h>
-#include <qserialportinfo.h>
+#include <QSerialPort>
+#include <QSerialPortInfo>
 #include <QTimer>
 #include <QTextCodec>
 #include <QMessageBox>
@@ -102,7 +102,7 @@ private slots:
 
   private:
     Ui::MainWindow *ui;
-    QSerialPort serialPort;
+    QSerialPort *serialPort;
     QSerialPortInfo info;
 
     QString serialBuffer;
@@ -133,11 +133,11 @@ private slots:
     int bufferSize_;
     QString messageCode_;
 
-    int baudRate_;
-    int dataBits_;
-    int parityControl_;
-    int stopBits_;
-    int flowControl_;
+    QSerialPort::BaudRate baudRate_;
+    QSerialPort::DataBits dataBits_;
+    QSerialPort::Parity parityControl_;
+    QSerialPort::StopBits stopBits_;
+    QSerialPort::FlowControl flowControl_;
 };
 
 #endif // MAINWINDOW_H

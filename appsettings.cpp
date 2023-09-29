@@ -48,7 +48,10 @@ void appSettings::setVisibleSettings(appSettingsStruct settings)
   ui->lineEdit_bufferSize->setText(settings.bufferSize);
   ui->lineEdit_messageCode->setText(settings.messageCode);
 
-  ui->comboBox_UART_speed->setCurrentIndex(ui->comboBox_UART_speed->findText(settings.baudRate));
+  int textIndex = ui->comboBox_UART_speed->findText(settings.baudRate);
+  qDebug() << textIndex;
+
+  ui->comboBox_UART_speed->setCurrentIndex(textIndex);
   ui->comboBox_UART_dataBits->setCurrentIndex(ui->comboBox_UART_dataBits->findText(settings.dataBits));
 
   QString textToFind = "";

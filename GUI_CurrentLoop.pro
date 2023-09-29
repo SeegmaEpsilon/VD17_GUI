@@ -5,11 +5,11 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = "VD17 Service"
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -32,4 +32,3 @@ win32 {
     RC_FILE = myicon.rc
 }
 
-CONFIG += serialport
