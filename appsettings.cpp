@@ -10,7 +10,7 @@ appSettings::appSettings(QWidget *parent) :
   ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Сохранить");
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setText("Отмена");
   QString labelText = "Настройки приложения ВД17-Сервис";
-  QString version = "(версия 2.1)";
+  QString version = "(версия 2.2)";
   ui->label->setText(labelText + " " + version);
 }
 
@@ -48,13 +48,10 @@ void appSettings::setVisibleSettings(appSettingsStruct settings)
   ui->lineEdit_bufferSize->setText(settings.bufferSize);
   ui->lineEdit_messageCode->setText(settings.messageCode);
 
-  int textIndex = ui->comboBox_UART_speed->findText(settings.baudRate);
-  qDebug() << textIndex;
-
-  ui->comboBox_UART_speed->setCurrentIndex(textIndex);
+  ui->comboBox_UART_speed->setCurrentIndex(ui->comboBox_UART_speed->findText(settings.baudRate));
   ui->comboBox_UART_dataBits->setCurrentIndex(ui->comboBox_UART_dataBits->findText(settings.dataBits));
 
-  QString textToFind = "";
+  QString textToFind;
 
   QSerialPort::Parity parity = static_cast<QSerialPort::Parity>(settings.parityControl.toInt());
   if(parity == QSerialPort::NoParity) textToFind = "Не используется";

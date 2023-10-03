@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Fri 29. Sep 12:38:49 2023
+** Created: Tue 3. Oct 13:43:01 2023
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      34,   14, // methods
+      36,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -53,20 +53,22 @@ static const uint qt_meta_data_MainWindow[] = {
      568,   11,   11,   11, 0x08,
      610,   11,   11,   11, 0x08,
      654,   11,   11,   11, 0x08,
-     691,   11,   11,   11, 0x08,
-     729,   11,   11,   11, 0x08,
-     765,   11,  760,   11, 0x08,
-     792,  786,   11,   11, 0x08,
-     820,  786,   11,   11, 0x08,
-     855,  786,   11,   11, 0x08,
-     884,  786,   11,   11, 0x08,
-     915,   11,   11,   11, 0x08,
-     933,   11,   11,   11, 0x08,
-     951,   11,   11,   11, 0x08,
-     974,   11,   11,   11, 0x08,
-    1007,   11,   11,   11, 0x08,
-    1044, 1031,   11,   11, 0x08,
-    1079,   11,   11,   11, 0x08,
+     690,   11,  685,   11, 0x08,
+     717,  711,   11,   11, 0x08,
+     745,  711,   11,   11, 0x08,
+     780,  711,   11,   11, 0x08,
+     809,  711,   11,   11, 0x08,
+     840,   11,   11,   11, 0x08,
+     858,   11,   11,   11, 0x08,
+     876,   11,   11,   11, 0x08,
+     899,   11,   11,   11, 0x08,
+     932,   11,   11,   11, 0x08,
+     969,  956,   11,   11, 0x08,
+    1004,   11,   11,   11, 0x08,
+    1040,   11,   11,   11, 0x08,
+    1058,   11,   11,   11, 0x08,
+    1076,   11,   11,   11, 0x08,
+    1095,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -90,8 +92,6 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "receiveMessage()\0msg\0plotGraph(QString&)\0"
     "on_pushButton_dynamic_range_set_clicked()\0"
     "on_pushButton_dynamic_range_write_clicked()\0"
-    "on_pushButton_clear_canvas_clicked()\0"
-    "on_pushButton_clear_console_clicked()\0"
     "on_pushButton_manual_clicked()\0bool\0"
     "serialPortCheckout()\0event\0"
     "slotMouseMove(QMouseEvent*)\0"
@@ -104,6 +104,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "initializeAppSettings()\0tempSettings\0"
     "saveAppSettings(appSettingsStruct)\0"
     "on_pushButton_userCommand_clicked()\0"
+    "serialGetConfig()\0slotClearCanvas()\0"
+    "slotClearConsole()\0slotClearAll()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -131,22 +133,24 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 16: _t->plotGraph((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 17: _t->on_pushButton_dynamic_range_set_clicked(); break;
         case 18: _t->on_pushButton_dynamic_range_write_clicked(); break;
-        case 19: _t->on_pushButton_clear_canvas_clicked(); break;
-        case 20: _t->on_pushButton_clear_console_clicked(); break;
-        case 21: _t->on_pushButton_manual_clicked(); break;
-        case 22: { bool _r = _t->serialPortCheckout();
+        case 19: _t->on_pushButton_manual_clicked(); break;
+        case 20: { bool _r = _t->serialPortCheckout();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 23: _t->slotMouseMove((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 24: _t->slotMouseDoubleClick((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 25: _t->slotMousePress((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 26: _t->slotMouseRelease((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
-        case 27: _t->slotSavePlotPNG(); break;
-        case 28: _t->slotResetCanvas(); break;
-        case 29: _t->slotSaveDataFromPlot(); break;
-        case 30: _t->on_pushButton_settings_clicked(); break;
-        case 31: _t->initializeAppSettings(); break;
-        case 32: _t->saveAppSettings((*reinterpret_cast< appSettingsStruct(*)>(_a[1]))); break;
-        case 33: _t->on_pushButton_userCommand_clicked(); break;
+        case 21: _t->slotMouseMove((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 22: _t->slotMouseDoubleClick((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 23: _t->slotMousePress((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 24: _t->slotMouseRelease((*reinterpret_cast< QMouseEvent*(*)>(_a[1]))); break;
+        case 25: _t->slotSavePlotPNG(); break;
+        case 26: _t->slotResetCanvas(); break;
+        case 27: _t->slotSaveDataFromPlot(); break;
+        case 28: _t->on_pushButton_settings_clicked(); break;
+        case 29: _t->initializeAppSettings(); break;
+        case 30: _t->saveAppSettings((*reinterpret_cast< appSettingsStruct(*)>(_a[1]))); break;
+        case 31: _t->on_pushButton_userCommand_clicked(); break;
+        case 32: _t->serialGetConfig(); break;
+        case 33: _t->slotClearCanvas(); break;
+        case 34: _t->slotClearConsole(); break;
+        case 35: _t->slotClearAll(); break;
         default: ;
         }
     }
@@ -184,9 +188,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 34)
+        if (_id < 36)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 34;
+        _id -= 36;
     }
     return _id;
 }

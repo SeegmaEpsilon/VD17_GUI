@@ -103,7 +103,7 @@ void MainWindow::on_pushButton_UL_write_clicked()
 void MainWindow::on_pushButton_mmpersec_calibration_clicked()
 {
     disable_all_widgets();
-    ui->cmb_mmpersec->setEnabled(true);
+    ui->lineEdit_mmpersec_value->setEnabled(true);
     ui->pushButton_mmpersec_write->setEnabled(true);
 
     serialPort->write(CMD_MM_PER_SEC_SET);
@@ -111,13 +111,25 @@ void MainWindow::on_pushButton_mmpersec_calibration_clicked()
 
 void MainWindow::on_pushButton_mmpersec_write_clicked()
 {
-    QString serialData;
-    if(ui->cmb_mmpersec->currentIndex() == 0) serialData = "020";
-    if(ui->cmb_mmpersec->currentIndex() == 1) serialData = "050";
-    if(ui->cmb_mmpersec->currentIndex() == 2) serialData = "100";
-    if(ui->cmb_mmpersec->currentIndex() == 3) serialData = "200";
+    QString str_temp = ui->lineEdit_mmpersec_value->text();
+    switch(str_temp.size())
+    {
+      case 0:
+          str_temp = "0200";
+          ui->lineEdit_UL_value->setValue(str_temp.toInt());
+          break;
+      case 1:
+          str_temp = "000" + str_temp;
+          break;
+      case 2:
+          str_temp = "00" + str_temp;
+          break;
+      case 3:
+          str_temp = "0" + str_temp;
+          break;
+    }
 
-    const char* pcData = serialData.toStdString().c_str();
+    const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
     reset_all_widgets();
 }

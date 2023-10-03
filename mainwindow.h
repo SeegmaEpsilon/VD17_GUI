@@ -76,10 +76,6 @@ private slots:
 
     void on_pushButton_dynamic_range_write_clicked();
 
-    void on_pushButton_clear_canvas_clicked();
-
-    void on_pushButton_clear_console_clicked();
-
     void on_pushButton_manual_clicked();
 
     bool serialPortCheckout();
@@ -99,6 +95,12 @@ private slots:
     void saveAppSettings(appSettingsStruct tempSettings);
 
     void on_pushButton_userCommand_clicked();
+
+    void serialGetConfig();
+
+    void slotClearCanvas();
+    void slotClearConsole();
+    void slotClearAll();
 
   private:
     Ui::MainWindow *ui;

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'appsettings.ui'
 **
-** Created: Fri 29. Sep 12:38:27 2023
+** Created: Tue 3. Oct 13:07:46 2023
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

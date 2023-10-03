@@ -15,10 +15,9 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_mmpersec_calibration->setEnabled(false);
     ui->pushButton_mmpersec_write->setEnabled(false);
     ui->pushButton_calibrate_device->setEnabled(false);
-    ui->pushButton_userCommand->setEnabled(false);
     ui->lineEdit_DL_value->setEnabled(false);
     ui->lineEdit_UL_value->setEnabled(false);
-    ui->cmb_mmpersec->setEnabled(false);
+    ui->lineEdit_mmpersec_value->setEnabled(false);
     ui->cmb_dynamic_ranges->setEnabled(false);
 }
 
@@ -35,10 +34,9 @@ void MainWindow::enable_all_widgets()
     ui->pushButton_mmpersec_calibration->setEnabled(true);
     ui->pushButton_mmpersec_write->setEnabled(true);
     ui->pushButton_calibrate_device->setEnabled(true);
-    ui->pushButton_userCommand->setEnabled(true);
     ui->lineEdit_DL_value->setEnabled(true);
     ui->lineEdit_UL_value->setEnabled(true);
-    ui->cmb_mmpersec->setEnabled(true);
+    ui->lineEdit_mmpersec_value->setEnabled(true);
     ui->cmb_dynamic_ranges->setEnabled(true);
 }
 
@@ -55,7 +53,7 @@ void MainWindow::reset_all_widgets()
   ui->pushButton_UL_multimeter->setEnabled(false);
   ui->pushButton_UL_write->setEnabled(false);
 
-  ui->cmb_mmpersec->setEnabled(false);
+  ui->lineEdit_mmpersec_value->setEnabled(false);
   ui->pushButton_mmpersec_write->setEnabled(false);
 
   ui->cmb_dynamic_ranges->setEnabled(false);
@@ -69,7 +67,7 @@ void MainWindow::printConsole(const QString& string)
     ui->UART_output->append(QTime::currentTime().toString("HH:mm:ss.zzz    |  ") + string);
 }
 
-void MainWindow::on_pushButton_clear_canvas_clicked()
+void MainWindow::slotClearCanvas()
 {
     counter = 0;
     flagMeasureDone = 0;
@@ -92,9 +90,15 @@ void MainWindow::on_pushButton_clear_canvas_clicked()
     ui->canvas->update();
 }
 
-void MainWindow::on_pushButton_clear_console_clicked()
+void MainWindow::slotClearConsole()
 {
     ui->UART_output->clear();
+}
+
+void MainWindow::slotClearAll()
+{
+    slotClearCanvas();
+    slotClearConsole();
 }
 
 void MainWindow::on_pushButton_manual_clicked()

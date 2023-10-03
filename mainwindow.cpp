@@ -1,6 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+void MainWindow::serialGetConfig()
+{
+  // Successfully connected
+  qDebug() << "baudRate:" << serialPort->baudRate();
+  qDebug() << "parity:" << serialPort->parity();
+  qDebug() << "stopBits:" << serialPort->stopBits();
+  qDebug() << "dataBits:" << serialPort->dataBits();
+  qDebug() << "flowControl:" << serialPort->flowControl();
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -15,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 {
     ui->setupUi(this);
+
+
 
     /* Коннекты связей между плоттером графиков и GUI */
     connect(ui->canvas, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(slotMouseMove(QMouseEvent*)));
@@ -36,22 +48,30 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->canvas->xAxis->setLabel("Точки отсчета");
     ui->canvas->yAxis->setLabel("A, V");
 
-    /* Первое сканирование на наличие COM-портов */
-    serialPortCheckout();
+    /* Второе субменю с настройками точки доступа */
+    QMenu* menuClear = new QMenu(tr("Меню настроек точки доступа"));
+    menuClear->addAction(tr("Очистить консоль"),  this, SLOT(slotClearConsole()));
+    menuClear->addAction(tr("Очистить график"), this, SLOT(slotClearCanvas()));
+    menuClear->addAction(tr("Очистить всё"), this, SLOT(slotClearAll()));
+    ui->menuClear->setMenu(menuClear);
 
     /* Инициализация таймера, по которому будут сканироваться COM-порты */
-
+    /* Первое сканирование на наличие COM-портов */
+    serialPortCheckout();
     serialTimer.start(MS_SERIAL_TIMEOUT);
     disable_all_widgets();
 }
 
 MainWindow::~MainWindow()
 {
-  if(serialPort->isOpen())
+  // Disconnect and clean up resources
+  if(serialPort)
   {
-    serialPort->close();
+      serialPort->close();
+      delete serialPort;
+      serialPort = NULL; // Use NULL here
   }
-    delete ui;
+  delete ui;
 }
 
 void MainWindow::on_pushButton_COM_connect_clicked()
@@ -96,19 +116,13 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
         if (serialPort->error() != QSerialPort::NoError)
         {
-            qDebug() << "Ошибка установки скорости передачи: " << serialPort->errorString();
-            serialPort->close();
-            delete serialPort;
-            serialPort = NULL; // Use NULL here
-            return;
+          QString message = "Ошибка установки скорости передачи: " + serialPort->errorString();
+          printConsole(message);
+          serialPort->close();
+          delete serialPort;
+          serialPort = NULL; // Use NULL here
+          return;
         }
-
-        // Successfully connected
-        qDebug() << "baudRate:" << serialPort->baudRate();
-        qDebug() << "parity:" << serialPort->parity();
-        qDebug() << "stopBits:" << serialPort->stopBits();
-        qDebug() << "dataBits:" << serialPort->dataBits();
-        qDebug() << "flowControl:" << serialPort->flowControl();
 
         connect(serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
         buttonState = COM_PORT_CONNECTED;
@@ -132,15 +146,11 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
-
-
 /* Функция обработчик сообщений через UART */
 void MainWindow::receiveMessage()
 {
     QByteArray dataBA = serialPort->readAll(); // Получаем массив байтов с данными
     QString data(dataBA); // Преобразуем байты в строку
-
-    qDebug() << data;
 
     serialBuffer.append(data); // Добавляем в буфер данные
 
@@ -161,7 +171,7 @@ void MainWindow::receiveMessage()
             {
               reset_all_widgets();
             }
-            else if(message.contains("Micronix", Qt::CaseInsensitive))
+            else if(message.contains("start the main program", Qt::CaseInsensitive))
             {
               disable_all_widgets();
             }
@@ -193,8 +203,12 @@ void MainWindow::receiveMessage()
             {
                 foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
                 {
-                    int index = ui->cmb_mmpersec->findText(numStr, Qt::MatchContains);
-                    if(index != -1) ui->cmb_mmpersec->setCurrentIndex(index);
+                  bool check = false;
+                  numStr.toInt(&check);
+                  if(check)
+                  {
+                      ui->lineEdit_mmpersec_value->setValue(numStr.toInt());
+                  }
                 }
             }
             else if(message.contains("Dynamic range", Qt::CaseInsensitive))
