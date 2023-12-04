@@ -17,6 +17,8 @@
 #define CMD_DYNAMIC_MODE_WRITE "MW"
 #define CMD_FLASH_WRITE "WS"
 
+#define SOFTWARE_VERSION QString("2.3")
+
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500
 

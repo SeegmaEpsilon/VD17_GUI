@@ -5,18 +5,18 @@
 // TODO реализовать пользовательские команды
 void MainWindow::on_pushButton_userCommand_clicked()
 {
-  bool ok;
-  // Ask for birth date as a string.
-  QString text = QInputDialog::getText(this, "Пользовательская команда",
-                                       "Введите команду:", QLineEdit::Normal,
-                                       "", &ok);
-  if (ok && !text.isEmpty())
-  {
-    QString uiNotification = "Отправлена команда ";
-    uiNotification += text;
-    serialPort->write(text.toStdString().c_str());
-    printConsole(uiNotification);
-  }
+    bool ok;
+    // Ask for birth date as a string.
+    QString text = QInputDialog::getText(this, "Пользовательская команда",
+                                         "Введите команду:", QLineEdit::Normal,
+                                         "", &ok);
+    if (ok && !text.isEmpty())
+    {
+        QString uiNotification = "Отправлена команда ";
+        uiNotification += text;
+        serialPort->write(text.toStdString().c_str());
+        printConsole(uiNotification);
+    }
 }
 
 void MainWindow::on_pushButton_DL_calibration_clicked()
@@ -35,19 +35,19 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
 
     switch(str_temp.size())
     {
-      case 0:
-          str_temp = "0100";
-          ui->lineEdit_DL_value->setValue(str_temp.toInt());
-          break;
-      case 1:
-          str_temp = "000" + str_temp;
-          break;
-      case 2:
-          str_temp = "00" + str_temp;
-          break;
-      case 3:
-          str_temp = "0" + str_temp;
-          break;
+    case 0:
+        str_temp = "0100";
+        ui->lineEdit_DL_value->setValue(str_temp.toInt());
+        break;
+    case 1:
+        str_temp = "000" + str_temp;
+        break;
+    case 2:
+        str_temp = "00" + str_temp;
+        break;
+    case 3:
+        str_temp = "0" + str_temp;
+        break;
     }
 
     const char* pcData = str_temp.toStdString().c_str();
@@ -75,19 +75,19 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
     QString str_temp = ui->lineEdit_UL_value->text();
     switch(str_temp.size())
     {
-      case 0:
-          str_temp = "1580";
-          ui->lineEdit_UL_value->setValue(str_temp.toInt());
-          break;
-      case 1:
-          str_temp = "000" + str_temp;
-          break;
-      case 2:
-          str_temp = "00" + str_temp;
-          break;
-      case 3:
-          str_temp = "0" + str_temp;
-          break;
+    case 0:
+        str_temp = "1580";
+        ui->lineEdit_UL_value->setValue(str_temp.toInt());
+        break;
+    case 1:
+        str_temp = "000" + str_temp;
+        break;
+    case 2:
+        str_temp = "00" + str_temp;
+        break;
+    case 3:
+        str_temp = "0" + str_temp;
+        break;
     }
 
     const char* pcData = str_temp.toStdString().c_str();
@@ -114,19 +114,19 @@ void MainWindow::on_pushButton_mmpersec_write_clicked()
     QString str_temp = ui->lineEdit_mmpersec_value->text();
     switch(str_temp.size())
     {
-      case 0:
-          str_temp = "0200";
-          ui->lineEdit_UL_value->setValue(str_temp.toInt());
-          break;
-      case 1:
-          str_temp = "000" + str_temp;
-          break;
-      case 2:
-          str_temp = "00" + str_temp;
-          break;
-      case 3:
-          str_temp = "0" + str_temp;
-          break;
+    case 0:
+        str_temp = "0200";
+        ui->lineEdit_UL_value->setValue(str_temp.toInt());
+        break;
+    case 1:
+        str_temp = "000" + str_temp;
+        break;
+    case 2:
+        str_temp = "00" + str_temp;
+        break;
+    case 3:
+        str_temp = "0" + str_temp;
+        break;
     }
 
     const char* pcData = str_temp.toStdString().c_str();

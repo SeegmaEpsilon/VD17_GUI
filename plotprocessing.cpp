@@ -47,8 +47,8 @@ void MainWindow::plotGraph(QString &msg)
 
         if(ui->canvas->graphCount() < 2)
         {
-          ui->canvas->addGraph();
-          ui->canvas->addGraph();
+            ui->canvas->addGraph();
+            ui->canvas->addGraph();
         }
 
         ui->canvas->legend->setVisible(true);
@@ -73,52 +73,53 @@ void MainWindow::plotGraph(QString &msg)
 
 void MainWindow::slotResetCanvas(void)
 {
-  ui->canvas->rescaleAxes();
-  ui->canvas->replot();
+    ui->canvas->rescaleAxes();
+    ui->canvas->replot();
 }
 
 void MainWindow::slotSavePlotPNG()
 {
-  QString file_name = QFileDialog::getSaveFileName(this,
-                                                   tr("Сохранить изображение"),
-                                                   QCoreApplication::applicationDirPath () + "/VD17",
-                                                   tr("Изображение (*.png)"));
-  ui->canvas->savePng(file_name);
+    QString file_name = QFileDialog::getSaveFileName(this,
+                                                     tr("Сохранить изображение"),
+                                                     QCoreApplication::applicationDirPath () + "/VD17",
+                                                     tr("Изображение (*.png)"));
+    ui->canvas->savePng(file_name);
 }
 
 void MainWindow::slotSaveDataFromPlot(void)
 {
-  QString file_name = QFileDialog::getSaveFileName(this,
-                                                   tr("Сохранить данные"),
-                                                   QCoreApplication::applicationDirPath () + "/VD17",
-                                                   tr("Данные (*.txt)"));
+    QString file_name = QFileDialog::getSaveFileName(this,
+                                                     tr("Сохранить данные"),
+                                                     QCoreApplication::applicationDirPath () + "/VD17",
+                                                     tr("Данные (*.txt)"));
 
-  const QCPGraph *graph1 = qobject_cast<const QCPGraph*>(ui->canvas->graph(0));
-  const QCPGraph *graph2 = qobject_cast<const QCPGraph*>(ui->canvas->graph(1));
+    const QCPGraph *graph1 = qobject_cast<const QCPGraph*>(ui->canvas->graph(0));
+    const QCPGraph *graph2 = qobject_cast<const QCPGraph*>(ui->canvas->graph(1));
 
-  QFile file(file_name);
-  if(file.open(QIODevice::WriteOnly | QIODevice::Text))
-  {
-    QTextStream writeStream(&file);
-
-    if(graph1 && graph2)
+    QFile file(file_name);
+    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-      const QCPDataMap *plotData1 = graph1->data();
-      const QCPDataMap *plotData2 = graph2->data();
-      QCPDataMap::const_iterator it1 = plotData1->constBegin();
-      QCPDataMap::const_iterator it2 = plotData2->constBegin();
+        QTextStream writeStream(&file);
 
-      while(it1 != plotData1->constEnd() && it2 != plotData2->constEnd())
-      {
-        double y1 = it1.value().value;
-        double y2 = it2.value().value;
-        writeStream << QString("%1,%2\n").arg(QString::number(y1, 'f', 2)).arg(QString::number(y2, 'f', 2));
+        if(graph1 && graph2)
+        {
+            QSharedPointer<QCPDataContainer<QCPGraphData> > plotData1 = graph1->data();
+            QSharedPointer<QCPDataContainer<QCPGraphData> > plotData2 = graph2->data();
+            QCPDataContainer<QCPGraphData>::const_iterator it1 = plotData1->constBegin();
+            QCPDataContainer<QCPGraphData>::const_iterator it2 = plotData2->constBegin();
 
-        ++it1;
-        ++it2;
-      }
+            while(it1 != plotData1->constEnd() && it2 != plotData2->constEnd())
+            {
+                double y1 = it1->value;
+                double y2 = it2->value;
+                writeStream << QString("%1,%2\n").arg(QString::number(y1, 'f', 2)).arg(QString::number(y2, 'f', 2));
+
+                ++it1;
+                ++it2;
+            }
+        }
+        file.close();
     }
-    file.close();
-  }
-  else return;
+    else return;
 }
+

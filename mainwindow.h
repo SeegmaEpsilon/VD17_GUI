@@ -91,7 +91,11 @@ private slots:
 
     void on_pushButton_settings_clicked();
 
+    void initializeConnects();
     void initializeAppSettings();
+    void initializeMenu();
+    void initializeCanvas();
+
     void saveAppSettings(appSettingsStruct tempSettings);
 
     void on_pushButton_userCommand_clicked();
