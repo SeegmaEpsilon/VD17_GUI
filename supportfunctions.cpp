@@ -73,6 +73,7 @@ void MainWindow::slotClearCanvas()
     flagMeasureDone = 0;
     valueA = 0;
     valueV = 0;
+    valueT = 0;
     serialBuffer.clear();
 
     ui->canvas->clearGraphs();
@@ -84,8 +85,11 @@ void MainWindow::slotClearCanvas()
 
     ui->lineEdit_RMS_A->clear();
     ui->lineEdit_RMS_V->clear();
+    ui->lineEdit_RMS_T->clear();
+
     ui->lineEdit_average_A->clear();
     ui->lineEdit_average_V->clear();
+    ui->lineEdit_average_T->clear();
 
     ui->canvas->update();
 }
@@ -237,6 +241,7 @@ void MainWindow::initializeAppSettings()
 
     cbA.resize(bufferSize_);
     cbV.resize(bufferSize_);
+    cbT.resize(bufferSize_);
 
     tempStruct.baudRate = QString::number(baudRate_);
     tempStruct.bufferSize = QString::number(bufferSize_);

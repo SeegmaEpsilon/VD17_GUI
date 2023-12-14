@@ -10,6 +10,7 @@ void MainWindow::plotGraph(QString &msg)
     {
         if(numStr == "A(RMS)") flag_select_value = 1;
         if(numStr == "V(RMS)") flag_select_value = 2;
+        if(numStr == "T(RMS)") flag_select_value = 10;
 
         bool check = false;
         numStr.toDouble(&check);
@@ -19,11 +20,31 @@ void MainWindow::plotGraph(QString &msg)
             {
                 flagMeasureDone = 1;
                 valueA = numStr.toDouble();
+
+                cbA.push(valueA);
+
+                ui->lineEdit_RMS_A->setText(QString::number(valueA, 'f', 2));
+                ui->lineEdit_average_A->setText(QString::number(cbA.average(), 'f', 2));
             }
             if(flag_select_value == 2)
             {
                 if(flagMeasureDone == 1) flagMeasureDone = 2;
                 valueV = numStr.toDouble();
+
+                cbV.push(valueV);
+
+                ui->lineEdit_RMS_V->setText(QString::number(valueV, 'f', 2));
+                ui->lineEdit_average_V->setText(QString::number(cbV.average(), 'f', 2));
+            }
+
+            if(flag_select_value == 10)
+            {
+                valueT = numStr.toDouble();
+
+                cbT.push(valueT);
+
+                ui->lineEdit_RMS_T->setText(QString::number(valueT, 'f', 2));
+                ui->lineEdit_average_T->setText(QString::number(cbT.average(), 'f', 2));
             }
         }
         else continue;
@@ -32,15 +53,6 @@ void MainWindow::plotGraph(QString &msg)
     if(flagMeasureDone == 2)
     {
         flagMeasureDone = 0;
-
-        cbA.push(valueA);
-        cbV.push(valueV);
-
-        ui->lineEdit_RMS_A->setText(QString::number(valueA, 'f', 2));
-        ui->lineEdit_RMS_V->setText(QString::number(valueV, 'f', 2));
-
-        ui->lineEdit_average_A->setText(QString::number(cbA.average(), 'f', 2));
-        ui->lineEdit_average_V->setText(QString::number(cbV.average(), 'f', 2));
 
         if(ui->checkBox_need_plot->isChecked() == false) return;
         counter++;

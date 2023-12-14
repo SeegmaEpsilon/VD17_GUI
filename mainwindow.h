@@ -115,11 +115,13 @@ private slots:
 
     CircularBuffer cbA;
     CircularBuffer cbV;
+    CircularBuffer cbT;
 
     uint32_t counter;
 
     double valueA;
     double valueV;
+    double valueT;
 
     uint8_t flagMeasureDone;
     uint8_t buttonState;

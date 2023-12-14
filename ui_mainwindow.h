@@ -56,13 +56,16 @@ public:
     QCustomPlot *canvas;
     QGridLayout *gridLayout_2;
     QLineEdit *lineEdit_average_V;
+    QLineEdit *lineEdit_RMS_V;
+    QLineEdit *lineEdit_RMS_T;
+    QLineEdit *lineEdit_average_A;
     QLabel *label_4;
     QLabel *label;
     QLineEdit *lineEdit_RMS_A;
-    QLineEdit *lineEdit_average_A;
-    QLineEdit *lineEdit_RMS_V;
-    QLabel *label_2;
+    QLineEdit *lineEdit_average_T;
     QLabel *label_3;
+    QLabel *label_2;
+    QLabel *label_5;
     QPushButton *pushButton_calibrate_device;
     QPushButton *menuClear;
     QStatusBar *statusBar;
@@ -307,46 +310,11 @@ public:
         lineEdit_average_V->setObjectName(QString::fromUtf8("lineEdit_average_V"));
         sizePolicy.setHeightForWidth(lineEdit_average_V->sizePolicy().hasHeightForWidth());
         lineEdit_average_V->setSizePolicy(sizePolicy);
-        lineEdit_average_V->setMaximumSize(QSize(80, 22));
+        lineEdit_average_V->setMaximumSize(QSize(80, 166666));
         lineEdit_average_V->setAlignment(Qt::AlignCenter);
         lineEdit_average_V->setReadOnly(true);
 
-        gridLayout_2->addWidget(lineEdit_average_V, 1, 4, 1, 1);
-
-        label_4 = new QLabel(centralWidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setAlignment(Qt::AlignCenter);
-
-        gridLayout_2->addWidget(label_4, 0, 4, 1, 1);
-
-        label = new QLabel(centralWidget);
-        label->setObjectName(QString::fromUtf8("label"));
-        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy2);
-        label->setMaximumSize(QSize(16777215, 16777215));
-        label->setAlignment(Qt::AlignCenter);
-
-        gridLayout_2->addWidget(label, 0, 0, 1, 1);
-
-        lineEdit_RMS_A = new QLineEdit(centralWidget);
-        lineEdit_RMS_A->setObjectName(QString::fromUtf8("lineEdit_RMS_A"));
-        sizePolicy.setHeightForWidth(lineEdit_RMS_A->sizePolicy().hasHeightForWidth());
-        lineEdit_RMS_A->setSizePolicy(sizePolicy);
-        lineEdit_RMS_A->setMaximumSize(QSize(80, 22));
-        lineEdit_RMS_A->setAlignment(Qt::AlignCenter);
-        lineEdit_RMS_A->setReadOnly(true);
-
-        gridLayout_2->addWidget(lineEdit_RMS_A, 1, 0, 1, 1);
-
-        lineEdit_average_A = new QLineEdit(centralWidget);
-        lineEdit_average_A->setObjectName(QString::fromUtf8("lineEdit_average_A"));
-        sizePolicy.setHeightForWidth(lineEdit_average_A->sizePolicy().hasHeightForWidth());
-        lineEdit_average_A->setSizePolicy(sizePolicy);
-        lineEdit_average_A->setMaximumSize(QSize(80, 22));
-        lineEdit_average_A->setAlignment(Qt::AlignCenter);
-        lineEdit_average_A->setReadOnly(true);
-
-        gridLayout_2->addWidget(lineEdit_average_A, 1, 3, 1, 1);
+        gridLayout_2->addWidget(lineEdit_average_V, 2, 2, 1, 1);
 
         lineEdit_RMS_V = new QLineEdit(centralWidget);
         lineEdit_RMS_V->setObjectName(QString::fromUtf8("lineEdit_RMS_V"));
@@ -356,27 +324,86 @@ public:
         lineEdit_RMS_V->setAlignment(Qt::AlignCenter);
         lineEdit_RMS_V->setReadOnly(true);
 
-        gridLayout_2->addWidget(lineEdit_RMS_V, 1, 1, 1, 1);
+        gridLayout_2->addWidget(lineEdit_RMS_V, 1, 2, 1, 1);
 
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setAlignment(Qt::AlignCenter);
+        lineEdit_RMS_T = new QLineEdit(centralWidget);
+        lineEdit_RMS_T->setObjectName(QString::fromUtf8("lineEdit_RMS_T"));
+        sizePolicy.setHeightForWidth(lineEdit_RMS_T->sizePolicy().hasHeightForWidth());
+        lineEdit_RMS_T->setSizePolicy(sizePolicy);
+        lineEdit_RMS_T->setMaximumSize(QSize(80, 22));
+        lineEdit_RMS_T->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_2, 0, 1, 1, 1);
+        gridLayout_2->addWidget(lineEdit_RMS_T, 1, 3, 1, 1);
+
+        lineEdit_average_A = new QLineEdit(centralWidget);
+        lineEdit_average_A->setObjectName(QString::fromUtf8("lineEdit_average_A"));
+        sizePolicy.setHeightForWidth(lineEdit_average_A->sizePolicy().hasHeightForWidth());
+        lineEdit_average_A->setSizePolicy(sizePolicy);
+        lineEdit_average_A->setMaximumSize(QSize(80, 166666));
+        lineEdit_average_A->setAlignment(Qt::AlignCenter);
+        lineEdit_average_A->setReadOnly(true);
+
+        gridLayout_2->addWidget(lineEdit_average_A, 2, 1, 1, 1);
+
+        label_4 = new QLabel(centralWidget);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setAlignment(Qt::AlignCenter);
+
+        gridLayout_2->addWidget(label_4, 2, 0, 1, 1);
+
+        label = new QLabel(centralWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy2);
+        label->setMaximumSize(QSize(16777215, 16777215));
+        label->setAlignment(Qt::AlignCenter);
+
+        gridLayout_2->addWidget(label, 0, 1, 1, 1);
+
+        lineEdit_RMS_A = new QLineEdit(centralWidget);
+        lineEdit_RMS_A->setObjectName(QString::fromUtf8("lineEdit_RMS_A"));
+        sizePolicy.setHeightForWidth(lineEdit_RMS_A->sizePolicy().hasHeightForWidth());
+        lineEdit_RMS_A->setSizePolicy(sizePolicy);
+        lineEdit_RMS_A->setMaximumSize(QSize(80, 22));
+        lineEdit_RMS_A->setAlignment(Qt::AlignCenter);
+        lineEdit_RMS_A->setReadOnly(true);
+
+        gridLayout_2->addWidget(lineEdit_RMS_A, 1, 1, 1, 1);
+
+        lineEdit_average_T = new QLineEdit(centralWidget);
+        lineEdit_average_T->setObjectName(QString::fromUtf8("lineEdit_average_T"));
+        lineEdit_average_T->setMinimumSize(QSize(0, 0));
+        lineEdit_average_T->setMaximumSize(QSize(80, 16777215));
+        lineEdit_average_T->setAlignment(Qt::AlignCenter);
+
+        gridLayout_2->addWidget(lineEdit_average_T, 2, 3, 1, 1);
 
         label_3 = new QLabel(centralWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_3, 0, 3, 1, 1);
+        gridLayout_2->addWidget(label_3, 1, 0, 1, 1);
+
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setAlignment(Qt::AlignCenter);
+
+        gridLayout_2->addWidget(label_2, 0, 2, 1, 1);
+
+        label_5 = new QLabel(centralWidget);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setAlignment(Qt::AlignCenter);
+
+        gridLayout_2->addWidget(label_5, 0, 3, 1, 1);
 
         pushButton_calibrate_device = new QPushButton(centralWidget);
         pushButton_calibrate_device->setObjectName(QString::fromUtf8("pushButton_calibrate_device"));
         pushButton_calibrate_device->setEnabled(true);
         sizePolicy.setHeightForWidth(pushButton_calibrate_device->sizePolicy().hasHeightForWidth());
         pushButton_calibrate_device->setSizePolicy(sizePolicy);
+        pushButton_calibrate_device->setMinimumSize(QSize(0, 46));
 
-        gridLayout_2->addWidget(pushButton_calibrate_device, 1, 2, 1, 1);
+        gridLayout_2->addWidget(pushButton_calibrate_device, 1, 4, 2, 1);
 
 
         gridLayout->addLayout(gridLayout_2, 6, 0, 1, 5);
@@ -425,10 +452,11 @@ public:
         pushButton_mmpersec_write->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", nullptr));
         label_port->setText(QCoreApplication::translate("MainWindow", "COM-\320\237\320\276\321\200\321\202", nullptr));
         pushButton_dynamic_range_write->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\277\320\270\321\201\320\260\321\202\321\214", nullptr));
-        label_4->setText(QCoreApplication::translate("MainWindow", "V\321\201\321\200 (\320\274\320\274/\321\201)", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "\320\220 (\320\274/\321\2012)", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "\320\241\321\200\320\265\320\264\320\275\320\265\320\265", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "\320\220 (\320\274/\321\201\302\262)", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "\320\242\320\265\320\272\321\203\321\211\320\265\320\265", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "V (\320\274\320\274/\321\201)", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "\320\220\321\201\321\200 (\320\274/\321\2012)", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "T (\302\260C)", nullptr));
         pushButton_calibrate_device->setText(QCoreApplication::translate("MainWindow", "\320\232\320\260\320\273\320\270\320\261\321\200\320\276\320\262\320\260\321\202\321\214 \320\264\320\260\321\202\321\207\320\270\320\272", nullptr));
         menuClear->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214", nullptr));
     } // retranslateUi
