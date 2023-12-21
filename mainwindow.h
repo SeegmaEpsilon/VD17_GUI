@@ -106,7 +106,11 @@ private slots:
     void slotClearConsole();
     void slotClearAll();
 
-  private:
+    void on_pushButton_thermoslope_set_clicked();
+
+    void on_pushButton_thermoslope_write_clicked();
+
+private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
     QSerialPortInfo info;

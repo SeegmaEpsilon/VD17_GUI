@@ -186,6 +186,18 @@ void MainWindow::receiveMessage()
                     if(index != -1) ui->cmb_dynamic_ranges->setCurrentIndex(index);
                 }
             }
+            else if(message.contains("Slope", Qt::CaseInsensitive))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    bool check = false;
+                    numStr.toFloat(&check);
+                    if(check)
+                    {
+                        ui->lineEdit_thermoslope->setText(numStr);
+                    }
+                }
+            }
         }
         else printConsole(message);
         serialBuffer.remove(0, index + messageCode_.size()); // Удаляем обработанное сообщение из очереди

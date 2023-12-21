@@ -10,6 +10,7 @@
 #define CMD_DYNAMIC_MODE_SET "DR"                    // setting dynamic range of accelerometer
 #define CMD_MM_PER_SEC_SET "MV"                      // setting max mm/s of device
 #define CMD_CALIBRATE_DEVICE "CD"                    // calibrate the device (10.1 m/s^2)
+#define CMD_THERMOSLOPE_SET "TS"                     // settings thermoslope for device
 
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE "DLWW"
 #define CMD_UP_LIMIT_CURRENT_LOOP_WRITE "ULWW"
@@ -17,7 +18,7 @@
 #define CMD_DYNAMIC_MODE_WRITE "MW"
 #define CMD_FLASH_WRITE "WS"
 
-#define SOFTWARE_VERSION QString("2.4")
+#define SOFTWARE_VERSION QString("2.4.1")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500

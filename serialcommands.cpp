@@ -29,26 +29,19 @@ void MainWindow::on_pushButton_DL_calibration_clicked()
     serialPort->write(CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION);
 }
 
+
+void MainWindow::on_pushButton_thermoslope_set_clicked()
+{
+    disable_all_widgets();
+    ui->lineEdit_thermoslope->setEnabled(true);
+    ui->pushButton_thermoslope_write->setEnabled(true);
+
+    serialPort->write(CMD_THERMOSLOPE_SET);
+}
+
 void MainWindow::on_pushButton_DL_multimeter_clicked()
 {
     QString str_temp = ui->lineEdit_DL_value->text();
-
-    switch(str_temp.size())
-    {
-    case 0:
-        str_temp = "0100";
-        ui->lineEdit_DL_value->setValue(str_temp.toInt());
-        break;
-    case 1:
-        str_temp = "000" + str_temp;
-        break;
-    case 2:
-        str_temp = "00" + str_temp;
-        break;
-    case 3:
-        str_temp = "0" + str_temp;
-        break;
-    }
 
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
@@ -73,23 +66,6 @@ void MainWindow::on_pushButton_UL_calibration_clicked()
 void MainWindow::on_pushButton_UL_multimeter_clicked()
 {
     QString str_temp = ui->lineEdit_UL_value->text();
-    switch(str_temp.size())
-    {
-    case 0:
-        str_temp = "1580";
-        ui->lineEdit_UL_value->setValue(str_temp.toInt());
-        break;
-    case 1:
-        str_temp = "000" + str_temp;
-        break;
-    case 2:
-        str_temp = "00" + str_temp;
-        break;
-    case 3:
-        str_temp = "0" + str_temp;
-        break;
-    }
-
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
 }
@@ -112,22 +88,15 @@ void MainWindow::on_pushButton_mmpersec_calibration_clicked()
 void MainWindow::on_pushButton_mmpersec_write_clicked()
 {
     QString str_temp = ui->lineEdit_mmpersec_value->text();
-    switch(str_temp.size())
-    {
-    case 0:
-        str_temp = "0200";
-        ui->lineEdit_UL_value->setValue(str_temp.toInt());
-        break;
-    case 1:
-        str_temp = "000" + str_temp;
-        break;
-    case 2:
-        str_temp = "00" + str_temp;
-        break;
-    case 3:
-        str_temp = "0" + str_temp;
-        break;
-    }
+    const char* pcData = str_temp.toStdString().c_str();
+    serialPort->write(pcData);
+    reset_all_widgets();
+}
+
+
+void MainWindow::on_pushButton_thermoslope_write_clicked()
+{
+    QString str_temp = ui->lineEdit_thermoslope->text();
 
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
