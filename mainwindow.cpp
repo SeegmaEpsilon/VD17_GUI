@@ -121,6 +121,9 @@ void MainWindow::receiveMessage()
 
     serialBuffer.append(data); // Добавляем в буфер данные
 
+    int indexBootloader = serialBuffer.indexOf("timeout..."); // Ищем индекс кодовой последовательности в строке
+    if(indexBootloader != -1) serialBuffer.clear();
+
     int index = serialBuffer.indexOf(messageCode_); // Ищем индекс кодовой последовательности в строке
 
     /* Если нашли, то обрабатываем */
@@ -133,12 +136,13 @@ void MainWindow::receiveMessage()
         }
         else if(message.contains("[INIT]", Qt::CaseInsensitive))
         {
-            printConsole(message); // Выводим сообщения об инициализации
             if(message.contains("Waiting for a command", Qt::CaseInsensitive))
             {
                 reset_all_widgets();
             }
-            else if(message.contains("start the main program", Qt::CaseInsensitive))
+            else if(message.contains("Accelerometer has been found successfully", Qt::CaseInsensitive)
+                    || message.contains("Restarting MCU", Qt::CaseInsensitive)
+                    || message.contains("start the main program"))
             {
                 disable_all_widgets();
             }
@@ -198,6 +202,7 @@ void MainWindow::receiveMessage()
                     }
                 }
             }
+            printConsole(message); // Выводим сообщения об инициализации
         }
         else printConsole(message);
         serialBuffer.remove(0, index + messageCode_.size()); // Удаляем обработанное сообщение из очереди
