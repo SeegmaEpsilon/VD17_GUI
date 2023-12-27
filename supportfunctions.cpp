@@ -17,61 +17,36 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_calibrate_device->setEnabled(false);
     ui->pushButton_thermoslope_set->setEnabled(false);
     ui->pushButton_thermoslope_write->setEnabled(false);
+    ui->pushButton_thermointercept_set->setEnabled(false);
+    ui->pushButton_thermointercept_write->setEnabled(false);
+    ui->pushButton_constant_value_set->setEnabled(false);
+    ui->pushButton_constant_value_write->setEnabled(false);
+    ui->pushButton_default_settings_set->setEnabled(false);
 
     ui->lineEdit_DL_value->setEnabled(false);
     ui->lineEdit_UL_value->setEnabled(false);
     ui->lineEdit_mmpersec_value->setEnabled(false);
     ui->lineEdit_thermoslope->setEnabled(false);
+    ui->lineEdit_thermointercept->setEnabled(false);
+    ui->lineEdit_constant_value->setEnabled(false);
 
     ui->cmb_dynamic_ranges->setEnabled(false);
 
-}
-
-void MainWindow::enable_all_widgets()
-{
-    ui->pushButton_DL_calibration->setEnabled(true);
-    ui->pushButton_DL_multimeter->setEnabled(true);
-    ui->pushButton_DL_write->setEnabled(true);
-    ui->pushButton_UL_calibration->setEnabled(true);
-    ui->pushButton_UL_multimeter->setEnabled(true);
-    ui->pushButton_UL_write->setEnabled(true);
-    ui->pushButton_dynamic_range_set->setEnabled(true);
-    ui->pushButton_dynamic_range_write->setEnabled(true);
-    ui->pushButton_mmpersec_calibration->setEnabled(true);
-    ui->pushButton_mmpersec_write->setEnabled(true);
-    ui->pushButton_calibrate_device->setEnabled(true);
-    ui->pushButton_thermoslope_set->setEnabled(true);
-    ui->pushButton_thermoslope_write->setEnabled(true);
-
-    ui->lineEdit_DL_value->setEnabled(true);
-    ui->lineEdit_UL_value->setEnabled(true);
-    ui->lineEdit_mmpersec_value->setEnabled(true);
-    ui->cmb_dynamic_ranges->setEnabled(true);
-
-    ui->lineEdit_thermoslope->setEnabled(true);
 }
 
 void MainWindow::reset_all_widgets()
 {
     disable_all_widgets();
-    enable_all_widgets();
 
-    ui->lineEdit_DL_value->setEnabled(false);
-    ui->pushButton_DL_multimeter->setEnabled(false);
-    ui->pushButton_DL_write->setEnabled(false);
-
-    ui->lineEdit_UL_value->setEnabled(false);
-    ui->pushButton_UL_multimeter->setEnabled(false);
-    ui->pushButton_UL_write->setEnabled(false);
-
-    ui->lineEdit_mmpersec_value->setEnabled(false);
-    ui->pushButton_mmpersec_write->setEnabled(false);
-
-    ui->cmb_dynamic_ranges->setEnabled(false);
-    ui->pushButton_dynamic_range_write->setEnabled(false);
-
-    ui->lineEdit_thermoslope->setEnabled(false);
-    ui->pushButton_thermoslope_write->setEnabled(false);
+    ui->pushButton_DL_calibration->setEnabled(true);
+    ui->pushButton_UL_calibration->setEnabled(true);
+    ui->pushButton_mmpersec_calibration->setEnabled(true);
+    ui->pushButton_dynamic_range_set->setEnabled(true);
+    ui->pushButton_thermoslope_set->setEnabled(true);
+    ui->pushButton_thermointercept_set->setEnabled(true);
+    ui->pushButton_constant_value_set->setEnabled(true);
+    ui->pushButton_calibrate_device->setEnabled(true);
+    ui->pushButton_default_settings_set->setEnabled(true);
 }
 
 

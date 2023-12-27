@@ -39,6 +39,30 @@ void MainWindow::on_pushButton_thermoslope_set_clicked()
     serialPort->write(CMD_THERMOSLOPE_SET);
 }
 
+void MainWindow::on_pushButton_thermointercept_set_clicked()
+{
+    disable_all_widgets();
+    ui->lineEdit_thermointercept->setEnabled(true);
+    ui->pushButton_thermointercept_write->setEnabled(true);
+
+    serialPort->write(CMD_THERMOINTERCEPT_SET);
+}
+
+void MainWindow::on_pushButton_constant_value_set_clicked()
+{
+    disable_all_widgets();
+    ui->lineEdit_constant_value->setEnabled(true);
+    ui->pushButton_constant_value_write->setEnabled(true);
+
+    serialPort->write(CMD_CONSTANT_VALUE_SET);
+}
+
+void MainWindow::on_pushButton_default_settings_set_clicked()
+{
+    disable_all_widgets();
+    serialPort->write(CMD_DEFAULT_SETTINGS_SET);
+}
+
 void MainWindow::on_pushButton_DL_multimeter_clicked()
 {
     QString str_temp = ui->lineEdit_DL_value->text();
@@ -49,7 +73,7 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
 
 void MainWindow::on_pushButton_DL_write_clicked()
 {
-    serialPort->write(CMD_DOWN_LIMIT_CURRENT_LOOP_WRITE);
+    serialPort->write(CMD_CURRENT_LOOP_WRITE);
     reset_all_widgets();
 }
 
@@ -72,7 +96,7 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
 
 void MainWindow::on_pushButton_UL_write_clicked()
 {
-    serialPort->write(CMD_UP_LIMIT_CURRENT_LOOP_WRITE);
+    serialPort->write(CMD_CURRENT_LOOP_WRITE);
     reset_all_widgets();
 }
 
@@ -97,6 +121,24 @@ void MainWindow::on_pushButton_mmpersec_write_clicked()
 void MainWindow::on_pushButton_thermoslope_write_clicked()
 {
     QString str_temp = ui->lineEdit_thermoslope->text();
+
+    const char* pcData = str_temp.toStdString().c_str();
+    serialPort->write(pcData);
+    reset_all_widgets();
+}
+
+void MainWindow::on_pushButton_thermointercept_write_clicked()
+{
+    QString str_temp = ui->lineEdit_thermointercept->text();
+
+    const char* pcData = str_temp.toStdString().c_str();
+    serialPort->write(pcData);
+    reset_all_widgets();
+}
+
+void MainWindow::on_pushButton_constant_value_write_clicked()
+{
+    QString str_temp = ui->lineEdit_constant_value->text();
 
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);

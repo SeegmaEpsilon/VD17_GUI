@@ -46,8 +46,6 @@ private slots:
 
     void disable_all_widgets();
 
-    void enable_all_widgets();
-
     void reset_all_widgets();
 
     void on_pushButton_DL_write_clicked();
@@ -109,6 +107,16 @@ private slots:
     void on_pushButton_thermoslope_set_clicked();
 
     void on_pushButton_thermoslope_write_clicked();
+
+    void on_pushButton_constant_value_set_clicked();
+
+    void on_pushButton_thermointercept_set_clicked();
+
+    void on_pushButton_thermointercept_write_clicked();
+
+    void on_pushButton_constant_value_write_clicked();
+
+    void on_pushButton_default_settings_set_clicked();
 
 private:
     Ui::MainWindow *ui;

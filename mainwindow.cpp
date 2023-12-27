@@ -202,6 +202,30 @@ void MainWindow::receiveMessage()
                     }
                 }
             }
+            else if(message.contains("Intercept", Qt::CaseInsensitive))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    bool check = false;
+                    numStr.toFloat(&check);
+                    if(check)
+                    {
+                        ui->lineEdit_thermointercept->setText(numStr);
+                    }
+                }
+            }
+            else if(message.contains("Vibrovalue", Qt::CaseInsensitive))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    bool check = false;
+                    numStr.toFloat(&check);
+                    if(check)
+                    {
+                        ui->lineEdit_constant_value->setText(numStr);
+                    }
+                }
+            }
             printConsole(message); // Выводим сообщения об инициализации
         }
         else printConsole(message);
@@ -213,3 +237,4 @@ void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
+
