@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->cmb_dynamic_ranges->setEditable(true);
+    ui->cmb_dynamic_ranges->lineEdit()->setReadOnly(true);
+    ui->cmb_dynamic_ranges->lineEdit()->setAlignment(Qt::AlignCenter);
+
     initializeConnects();
     initializeAppSettings();
     initializeMenu();
@@ -26,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     /* Первое сканирование на наличие COM-портов */
     serialPortCheckout();
     serialTimer.start(MS_SERIAL_TIMEOUT);
+
     disable_all_widgets();
 }
 
@@ -211,6 +216,18 @@ void MainWindow::receiveMessage()
                     if(check)
                     {
                         ui->lineEdit_thermointercept->setText(numStr);
+                    }
+                }
+            }
+            else if(message.contains("Low temperature", Qt::CaseInsensitive))
+            {
+                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
+                {
+                    bool check = false;
+                    numStr.toFloat(&check);
+                    if(check)
+                    {
+                        ui->lineEdit_thermo_lowTemperature_constant->setText(numStr);
                     }
                 }
             }

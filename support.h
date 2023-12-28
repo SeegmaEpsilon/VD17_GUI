@@ -12,12 +12,13 @@
 #define CMD_CALIBRATE_DEVICE "CD"                    // calibrate the device (10.1 m/s^2)
 #define CMD_THERMOSLOPE_SET "TS"                     // settings thermoslope for device
 #define CMD_THERMOINTERCEPT_SET "TI"                 // settings thermointercept for device
+#define CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET "LT"  // settings constant value at low temperature
 #define CMD_CONSTANT_VALUE_SET "CV"                  // settings constant value for device
-#define CMD_DEFAULT_SETTINGS_SET "DS"                  // settings constant value for device
+#define CMD_DEFAULT_SETTINGS_SET "DS"                // settings default settings
 
 #define CMD_CURRENT_LOOP_WRITE "DONE"
 
-#define SOFTWARE_VERSION QString("2.4.2")
+#define SOFTWARE_VERSION QString("2.4.4")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500

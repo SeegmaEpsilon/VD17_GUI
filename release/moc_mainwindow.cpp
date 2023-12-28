@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[55];
-    char stringdata0[1299];
+    QByteArrayData data[57];
+    char stringdata0[1415];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -86,7 +86,9 @@ QT_MOC_LITERAL(50, 1086, 40), // "on_pushButton_constant_value_..."
 QT_MOC_LITERAL(51, 1127, 41), // "on_pushButton_thermointercept..."
 QT_MOC_LITERAL(52, 1169, 43), // "on_pushButton_thermointercept..."
 QT_MOC_LITERAL(53, 1213, 42), // "on_pushButton_constant_value_..."
-QT_MOC_LITERAL(54, 1256, 42) // "on_pushButton_default_setting..."
+QT_MOC_LITERAL(54, 1256, 42), // "on_pushButton_default_setting..."
+QT_MOC_LITERAL(55, 1299, 56), // "on_pushButton_thermo_lowTempe..."
+QT_MOC_LITERAL(56, 1356, 58) // "on_pushButton_thermo_lowTempe..."
 
     },
     "MainWindow\0setSettingsUI\0\0appSettingsStruct\0"
@@ -124,7 +126,9 @@ QT_MOC_LITERAL(54, 1256, 42) // "on_pushButton_default_setting..."
     "on_pushButton_thermointercept_set_clicked\0"
     "on_pushButton_thermointercept_write_clicked\0"
     "on_pushButton_constant_value_write_clicked\0"
-    "on_pushButton_default_settings_set_clicked"
+    "on_pushButton_default_settings_set_clicked\0"
+    "on_pushButton_thermo_lowTemperature_constant_set_clicked\0"
+    "on_pushButton_thermo_lowTemperature_constant_write_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -134,7 +138,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      45,   14, // methods
+      47,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -142,53 +146,55 @@ static const uint qt_meta_data_MainWindow[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,  239,    2, 0x06 /* Public */,
+       1,    1,  249,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       5,    1,  242,    2, 0x08 /* Private */,
-       7,    0,  245,    2, 0x08 /* Private */,
-       8,    0,  246,    2, 0x08 /* Private */,
-       9,    0,  247,    2, 0x08 /* Private */,
-      10,    0,  248,    2, 0x08 /* Private */,
-      11,    0,  249,    2, 0x08 /* Private */,
-      12,    0,  250,    2, 0x08 /* Private */,
-      13,    0,  251,    2, 0x08 /* Private */,
-      14,    0,  252,    2, 0x08 /* Private */,
-      15,    0,  253,    2, 0x08 /* Private */,
-      16,    0,  254,    2, 0x08 /* Private */,
-      17,    0,  255,    2, 0x08 /* Private */,
-      18,    0,  256,    2, 0x08 /* Private */,
-      19,    0,  257,    2, 0x08 /* Private */,
-      20,    1,  258,    2, 0x08 /* Private */,
-      23,    0,  261,    2, 0x08 /* Private */,
-      24,    0,  262,    2, 0x08 /* Private */,
-      25,    0,  263,    2, 0x08 /* Private */,
-      26,    0,  264,    2, 0x08 /* Private */,
-      27,    1,  265,    2, 0x08 /* Private */,
-      30,    1,  268,    2, 0x08 /* Private */,
-      31,    1,  271,    2, 0x08 /* Private */,
-      32,    1,  274,    2, 0x08 /* Private */,
-      33,    0,  277,    2, 0x08 /* Private */,
-      34,    0,  278,    2, 0x08 /* Private */,
-      35,    0,  279,    2, 0x08 /* Private */,
-      36,    0,  280,    2, 0x08 /* Private */,
-      37,    0,  281,    2, 0x08 /* Private */,
-      38,    0,  282,    2, 0x08 /* Private */,
-      39,    0,  283,    2, 0x08 /* Private */,
-      40,    0,  284,    2, 0x08 /* Private */,
-      41,    1,  285,    2, 0x08 /* Private */,
-      43,    0,  288,    2, 0x08 /* Private */,
-      44,    0,  289,    2, 0x08 /* Private */,
-      45,    0,  290,    2, 0x08 /* Private */,
-      46,    0,  291,    2, 0x08 /* Private */,
-      47,    0,  292,    2, 0x08 /* Private */,
-      48,    0,  293,    2, 0x08 /* Private */,
-      49,    0,  294,    2, 0x08 /* Private */,
-      50,    0,  295,    2, 0x08 /* Private */,
-      51,    0,  296,    2, 0x08 /* Private */,
-      52,    0,  297,    2, 0x08 /* Private */,
-      53,    0,  298,    2, 0x08 /* Private */,
-      54,    0,  299,    2, 0x08 /* Private */,
+       5,    1,  252,    2, 0x08 /* Private */,
+       7,    0,  255,    2, 0x08 /* Private */,
+       8,    0,  256,    2, 0x08 /* Private */,
+       9,    0,  257,    2, 0x08 /* Private */,
+      10,    0,  258,    2, 0x08 /* Private */,
+      11,    0,  259,    2, 0x08 /* Private */,
+      12,    0,  260,    2, 0x08 /* Private */,
+      13,    0,  261,    2, 0x08 /* Private */,
+      14,    0,  262,    2, 0x08 /* Private */,
+      15,    0,  263,    2, 0x08 /* Private */,
+      16,    0,  264,    2, 0x08 /* Private */,
+      17,    0,  265,    2, 0x08 /* Private */,
+      18,    0,  266,    2, 0x08 /* Private */,
+      19,    0,  267,    2, 0x08 /* Private */,
+      20,    1,  268,    2, 0x08 /* Private */,
+      23,    0,  271,    2, 0x08 /* Private */,
+      24,    0,  272,    2, 0x08 /* Private */,
+      25,    0,  273,    2, 0x08 /* Private */,
+      26,    0,  274,    2, 0x08 /* Private */,
+      27,    1,  275,    2, 0x08 /* Private */,
+      30,    1,  278,    2, 0x08 /* Private */,
+      31,    1,  281,    2, 0x08 /* Private */,
+      32,    1,  284,    2, 0x08 /* Private */,
+      33,    0,  287,    2, 0x08 /* Private */,
+      34,    0,  288,    2, 0x08 /* Private */,
+      35,    0,  289,    2, 0x08 /* Private */,
+      36,    0,  290,    2, 0x08 /* Private */,
+      37,    0,  291,    2, 0x08 /* Private */,
+      38,    0,  292,    2, 0x08 /* Private */,
+      39,    0,  293,    2, 0x08 /* Private */,
+      40,    0,  294,    2, 0x08 /* Private */,
+      41,    1,  295,    2, 0x08 /* Private */,
+      43,    0,  298,    2, 0x08 /* Private */,
+      44,    0,  299,    2, 0x08 /* Private */,
+      45,    0,  300,    2, 0x08 /* Private */,
+      46,    0,  301,    2, 0x08 /* Private */,
+      47,    0,  302,    2, 0x08 /* Private */,
+      48,    0,  303,    2, 0x08 /* Private */,
+      49,    0,  304,    2, 0x08 /* Private */,
+      50,    0,  305,    2, 0x08 /* Private */,
+      51,    0,  306,    2, 0x08 /* Private */,
+      52,    0,  307,    2, 0x08 /* Private */,
+      53,    0,  308,    2, 0x08 /* Private */,
+      54,    0,  309,    2, 0x08 /* Private */,
+      55,    0,  310,    2, 0x08 /* Private */,
+      56,    0,  311,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -226,6 +232,8 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 3,   42,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -294,6 +302,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 42: _t->on_pushButton_thermointercept_write_clicked(); break;
         case 43: _t->on_pushButton_constant_value_write_clicked(); break;
         case 44: _t->on_pushButton_default_settings_set_clicked(); break;
+        case 45: _t->on_pushButton_thermo_lowTemperature_constant_set_clicked(); break;
+        case 46: _t->on_pushButton_thermo_lowTemperature_constant_write_clicked(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -337,13 +347,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 45)
+        if (_id < 47)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 45;
+        _id -= 47;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 45)
+        if (_id < 47)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 45;
+        _id -= 47;
     }
     return _id;
 }

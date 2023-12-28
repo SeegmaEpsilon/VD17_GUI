@@ -48,6 +48,15 @@ void MainWindow::on_pushButton_thermointercept_set_clicked()
     serialPort->write(CMD_THERMOINTERCEPT_SET);
 }
 
+void MainWindow::on_pushButton_thermo_lowTemperature_constant_set_clicked()
+{
+    disable_all_widgets();
+    ui->lineEdit_thermo_lowTemperature_constant->setEnabled(true);
+    ui->pushButton_thermo_lowTemperature_constant_write->setEnabled(true);
+
+    serialPort->write(CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET);
+}
+
 void MainWindow::on_pushButton_constant_value_set_clicked()
 {
     disable_all_widgets();
@@ -97,7 +106,7 @@ void MainWindow::on_pushButton_UL_multimeter_clicked()
 void MainWindow::on_pushButton_UL_write_clicked()
 {
     serialPort->write(CMD_CURRENT_LOOP_WRITE);
-    reset_all_widgets();
+    disable_all_widgets();
 }
 
 void MainWindow::on_pushButton_mmpersec_calibration_clicked()
@@ -114,7 +123,7 @@ void MainWindow::on_pushButton_mmpersec_write_clicked()
     QString str_temp = ui->lineEdit_mmpersec_value->text();
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
-    reset_all_widgets();
+    disable_all_widgets();
 }
 
 
@@ -124,7 +133,7 @@ void MainWindow::on_pushButton_thermoslope_write_clicked()
 
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
-    reset_all_widgets();
+    disable_all_widgets();
 }
 
 void MainWindow::on_pushButton_thermointercept_write_clicked()
@@ -133,7 +142,16 @@ void MainWindow::on_pushButton_thermointercept_write_clicked()
 
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
-    reset_all_widgets();
+    disable_all_widgets();
+}
+
+void MainWindow::on_pushButton_thermo_lowTemperature_constant_write_clicked()
+{
+    QString str_temp = ui->lineEdit_thermo_lowTemperature_constant->text();
+
+    const char* pcData = str_temp.toStdString().c_str();
+    serialPort->write(pcData);
+    disable_all_widgets();
 }
 
 void MainWindow::on_pushButton_constant_value_write_clicked()
@@ -142,7 +160,7 @@ void MainWindow::on_pushButton_constant_value_write_clicked()
 
     const char* pcData = str_temp.toStdString().c_str();
     serialPort->write(pcData);
-    reset_all_widgets();
+    disable_all_widgets();
 }
 
 void MainWindow::on_pushButton_dynamic_range_set_clicked()
@@ -158,7 +176,7 @@ void MainWindow::on_pushButton_dynamic_range_write_clicked()
 {
     const char* pcData = ui->cmb_dynamic_ranges->currentText().toStdString().c_str();
     serialPort->write(pcData);
-    reset_all_widgets();
+    disable_all_widgets();
 }
 
 void MainWindow::on_pushButton_calibrate_device_clicked()

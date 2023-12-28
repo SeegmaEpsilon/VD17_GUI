@@ -118,6 +118,10 @@ private slots:
 
     void on_pushButton_default_settings_set_clicked();
 
+    void on_pushButton_thermo_lowTemperature_constant_set_clicked();
+
+    void on_pushButton_thermo_lowTemperature_constant_write_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
