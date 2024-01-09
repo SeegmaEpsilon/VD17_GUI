@@ -118,140 +118,136 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
-/* Функция обработчик сообщений через UART */
 void MainWindow::receiveMessage()
 {
-    QByteArray dataBA = serialPort->readAll(); // Получаем массив байтов с данными
-    QString data(dataBA); // Преобразуем байты в строку
+    QByteArray dataBA = serialPort->readAll();
+    QString data(dataBA);
+    serialBuffer.append(data);
 
-    serialBuffer.append(data); // Добавляем в буфер данные
-
-    int indexBootloader = serialBuffer.indexOf("timeout..."); // Ищем индекс кодовой последовательности в строке
-    if(indexBootloader != -1) serialBuffer.clear();
-
-    int index = serialBuffer.indexOf(messageCode_); // Ищем индекс кодовой последовательности в строке
-
-    /* Если нашли, то обрабатываем */
-    if(index != -1)
+    int indexBootloader = serialBuffer.indexOf("timeout...");
+    if (indexBootloader != -1)
     {
-        QString message = serialBuffer.mid(0, index); // Получаем строку от 0 до искомого кода
-        if(message.contains("[DEBUG]", Qt::CaseInsensitive))
-        {
-            plotGraph(message); // Если в сообщении есть отладка, то строим график по входящим данным
-        }
-        else if(message.contains("[INIT]", Qt::CaseInsensitive))
-        {
-            if(message.contains("Waiting for a command", Qt::CaseInsensitive))
-            {
-                reset_all_widgets();
-            }
-            else if(message.contains("Accelerometer has been found successfully", Qt::CaseInsensitive)
-                    || message.contains("Restarting MCU", Qt::CaseInsensitive)
-                    || message.contains("start the main program"))
-            {
-                disable_all_widgets();
-            }
-            else if(message.contains("Correction ratio of 4mA", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toInt(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_DL_value->setValue(numStr.toInt());
-                    }
-                }
-            }
-            else if(message.contains("Correction ratio of 20mA", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toInt(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_UL_value->setValue(numStr.toInt());
-                    }
-                }
-            }
-            else if(message.contains("Max mm per sec", Qt::CaseInsensitive) || message.contains("Max velocity", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toInt(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_mmpersec_value->setValue(numStr.toInt());
-                    }
-                }
-            }
-            else if(message.contains("Dynamic range", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    int index = ui->cmb_dynamic_ranges->findText(numStr);
-                    if(index != -1) ui->cmb_dynamic_ranges->setCurrentIndex(index);
-                }
-            }
-            else if(message.contains("Slope", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toFloat(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_thermoslope->setText(numStr);
-                    }
-                }
-            }
-            else if(message.contains("Intercept", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toFloat(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_thermointercept->setText(numStr);
-                    }
-                }
-            }
-            else if(message.contains("Low temperature", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toFloat(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_thermo_lowTemperature_constant->setText(numStr);
-                    }
-                }
-            }
-            else if(message.contains("Vibrovalue", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toFloat(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_constant_value->setText(numStr);
-                    }
-                }
-            }
-            printConsole(message); // Выводим сообщения об инициализации
-        }
-        else printConsole(message);
-        serialBuffer.remove(0, index + messageCode_.size()); // Удаляем обработанное сообщение из очереди
+        serialBuffer.clear();
+        return;
+    }
+
+    int index = serialBuffer.indexOf(messageCode_);
+    if (index == -1)
+        return;
+
+    QString message = serialBuffer.mid(0, index);
+    serialBuffer.remove(0, index + messageCode_.size());
+
+    if (message.contains("[DEBUG]", Qt::CaseInsensitive))
+    {
+        plotGraph(message);
+    }
+    else if (message.contains("[INIT]", Qt::CaseInsensitive))
+    {
+        handleInitMessage(message);
+    }
+    else
+    {
+        printConsole(message);
     }
 }
+
+void MainWindow::handleInitMessage(const QString &message)
+{
+    if (message.contains("Waiting for a command", Qt::CaseInsensitive))
+    {
+        printConsole(message);
+        reset_all_widgets();
+    }
+    else if (message.contains("Accelerometer has been found successfully", Qt::CaseInsensitive))
+    {
+        printConsole(message);
+        disable_all_widgets();
+    }
+    else if (message.contains("Correction ratio of 4mA", Qt::CaseInsensitive))
+    {
+        updateSpinBoxValue(ui->lineEdit_DL_value, message);
+    }
+    else if (message.contains("Correction ratio of 20mA", Qt::CaseInsensitive))
+    {
+        updateSpinBoxValue(ui->lineEdit_UL_value, message);
+    }
+    else if (message.contains("Max velocity", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_mmpersec_value, message);
+    }
+    else if (message.contains("Dynamic range", Qt::CaseInsensitive))
+    {
+        updateComboBoxValue(ui->cmb_dynamic_ranges, message);
+    }
+    else if (message.contains("Slope", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_thermoslope, message);
+    }
+    else if (message.contains("Intercept", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_thermointercept, message);
+    }
+    else if (message.contains("Low temperature", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_thermo_lowTemperature_constant, message);
+    }
+    else if (message.contains("Vibrovalue", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_constant_value, message);
+    }
+    else
+    {
+        printConsole(message);
+    }
+}
+
+void MainWindow::updateLineEditValue(QLineEdit *lineEdit, const QString &message)
+{
+    foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
+    {
+        bool check = false;
+        numStr.toFloat(&check);
+        if (check)
+        {
+            lineEdit->setText(numStr);
+            break;
+        }
+    }
+}
+
+void MainWindow::updateComboBoxValue(QComboBox *comboBox, const QString &message)
+{
+    foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
+    {
+        int index = comboBox->findText(numStr);
+        if (index != -1)
+        {
+            comboBox->setCurrentIndex(index);
+            break;
+        }
+    }
+}
+
+void MainWindow::updateSpinBoxValue(QSpinBox *spinBox, const QString &message)
+{
+    foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
+    {
+        bool check = false;
+        int value = numStr.toInt(&check);
+        if (check)
+        {
+            spinBox->setValue(value);
+            break;
+        }
+    }
+}
+
 
 void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
+
+
 

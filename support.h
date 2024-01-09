@@ -18,7 +18,7 @@
 
 #define CMD_CURRENT_LOOP_WRITE "DONE"
 
-#define SOFTWARE_VERSION QString("2.4.4")
+#define SOFTWARE_VERSION QString("2.5.0")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500

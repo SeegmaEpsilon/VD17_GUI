@@ -122,6 +122,12 @@ private slots:
 
     void on_pushButton_thermo_lowTemperature_constant_write_clicked();
 
+    void on_pushButton_thermohelp_clicked();
+
+    void updateComboBoxValue(QComboBox *comboBox, const QString &message);
+    void updateLineEditValue(QLineEdit *lineEdit, const QString &message);
+    void handleInitMessage(const QString &message);
+    void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
@@ -162,6 +168,8 @@ private:
     QSerialPort::Parity parityControl_;
     QSerialPort::StopBits stopBits_;
     QSerialPort::FlowControl flowControl_;
+
+    QTextEdit thermoHelp;
 };
 
 #endif // MAINWINDOW_H

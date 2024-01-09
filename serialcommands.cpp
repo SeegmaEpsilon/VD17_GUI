@@ -174,7 +174,10 @@ void MainWindow::on_pushButton_dynamic_range_set_clicked()
 
 void MainWindow::on_pushButton_dynamic_range_write_clicked()
 {
-    const char* pcData = ui->cmb_dynamic_ranges->currentText().toStdString().c_str();
+    QString dynamicRange = ui->cmb_dynamic_ranges->currentText();
+    dynamicRange.chop(1); // удаляем 'g'
+
+    const char* pcData = dynamicRange.toStdString().c_str();
     serialPort->write(pcData);
     disable_all_widgets();
 }
