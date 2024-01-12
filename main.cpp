@@ -6,20 +6,18 @@
 
 int main(int argc, char *argv[])
 {
-  QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
-  QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
-  QCoreApplication::setApplicationName(APPLICATION_NAME);
+    QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
+    QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
+    QCoreApplication::setApplicationName(APPLICATION_NAME);
 
-  QTextCodec* tc = QTextCodec::codecForName("UTF-8");
-  QTextCodec::setCodecForTr(tc);
-  QTextCodec::setCodecForCStrings(tc);
-  QTextCodec::setCodecForLocale(tc);
+    QTextCodec* tc = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(tc);
 
-  QApplication a(argc, argv);
+    QApplication a(argc, argv);
 
-  MainWindow w;
-  w.setWindowFlags(Qt::Window);
-  w.show();
+    MainWindow w;
+    w.setWindowFlags(Qt::Window);
+    w.show();
 
-  return a.exec();
+    return a.exec();
 }

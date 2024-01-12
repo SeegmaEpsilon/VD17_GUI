@@ -4,10 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-CONFIG += serialport
+QT       += core gui serialport widgets printsupport
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = "VD17 Service"
 TEMPLATE = app
 

@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'appsettings.ui'
 **
-** Created: Tue 3. Oct 13:07:46 2023
-**      by: Qt User Interface Compiler version 4.8.4
+** Created by: Qt User Interface Compiler version 5.14.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -11,17 +10,14 @@
 #define UI_APPSETTINGS_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QComboBox>
-#include <QtGui/QDialog>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -75,6 +71,14 @@ public:
         gridLayout->addWidget(label_bufferSize, 1, 0, 1, 1);
 
         comboBox_UART_speed = new QComboBox(appSettings);
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
+        comboBox_UART_speed->addItem(QString());
         comboBox_UART_speed->setObjectName(QString::fromUtf8("comboBox_UART_speed"));
 
         gridLayout->addWidget(comboBox_UART_speed, 3, 1, 1, 1);
@@ -100,11 +104,20 @@ public:
         gridLayout->addWidget(label_UAR_parity, 5, 0, 1, 1);
 
         comboBox_UART_dataBits = new QComboBox(appSettings);
+        comboBox_UART_dataBits->addItem(QString());
+        comboBox_UART_dataBits->addItem(QString());
+        comboBox_UART_dataBits->addItem(QString());
+        comboBox_UART_dataBits->addItem(QString());
         comboBox_UART_dataBits->setObjectName(QString::fromUtf8("comboBox_UART_dataBits"));
 
         gridLayout->addWidget(comboBox_UART_dataBits, 4, 1, 1, 1);
 
         comboBox_UART_parity = new QComboBox(appSettings);
+        comboBox_UART_parity->addItem(QString());
+        comboBox_UART_parity->addItem(QString());
+        comboBox_UART_parity->addItem(QString());
+        comboBox_UART_parity->addItem(QString());
+        comboBox_UART_parity->addItem(QString());
         comboBox_UART_parity->setObjectName(QString::fromUtf8("comboBox_UART_parity"));
 
         gridLayout->addWidget(comboBox_UART_parity, 5, 1, 1, 1);
@@ -122,6 +135,9 @@ public:
         gridLayout->addWidget(label_UART_flowControl, 7, 0, 1, 1);
 
         comboBox_UART_flowControl = new QComboBox(appSettings);
+        comboBox_UART_flowControl->addItem(QString());
+        comboBox_UART_flowControl->addItem(QString());
+        comboBox_UART_flowControl->addItem(QString());
         comboBox_UART_flowControl->setObjectName(QString::fromUtf8("comboBox_UART_flowControl"));
 
         gridLayout->addWidget(comboBox_UART_flowControl, 7, 1, 1, 1);
@@ -132,6 +148,9 @@ public:
         gridLayout->addWidget(pushButton_defaultSettings, 8, 0, 1, 1);
 
         comboBox_UART_stopBits = new QComboBox(appSettings);
+        comboBox_UART_stopBits->addItem(QString());
+        comboBox_UART_stopBits->addItem(QString());
+        comboBox_UART_stopBits->addItem(QString());
         comboBox_UART_stopBits->setObjectName(QString::fromUtf8("comboBox_UART_stopBits"));
 
         gridLayout->addWidget(comboBox_UART_stopBits, 6, 1, 1, 1);
@@ -158,56 +177,46 @@ public:
 
     void retranslateUi(QDialog *appSettings)
     {
-        appSettings->setWindowTitle(QApplication::translate("appSettings", "Dialog", 0, QApplication::UnicodeUTF8));
-        lineEdit_messageCode->setText(QApplication::translate("appSettings", "***", 0, QApplication::UnicodeUTF8));
-        lineEdit_bufferSize->setText(QApplication::translate("appSettings", "32", 0, QApplication::UnicodeUTF8));
-        label_UART_speed->setText(QApplication::translate("appSettings", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\321\214 \320\277\320\276\321\200\321\202\320\260", 0, QApplication::UnicodeUTF8));
-        label_bufferSize->setText(QApplication::translate("appSettings", "\320\240\320\260\320\267\320\274\320\265\321\200 \320\272\320\276\320\273\321\214\321\206\320\265\320\262\320\276\320\263\320\276 \320\261\321\203\321\204\320\265\321\200\320\260", 0, QApplication::UnicodeUTF8));
-        comboBox_UART_speed->clear();
-        comboBox_UART_speed->insertItems(0, QStringList()
-         << QApplication::translate("appSettings", "115200", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "57600", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "38400", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "19200", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "9600", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "4800", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "2400", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "1200", 0, QApplication::UnicodeUTF8)
-        );
-        label_messageCode->setText(QApplication::translate("appSettings", "\320\232\320\276\320\264 \320\262 \320\272\320\276\320\275\321\206\320\265 \321\201\320\276\320\276\320\261\321\211\320\265\320\275\320\270\321\217", 0, QApplication::UnicodeUTF8));
-        label_UART_dataBits->setText(QApplication::translate("appSettings", "\320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\261\320\270\321\202\320\276\320\262 \320\264\320\260\320\275\320\275\321\213\321\205", 0, QApplication::UnicodeUTF8));
-        label_UART_stopBits->setText(QApplication::translate("appSettings", "\320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \321\201\321\202\320\276\320\277-\320\261\320\270\321\202\320\276\320\262", 0, QApplication::UnicodeUTF8));
-        label_UAR_parity->setText(QApplication::translate("appSettings", "\320\232\320\276\320\275\321\202\321\200\320\276\320\273\321\214 \321\207\320\265\321\202\320\275\320\276\321\201\321\202\320\270", 0, QApplication::UnicodeUTF8));
-        comboBox_UART_dataBits->clear();
-        comboBox_UART_dataBits->insertItems(0, QStringList()
-         << QApplication::translate("appSettings", "8", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "7", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "6", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "5", 0, QApplication::UnicodeUTF8)
-        );
-        comboBox_UART_parity->clear();
-        comboBox_UART_parity->insertItems(0, QStringList()
-         << QApplication::translate("appSettings", "\320\235\320\265 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\321\203\320\265\321\202\321\201\321\217", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "\320\247\320\265\321\202\320\275\320\276\321\201\321\202\321\214", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "\320\235\320\265\321\207\320\265\321\202\320\275\320\276\321\201\321\202\321\214", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "\320\237\321\200\320\276\321\201\321\202\321\200\320\260\320\275\321\201\321\202\320\262\320\265\320\275\320\275\321\213\320\271", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "\320\234\320\260\321\200\320\272\320\270\321\200\320\276\320\262\320\276\321\207\320\275\321\213\320\271", 0, QApplication::UnicodeUTF8)
-        );
-        label_UART_flowControl->setText(QApplication::translate("appSettings", "\320\232\320\276\320\275\321\202\321\200\320\276\320\273\321\214 \320\277\320\276\321\202\320\276\320\272\320\260", 0, QApplication::UnicodeUTF8));
-        comboBox_UART_flowControl->clear();
-        comboBox_UART_flowControl->insertItems(0, QStringList()
-         << QApplication::translate("appSettings", "\320\235\320\265 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\321\203\320\265\321\202\321\201\321\217", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "\320\220\320\277\320\277\320\260\321\200\320\260\321\202\320\275\321\213\320\271", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "\320\237\321\200\320\276\320\263\321\200\320\260\320\274\320\274\320\275\321\213\320\271", 0, QApplication::UnicodeUTF8)
-        );
-        pushButton_defaultSettings->setText(QApplication::translate("appSettings", "\320\237\320\276 \321\203\320\274\320\276\320\273\321\207\320\260\320\275\320\270\321\216", 0, QApplication::UnicodeUTF8));
-        comboBox_UART_stopBits->clear();
-        comboBox_UART_stopBits->insertItems(0, QStringList()
-         << QApplication::translate("appSettings", "1", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "1.5", 0, QApplication::UnicodeUTF8)
-         << QApplication::translate("appSettings", "2", 0, QApplication::UnicodeUTF8)
-        );
-        label->setText(QApplication::translate("appSettings", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270 \320\277\321\200\320\270\320\273\320\276\320\266\320\265\320\275\320\270\321\217 \320\222\320\22417-\320\241\320\265\321\200\320\262\320\270\321\201 (\320\262\320\265\321\200\321\201\320\270\321\217 2.1)", 0, QApplication::UnicodeUTF8));
+        appSettings->setWindowTitle(QCoreApplication::translate("appSettings", "Dialog", nullptr));
+        lineEdit_messageCode->setText(QCoreApplication::translate("appSettings", "***", nullptr));
+        lineEdit_bufferSize->setText(QCoreApplication::translate("appSettings", "32", nullptr));
+        label_UART_speed->setText(QCoreApplication::translate("appSettings", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\321\214 \320\277\320\276\321\200\321\202\320\260", nullptr));
+        label_bufferSize->setText(QCoreApplication::translate("appSettings", "\320\240\320\260\320\267\320\274\320\265\321\200 \320\272\320\276\320\273\321\214\321\206\320\265\320\262\320\276\320\263\320\276 \320\261\321\203\321\204\320\265\321\200\320\260", nullptr));
+        comboBox_UART_speed->setItemText(0, QCoreApplication::translate("appSettings", "115200", nullptr));
+        comboBox_UART_speed->setItemText(1, QCoreApplication::translate("appSettings", "57600", nullptr));
+        comboBox_UART_speed->setItemText(2, QCoreApplication::translate("appSettings", "38400", nullptr));
+        comboBox_UART_speed->setItemText(3, QCoreApplication::translate("appSettings", "19200", nullptr));
+        comboBox_UART_speed->setItemText(4, QCoreApplication::translate("appSettings", "9600", nullptr));
+        comboBox_UART_speed->setItemText(5, QCoreApplication::translate("appSettings", "4800", nullptr));
+        comboBox_UART_speed->setItemText(6, QCoreApplication::translate("appSettings", "2400", nullptr));
+        comboBox_UART_speed->setItemText(7, QCoreApplication::translate("appSettings", "1200", nullptr));
+
+        label_messageCode->setText(QCoreApplication::translate("appSettings", "\320\232\320\276\320\264 \320\262 \320\272\320\276\320\275\321\206\320\265 \321\201\320\276\320\276\320\261\321\211\320\265\320\275\320\270\321\217", nullptr));
+        label_UART_dataBits->setText(QCoreApplication::translate("appSettings", "\320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \320\261\320\270\321\202\320\276\320\262 \320\264\320\260\320\275\320\275\321\213\321\205", nullptr));
+        label_UART_stopBits->setText(QCoreApplication::translate("appSettings", "\320\232\320\276\320\273\320\270\321\207\320\265\321\201\321\202\320\262\320\276 \321\201\321\202\320\276\320\277-\320\261\320\270\321\202\320\276\320\262", nullptr));
+        label_UAR_parity->setText(QCoreApplication::translate("appSettings", "\320\232\320\276\320\275\321\202\321\200\320\276\320\273\321\214 \321\207\320\265\321\202\320\275\320\276\321\201\321\202\320\270", nullptr));
+        comboBox_UART_dataBits->setItemText(0, QCoreApplication::translate("appSettings", "8", nullptr));
+        comboBox_UART_dataBits->setItemText(1, QCoreApplication::translate("appSettings", "7", nullptr));
+        comboBox_UART_dataBits->setItemText(2, QCoreApplication::translate("appSettings", "6", nullptr));
+        comboBox_UART_dataBits->setItemText(3, QCoreApplication::translate("appSettings", "5", nullptr));
+
+        comboBox_UART_parity->setItemText(0, QCoreApplication::translate("appSettings", "\320\235\320\265 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\321\203\320\265\321\202\321\201\321\217", nullptr));
+        comboBox_UART_parity->setItemText(1, QCoreApplication::translate("appSettings", "\320\247\320\265\321\202\320\275\320\276\321\201\321\202\321\214", nullptr));
+        comboBox_UART_parity->setItemText(2, QCoreApplication::translate("appSettings", "\320\235\320\265\321\207\320\265\321\202\320\275\320\276\321\201\321\202\321\214", nullptr));
+        comboBox_UART_parity->setItemText(3, QCoreApplication::translate("appSettings", "\320\237\321\200\320\276\321\201\321\202\321\200\320\260\320\275\321\201\321\202\320\262\320\265\320\275\320\275\321\213\320\271", nullptr));
+        comboBox_UART_parity->setItemText(4, QCoreApplication::translate("appSettings", "\320\234\320\260\321\200\320\272\320\270\321\200\320\276\320\262\320\276\321\207\320\275\321\213\320\271", nullptr));
+
+        label_UART_flowControl->setText(QCoreApplication::translate("appSettings", "\320\232\320\276\320\275\321\202\321\200\320\276\320\273\321\214 \320\277\320\276\321\202\320\276\320\272\320\260", nullptr));
+        comboBox_UART_flowControl->setItemText(0, QCoreApplication::translate("appSettings", "\320\235\320\265 \320\270\321\201\320\277\320\276\320\273\321\214\320\267\321\203\320\265\321\202\321\201\321\217", nullptr));
+        comboBox_UART_flowControl->setItemText(1, QCoreApplication::translate("appSettings", "\320\220\320\277\320\277\320\260\321\200\320\260\321\202\320\275\321\213\320\271", nullptr));
+        comboBox_UART_flowControl->setItemText(2, QCoreApplication::translate("appSettings", "\320\237\321\200\320\276\320\263\321\200\320\260\320\274\320\274\320\275\321\213\320\271", nullptr));
+
+        pushButton_defaultSettings->setText(QCoreApplication::translate("appSettings", "\320\237\320\276 \321\203\320\274\320\276\320\273\321\207\320\260\320\275\320\270\321\216", nullptr));
+        comboBox_UART_stopBits->setItemText(0, QCoreApplication::translate("appSettings", "1", nullptr));
+        comboBox_UART_stopBits->setItemText(1, QCoreApplication::translate("appSettings", "1.5", nullptr));
+        comboBox_UART_stopBits->setItemText(2, QCoreApplication::translate("appSettings", "2", nullptr));
+
+        label->setText(QCoreApplication::translate("appSettings", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270 \320\277\321\200\320\270\320\273\320\276\320\266\320\265\320\275\320\270\321\217 \320\222\320\22417-\320\241\320\265\321\200\320\262\320\270\321\201 (\320\262\320\265\321\200\321\201\320\270\321\217 2.1)", nullptr));
     } // retranslateUi
 
 };

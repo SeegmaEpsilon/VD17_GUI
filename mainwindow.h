@@ -46,8 +46,6 @@ private slots:
 
     void disable_all_widgets();
 
-    void enable_all_widgets();
-
     void reset_all_widgets();
 
     void on_pushButton_DL_write_clicked();
@@ -91,7 +89,11 @@ private slots:
 
     void on_pushButton_settings_clicked();
 
+    void initializeConnects();
     void initializeAppSettings();
+    void initializeMenu();
+    void initializeCanvas();
+
     void saveAppSettings(appSettingsStruct tempSettings);
 
     void on_pushButton_userCommand_clicked();
@@ -102,7 +104,31 @@ private slots:
     void slotClearConsole();
     void slotClearAll();
 
-  private:
+    void on_pushButton_thermoslope_set_clicked();
+
+    void on_pushButton_thermoslope_write_clicked();
+
+    void on_pushButton_constant_value_set_clicked();
+
+    void on_pushButton_thermointercept_set_clicked();
+
+    void on_pushButton_thermointercept_write_clicked();
+
+    void on_pushButton_constant_value_write_clicked();
+
+    void on_pushButton_default_settings_set_clicked();
+
+    void on_pushButton_thermo_lowTemperature_constant_set_clicked();
+
+    void on_pushButton_thermo_lowTemperature_constant_write_clicked();
+
+    void on_pushButton_thermohelp_clicked();
+
+    void updateComboBoxValue(QComboBox *comboBox, const QString &message);
+    void updateLineEditValue(QLineEdit *lineEdit, const QString &message);
+    void handleInitMessage(const QString &message);
+    void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
+private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
     QSerialPortInfo info;
@@ -111,11 +137,13 @@ private slots:
 
     CircularBuffer cbA;
     CircularBuffer cbV;
+    CircularBuffer cbT;
 
     uint32_t counter;
 
     double valueA;
     double valueV;
+    double valueT;
 
     uint8_t flagMeasureDone;
     uint8_t buttonState;
@@ -140,6 +168,8 @@ private slots:
     QSerialPort::Parity parityControl_;
     QSerialPort::StopBits stopBits_;
     QSerialPort::FlowControl flowControl_;
+
+    QTextEdit thermoHelp;
 };
 
 #endif // MAINWINDOW_H

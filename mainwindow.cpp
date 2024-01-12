@@ -1,21 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-void MainWindow::serialGetConfig()
-{
-  // Successfully connected
-  qDebug() << "baudRate:" << serialPort->baudRate();
-  qDebug() << "parity:" << serialPort->parity();
-  qDebug() << "stopBits:" << serialPort->stopBits();
-  qDebug() << "dataBits:" << serialPort->dataBits();
-  qDebug() << "flowControl:" << serialPort->flowControl();
-}
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     cbA(32),            // Кольцевой буфер на 32 элемента
     cbV(32),            // Кольцевой буфер на 32 элемента
+    cbT(32),            // Кольцевой буфер на 32 элемента
     counter(0),         // Счетчик принятых значений
     valueA(0),          // Текущее значение виброускорения
     valueV(0),          // Текущее значение виброскорости
@@ -26,52 +17,33 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->cmb_dynamic_ranges->setEditable(true);
+    ui->cmb_dynamic_ranges->lineEdit()->setReadOnly(true);
+    ui->cmb_dynamic_ranges->lineEdit()->setAlignment(Qt::AlignCenter);
 
-
-    /* Коннекты связей между плоттером графиков и GUI */
-    connect(ui->canvas, SIGNAL(mouseMove(QMouseEvent*)), this, SLOT(slotMouseMove(QMouseEvent*)));
-    connect(ui->canvas, SIGNAL(mouseDoubleClick(QMouseEvent*)), this, SLOT(slotMouseDoubleClick(QMouseEvent*)));
-    connect(ui->canvas, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(slotMousePress(QMouseEvent*)));
-    connect(ui->canvas, SIGNAL(mouseRelease(QMouseEvent*)), this, SLOT(slotMouseRelease(QMouseEvent*)));
-
-    connect(&settingsUI_, SIGNAL(needSaveSettings(appSettingsStruct)), this, SLOT(saveAppSettings(appSettingsStruct)));
-    connect(this, SIGNAL(setSettingsUI(appSettingsStruct)), &settingsUI_, SLOT(setVisibleSettings(appSettingsStruct)));
-
-    connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
-
+    initializeConnects();
     initializeAppSettings();
-
-    /* Настройка холста, на котором будет отрисовываться график
-       Разрешаем зум и перемещение по графику */
-    ui->canvas->setInteraction(QCP::iRangeDrag, true);
-    ui->canvas->setInteraction(QCP::iRangeZoom, true);
-    ui->canvas->xAxis->setLabel("Точки отсчета");
-    ui->canvas->yAxis->setLabel("A, V");
-
-    /* Второе субменю с настройками точки доступа */
-    QMenu* menuClear = new QMenu(tr("Меню настроек точки доступа"));
-    menuClear->addAction(tr("Очистить консоль"),  this, SLOT(slotClearConsole()));
-    menuClear->addAction(tr("Очистить график"), this, SLOT(slotClearCanvas()));
-    menuClear->addAction(tr("Очистить всё"), this, SLOT(slotClearAll()));
-    ui->menuClear->setMenu(menuClear);
+    initializeMenu();
+    initializeCanvas();
 
     /* Инициализация таймера, по которому будут сканироваться COM-порты */
     /* Первое сканирование на наличие COM-портов */
     serialPortCheckout();
     serialTimer.start(MS_SERIAL_TIMEOUT);
+
     disable_all_widgets();
 }
 
 MainWindow::~MainWindow()
 {
-  // Disconnect and clean up resources
-  if(serialPort)
-  {
-      serialPort->close();
-      delete serialPort;
-      serialPort = NULL; // Use NULL here
-  }
-  delete ui;
+    // Disconnect and clean up resources
+    if(serialPort)
+    {
+        serialPort->close();
+        delete serialPort;
+        serialPort = nullptr; // Use NULL here
+    }
+    delete ui;
 }
 
 void MainWindow::on_pushButton_COM_connect_clicked()
@@ -116,12 +88,12 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
         if (serialPort->error() != QSerialPort::NoError)
         {
-          QString message = "Ошибка установки скорости передачи: " + serialPort->errorString();
-          printConsole(message);
-          serialPort->close();
-          delete serialPort;
-          serialPort = NULL; // Use NULL here
-          return;
+            QString message = "Ошибка установки скорости передачи: " + serialPort->errorString();
+            printConsole(message);
+            serialPort->close();
+            delete serialPort;
+            serialPort = NULL; // Use NULL here
+            return;
         }
 
         connect(serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
@@ -146,86 +118,137 @@ void MainWindow::on_pushButton_COM_connect_clicked()
     }
 }
 
-/* Функция обработчик сообщений через UART */
 void MainWindow::receiveMessage()
 {
-    QByteArray dataBA = serialPort->readAll(); // Получаем массив байтов с данными
-    QString data(dataBA); // Преобразуем байты в строку
+    QByteArray dataBA = serialPort->readAll();
+    QString data(dataBA);
+    serialBuffer.append(data);
 
-    serialBuffer.append(data); // Добавляем в буфер данные
-
-    int index = serialBuffer.indexOf(messageCode_); // Ищем индекс кодовой последовательности в строке
-
-    /* Если нашли, то обрабатываем */
-    if(index != -1)
+    int indexBootloader = serialBuffer.indexOf("timeout...");
+    if (indexBootloader != -1)
     {
-        QString message = serialBuffer.mid(0, index); // Получаем строку от 0 до искомого кода
-        if(message.contains("[DEBUG]", Qt::CaseInsensitive))
-        {
-          plotGraph(message); // Если в сообщении есть отладка, то строим график по входящим данным
-        }
-        else if(message.contains("[INIT]", Qt::CaseInsensitive))
-        {
-            printConsole(message); // Выводим сообщения об инициализации
-            if(message.contains("Waiting for a command", Qt::CaseInsensitive))
-            {
-              reset_all_widgets();
-            }
-            else if(message.contains("start the main program", Qt::CaseInsensitive))
-            {
-              disable_all_widgets();
-            }
-            else if(message.contains("Correction ratio of 4mA", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toInt(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_DL_value->setValue(numStr.toInt());
-                    }
-                }
-            }
-            else if(message.contains("Correction ratio of 20mA", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    bool check = false;
-                    numStr.toInt(&check);
-                    if(check)
-                    {
-                        ui->lineEdit_UL_value->setValue(numStr.toInt());
-                    }
-                }
-            }
-            else if(message.contains("Max mm per sec", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                  bool check = false;
-                  numStr.toInt(&check);
-                  if(check)
-                  {
-                      ui->lineEdit_mmpersec_value->setValue(numStr.toInt());
-                  }
-                }
-            }
-            else if(message.contains("Dynamic range", Qt::CaseInsensitive))
-            {
-                foreach(QString numStr, message.split(" ", QString::SkipEmptyParts))
-                {
-                    int index = ui->cmb_dynamic_ranges->findText(numStr);
-                    if(index != -1) ui->cmb_dynamic_ranges->setCurrentIndex(index);
-                }
-            }
-        }
-        else printConsole(message);
-        serialBuffer.remove(0, index + messageCode_.size()); // Удаляем обработанное сообщение из очереди
+        serialBuffer.clear();
+        return;
+    }
+
+    int index = serialBuffer.indexOf(messageCode_);
+    if (index == -1)
+        return;
+
+    QString message = serialBuffer.mid(0, index);
+    serialBuffer.remove(0, index + messageCode_.size());
+
+    if (message.contains("[DEBUG]", Qt::CaseInsensitive))
+    {
+        plotGraph(message);
+    }
+    else if (message.contains("[INIT]", Qt::CaseInsensitive))
+    {
+        handleInitMessage(message);
+    }
+    else
+    {
+        printConsole(message);
     }
 }
+
+void MainWindow::handleInitMessage(const QString &message)
+{
+    if (message.contains("Waiting for a command", Qt::CaseInsensitive))
+    {
+        printConsole(message);
+        reset_all_widgets();
+    }
+    else if (message.contains("Sensor started", Qt::CaseInsensitive) || message.contains("Restarting MCU", Qt::CaseInsensitive))
+    {
+        printConsole(message);
+        disable_all_widgets();
+    }
+    else if (message.contains("Code 4mA", Qt::CaseInsensitive))
+    {
+        updateSpinBoxValue(ui->lineEdit_DL_value, message);
+    }
+    else if (message.contains("Code 20mA", Qt::CaseInsensitive))
+    {
+        updateSpinBoxValue(ui->lineEdit_UL_value, message);
+    }
+    else if (message.contains("Max velocity", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_mmpersec_value, message);
+    }
+    else if (message.contains("Dynamic range", Qt::CaseInsensitive))
+    {
+        updateComboBoxValue(ui->cmb_dynamic_ranges, message);
+    }
+    else if (message.contains("Thermo slope", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_thermoslope, message);
+    }
+    else if (message.contains("Thermo intercept", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_thermointercept, message);
+    }
+    else if (message.contains("Thermo low", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_thermo_lowTemperature_constant, message);
+    }
+    else if (message.contains("Constant velocity", Qt::CaseInsensitive))
+    {
+        updateLineEditValue(ui->lineEdit_constant_value, message);
+    }
+    else
+    {
+        printConsole(message);
+    }
+}
+
+void MainWindow::updateLineEditValue(QLineEdit *lineEdit, const QString &message)
+{
+    foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
+    {
+        bool check = false;
+        numStr.toFloat(&check);
+        if (check)
+        {
+            lineEdit->setText(numStr);
+            break;
+        }
+    }
+}
+
+void MainWindow::updateComboBoxValue(QComboBox *comboBox, const QString &message)
+{
+    foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
+    {
+        bool check = false;
+        int index = numStr.toInt(&check);
+        if (check)
+        {
+            comboBox->setCurrentIndex(index);
+            break;
+        }
+    }
+}
+
+void MainWindow::updateSpinBoxValue(QSpinBox *spinBox, const QString &message)
+{
+    foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
+    {
+        bool check = false;
+        int value = numStr.toInt(&check);
+        if (check)
+        {
+            spinBox->setValue(value);
+            break;
+        }
+    }
+}
+
 
 void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
+
+
+
