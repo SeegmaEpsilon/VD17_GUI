@@ -174,8 +174,13 @@ void MainWindow::on_pushButton_dynamic_range_set_clicked()
 
 void MainWindow::on_pushButton_dynamic_range_write_clicked()
 {
-    QString dynamicRange = ui->cmb_dynamic_ranges->currentText();
-    dynamicRange.chop(1); // удаляем 'g'
+    QMap<QString, QString> map;
+    map["2g"] = "0";
+    map["4g"] = "1";
+    map["8g"] = "2";
+    map["16g"] = "3";
+
+    QString dynamicRange = map[ui->cmb_dynamic_ranges->currentText()];
 
     const char* pcData = dynamicRange.toStdString().c_str();
     serialPort->write(pcData);

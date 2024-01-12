@@ -159,16 +159,16 @@ void MainWindow::handleInitMessage(const QString &message)
         printConsole(message);
         reset_all_widgets();
     }
-    else if (message.contains("Accelerometer has been found successfully", Qt::CaseInsensitive))
+    else if (message.contains("Sensor started", Qt::CaseInsensitive) || message.contains("Restarting MCU", Qt::CaseInsensitive))
     {
         printConsole(message);
         disable_all_widgets();
     }
-    else if (message.contains("Correction ratio of 4mA", Qt::CaseInsensitive))
+    else if (message.contains("Code 4mA", Qt::CaseInsensitive))
     {
         updateSpinBoxValue(ui->lineEdit_DL_value, message);
     }
-    else if (message.contains("Correction ratio of 20mA", Qt::CaseInsensitive))
+    else if (message.contains("Code 20mA", Qt::CaseInsensitive))
     {
         updateSpinBoxValue(ui->lineEdit_UL_value, message);
     }
@@ -180,19 +180,19 @@ void MainWindow::handleInitMessage(const QString &message)
     {
         updateComboBoxValue(ui->cmb_dynamic_ranges, message);
     }
-    else if (message.contains("Slope", Qt::CaseInsensitive))
+    else if (message.contains("Thermo slope", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_thermoslope, message);
     }
-    else if (message.contains("Intercept", Qt::CaseInsensitive))
+    else if (message.contains("Thermo intercept", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_thermointercept, message);
     }
-    else if (message.contains("Low temperature", Qt::CaseInsensitive))
+    else if (message.contains("Thermo low", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_thermo_lowTemperature_constant, message);
     }
-    else if (message.contains("Vibrovalue", Qt::CaseInsensitive))
+    else if (message.contains("Constant velocity", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_constant_value, message);
     }
@@ -220,8 +220,9 @@ void MainWindow::updateComboBoxValue(QComboBox *comboBox, const QString &message
 {
     foreach (QString numStr, message.split(" ", QString::SkipEmptyParts))
     {
-        int index = comboBox->findText(numStr);
-        if (index != -1)
+        bool check = false;
+        int index = numStr.toInt(&check);
+        if (check)
         {
             comboBox->setCurrentIndex(index);
             break;

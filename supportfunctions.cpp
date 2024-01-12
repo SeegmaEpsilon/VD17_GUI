@@ -58,7 +58,7 @@ void MainWindow::printConsole(const QString& string)
 {
     QString message = string;
     QString time = QTime::currentTime().toString("HH:mm:ss.zzz    |  ");
-    if(string.contains('\r')) time = "";
+    if(string.contains('\r') || string.contains('\n')) time = "";
 
     ui->UART_output->setTextColor(Qt::blue); // Received message's color is blue.
     ui->UART_output->append(time + message);
