@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmb_dynamic_ranges->lineEdit()->setReadOnly(true);
     ui->cmb_dynamic_ranges->lineEdit()->setAlignment(Qt::AlignCenter);
 
+    ui->cmb_axis->setEditable(true);
+    ui->cmb_axis->lineEdit()->setReadOnly(true);
+    ui->cmb_axis->lineEdit()->setAlignment(Qt::AlignCenter);
+
     initializeConnects();
     initializeAppSettings();
     initializeMenu();
@@ -249,6 +253,4 @@ void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
-
-
 

@@ -128,7 +128,9 @@ private slots:
     void updateLineEditValue(QLineEdit *lineEdit, const QString &message);
     void handleInitMessage(const QString &message);
     void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
-private:
+    void on_pushButton_axis_write_clicked();
+
+  private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
     QSerialPortInfo info;

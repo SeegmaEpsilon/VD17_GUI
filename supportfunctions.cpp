@@ -15,6 +15,7 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_mmpersec_calibration->setEnabled(false);
     ui->pushButton_mmpersec_write->setEnabled(false);
     ui->pushButton_calibrate_device->setEnabled(false);
+    ui->pushButton_axis_write->setEnabled(false);
     ui->pushButton_thermoslope_set->setEnabled(false);
     ui->pushButton_thermoslope_write->setEnabled(false);
     ui->pushButton_thermointercept_set->setEnabled(false);
@@ -25,6 +26,7 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_constant_value_write->setEnabled(false);
     ui->pushButton_default_settings_set->setEnabled(false);
 
+
     ui->lineEdit_DL_value->setEnabled(false);
     ui->lineEdit_UL_value->setEnabled(false);
     ui->lineEdit_mmpersec_value->setEnabled(false);
@@ -34,6 +36,7 @@ void MainWindow::disable_all_widgets()
     ui->lineEdit_constant_value->setEnabled(false);
 
     ui->cmb_dynamic_ranges->setEnabled(false);
+    ui->cmb_axis->setEnabled(false);
 
 }
 

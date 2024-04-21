@@ -189,5 +189,17 @@ void MainWindow::on_pushButton_dynamic_range_write_clicked()
 
 void MainWindow::on_pushButton_calibrate_device_clicked()
 {
+    disable_all_widgets();
+    ui->cmb_axis->setEnabled(true);
+    ui->pushButton_axis_write->setEnabled(true);
+
     serialPort->write(CMD_CALIBRATE_DEVICE);
+}
+
+void MainWindow::on_pushButton_axis_write_clicked()
+{
+  QString currentAxis = QString::number(ui->cmb_axis->currentIndex());
+
+  const char* pcData = currentAxis.toStdString().c_str();
+  serialPort->write(pcData);
 }
