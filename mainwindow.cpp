@@ -25,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmb_axis->lineEdit()->setReadOnly(true);
     ui->cmb_axis->lineEdit()->setAlignment(Qt::AlignCenter);
 
+    ui->cmb_axis_measuring->setEditable(true);
+    ui->cmb_axis_measuring->lineEdit()->setReadOnly(true);
+    ui->cmb_axis_measuring->lineEdit()->setAlignment(Qt::AlignCenter);
+
     initializeConnects();
     initializeAppSettings();
     initializeMenu();
@@ -184,6 +188,10 @@ void MainWindow::handleInitMessage(const QString &message)
     {
         updateComboBoxValue(ui->cmb_dynamic_ranges, message);
     }
+    else if (message.contains("Measuring axis", Qt::CaseInsensitive))
+    {
+        updateComboBoxValue(ui->cmb_axis_measuring, message);
+    }
     else if (message.contains("Thermo slope", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_thermoslope, message);
@@ -253,4 +261,8 @@ void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
+
+
+
+
 

@@ -130,7 +130,11 @@ private slots:
     void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
     void on_pushButton_axis_write_clicked();
 
-  private:
+    void on_pushButton_measuring_axis_set_clicked();
+
+    void on_pushButton_measuring_axis_write_clicked();
+
+private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
     QSerialPortInfo info;

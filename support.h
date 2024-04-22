@@ -15,6 +15,7 @@
 #define CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET "LT"  // settings constant value at low temperature
 #define CMD_CONSTANT_VALUE_SET "CV"                  // settings constant value for device
 #define CMD_DEFAULT_SETTINGS_SET "DS"                // settings default settings
+#define CMD_CHANGE_MEASURING_AXIS "AS"
 
 #define CMD_CURRENT_LOOP_WRITE "DONE"
 

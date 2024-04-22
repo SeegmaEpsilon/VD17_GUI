@@ -38,6 +38,10 @@ void MainWindow::disable_all_widgets()
     ui->cmb_dynamic_ranges->setEnabled(false);
     ui->cmb_axis->setEnabled(false);
 
+    ui->pushButton_measuring_axis_set->setEnabled(false);
+    ui->cmb_axis_measuring->setEnabled(false);
+    ui->pushButton_measuring_axis_write->setEnabled(false);
+
 }
 
 void MainWindow::reset_all_widgets()
@@ -54,6 +58,7 @@ void MainWindow::reset_all_widgets()
     ui->pushButton_constant_value_set->setEnabled(true);
     ui->pushButton_calibrate_device->setEnabled(true);
     ui->pushButton_default_settings_set->setEnabled(true);
+    ui->pushButton_measuring_axis_set->setEnabled(true);
 }
 
 

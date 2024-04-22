@@ -83,7 +83,7 @@ void MainWindow::on_pushButton_DL_multimeter_clicked()
 void MainWindow::on_pushButton_DL_write_clicked()
 {
     serialPort->write(CMD_CURRENT_LOOP_WRITE);
-    reset_all_widgets();
+    disable_all_widgets();
 }
 
 void MainWindow::on_pushButton_UL_calibration_clicked()
@@ -202,4 +202,21 @@ void MainWindow::on_pushButton_axis_write_clicked()
 
   const char* pcData = currentAxis.toStdString().c_str();
   serialPort->write(pcData);
+}
+
+void MainWindow::on_pushButton_measuring_axis_set_clicked()
+{
+    disable_all_widgets();
+    ui->cmb_axis_measuring->setEnabled(true);
+    ui->pushButton_measuring_axis_write->setEnabled(true);
+
+    serialPort->write(CMD_CHANGE_MEASURING_AXIS);
+}
+
+void MainWindow::on_pushButton_measuring_axis_write_clicked()
+{
+    QString currentAxis = QString::number(ui->cmb_axis_measuring->currentIndex());
+
+    const char* pcData = currentAxis.toStdString().c_str();
+    serialPort->write(pcData);
 }
