@@ -2932,8 +2932,10 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QHBoxLayout \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLabel \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLineEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
@@ -3993,8 +3995,10 @@ debug/serialcommands.o: serialcommands.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QHBoxLayout \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLabel \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLineEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
@@ -4539,8 +4543,10 @@ debug/supportfunctions.o: supportfunctions.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QHBoxLayout \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLabel \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLineEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
@@ -5085,8 +5091,10 @@ debug/mouseprocessing.o: mouseprocessing.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QHBoxLayout \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLabel \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLineEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
@@ -5631,8 +5639,10 @@ debug/plotprocessing.o: plotprocessing.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QHBoxLayout \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLabel \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QLineEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit

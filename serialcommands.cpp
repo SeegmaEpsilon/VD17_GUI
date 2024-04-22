@@ -210,7 +210,7 @@ void MainWindow::on_pushButton_measuring_axis_set_clicked()
     ui->cmb_axis_measuring->setEnabled(true);
     ui->pushButton_measuring_axis_write->setEnabled(true);
 
-    serialPort->write(CMD_CHANGE_MEASURING_AXIS);
+    serialPort->write(CMD_CHANGE_MEASURING_AXIS_SET);
 }
 
 void MainWindow::on_pushButton_measuring_axis_write_clicked()
@@ -218,5 +218,22 @@ void MainWindow::on_pushButton_measuring_axis_write_clicked()
     QString currentAxis = QString::number(ui->cmb_axis_measuring->currentIndex());
 
     const char* pcData = currentAxis.toStdString().c_str();
+    serialPort->write(pcData);
+}
+
+void MainWindow::on_pushButton_constant_component_set_clicked()
+{
+    disable_all_widgets();
+    ui->cmb_constant_component->setEnabled(true);
+    ui->pushButton_constant_component_write->setEnabled(true);
+
+    serialPort->write(CMD_REMOVE_CONSTANT_COMPONENT_SET);
+}
+
+void MainWindow::on_pushButton_constant_component_write_clicked()
+{
+    QString constantComponent = QString::number(ui->cmb_constant_component->currentIndex());
+
+    const char* pcData = constantComponent.toStdString().c_str();
     serialPort->write(pcData);
 }

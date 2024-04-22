@@ -40,6 +40,8 @@ signals:
     void setSettingsUI(appSettingsStruct settings);
 
 private slots:
+    void processMessage(const QString & message);
+
     void printConsole(const QString& string);
 
     void on_pushButton_DL_calibration_clicked();
@@ -68,8 +70,6 @@ private slots:
 
     void receiveMessage();
 
-    void plotGraph(QString& msg);
-
     void on_pushButton_dynamic_range_set_clicked();
 
     void on_pushButton_dynamic_range_write_clicked();
@@ -92,7 +92,6 @@ private slots:
     void initializeConnects();
     void initializeAppSettings();
     void initializeMenu();
-    void initializeCanvas();
 
     void saveAppSettings(appSettingsStruct tempSettings);
 
@@ -134,6 +133,12 @@ private slots:
 
     void on_pushButton_measuring_axis_write_clicked();
 
+    void on_pushButton_constant_component_set_clicked();
+
+    void on_pushButton_constant_component_write_clicked();
+
+    void setupGraphsOnce(int canvas_index, bool from_ui = false);
+    void plotGraph(int canvas_index, int graphIndex, float_t value);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
@@ -144,8 +149,6 @@ private:
     CircularBuffer cbA;
     CircularBuffer cbV;
     CircularBuffer cbT;
-
-    uint32_t counter;
 
     double valueA;
     double valueV;
@@ -176,6 +179,8 @@ private:
     QSerialPort::FlowControl flowControl_;
 
     QTextEdit thermoHelp;
+
+    QCustomPlot *activeCanvas;  // Указатель на активный канвас
 };
 
 #endif // MAINWINDOW_H

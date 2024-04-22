@@ -15,11 +15,12 @@
 #define CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET "LT"  // settings constant value at low temperature
 #define CMD_CONSTANT_VALUE_SET "CV"                  // settings constant value for device
 #define CMD_DEFAULT_SETTINGS_SET "DS"                // settings default settings
-#define CMD_CHANGE_MEASURING_AXIS "AS"
+#define CMD_CHANGE_MEASURING_AXIS_SET "AS"
+#define CMD_REMOVE_CONSTANT_COMPONENT_SET "CC"
 
 #define CMD_CURRENT_LOOP_WRITE "DONE"
 
-#define SOFTWARE_VERSION QString("2.5.1")
+#define SOFTWARE_VERSION QString("2.6.0")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500

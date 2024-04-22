@@ -1,137 +1,201 @@
 #include <mainwindow.h>
 #include <ui_mainwindow.h>
 
-void MainWindow::plotGraph(QString &msg)
+void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
 {
-    uint8_t flag_select_value = 0;
+    static bool isSetupDoneA = false;
+    static bool isSetupDoneV = false;
 
-    /* finding a double value in the string */
-    foreach(QString numStr, msg.split(" ", QString::SkipEmptyParts))
+    if(canvas_index == 0)
     {
-        if(numStr == "A(RMS)") flag_select_value = 1;
-        if(numStr == "V(RMS)") flag_select_value = 2;
-        if(numStr == "T(RMS)") flag_select_value = 10;
-
-        bool check = false;
-        numStr.toDouble(&check);
-        if(check)
+        if (!isSetupDoneA || from_ui)
         {
-            if(flag_select_value == 1)
+            // Проверяем, созданы ли графики и их количество, если нет - создаем
+            if (ui->canvas_A->graphCount() < 4)
             {
-                flagMeasureDone = 1;
-                valueA = numStr.toDouble();
-
-                cbA.push(valueA);
-
-                ui->lineEdit_RMS_A->setText(QString::number(valueA, 'f', 2));
-                ui->lineEdit_average_A->setText(QString::number(cbA.average(), 'f', 2));
-            }
-            if(flag_select_value == 2)
-            {
-                if(flagMeasureDone == 1) flagMeasureDone = 2;
-                valueV = numStr.toDouble();
-
-                cbV.push(valueV);
-
-                ui->lineEdit_RMS_V->setText(QString::number(valueV, 'f', 2));
-                ui->lineEdit_average_V->setText(QString::number(cbV.average(), 'f', 2));
+                ui->canvas_A->addGraph();  // График для Виброускорения
+                ui->canvas_A->addGraph();  // График для Виброускорения
+                ui->canvas_A->addGraph();  // График для Виброускорения
+                ui->canvas_A->addGraph();  // График для Виброускорения
             }
 
-            if(flag_select_value == 10)
-            {
-                valueT = numStr.toDouble();
+            ui->canvas_A->legend->setVisible(true);
+            QFont legendFont = font();
+            legendFont.setPointSize(8);
+            ui->canvas_A->legend->setFont(legendFont);
+            ui->canvas_A->legend->setBrush(QBrush(QColor(255,255,255,230)));
 
-                cbT.push(valueT);
+            ui->canvas_A->graph(0)->setName("Виброускорение X (СКЗ)");
+            ui->canvas_A->graph(0)->setPen(QPen(Qt::blue));
+            ui->canvas_A->graph(0)->rescaleAxes(true);
 
-                ui->lineEdit_RMS_T->setText(QString::number(valueT, 'f', 2));
-                ui->lineEdit_average_T->setText(QString::number(cbT.average(), 'f', 2));
-            }
+            ui->canvas_A->graph(1)->setName("Виброускорение Y (СКЗ)");
+            ui->canvas_A->graph(1)->setPen(QPen(Qt::red));
+            ui->canvas_A->graph(1)->rescaleAxes(true);
+
+            ui->canvas_A->graph(2)->setName("Виброускорение Z (СКЗ)");
+            ui->canvas_A->graph(2)->setPen(QPen(Qt::green));
+            ui->canvas_A->graph(2)->rescaleAxes(true);
+
+            ui->canvas_A->graph(3)->setName("Виброускорение XYZ (СКЗ)");
+            ui->canvas_A->graph(3)->setPen(QPen(Qt::black));
+            ui->canvas_A->graph(3)->rescaleAxes(true);
+
+            /* Настройка холста, на котором будет отрисовываться график
+                   Разрешаем зум и перемещение по графику */
+            ui->canvas_A->setInteraction(QCP::iRangeDrag, true);
+            ui->canvas_A->setInteraction(QCP::iRangeZoom, true);
+            ui->canvas_A->xAxis->setLabel("Точки отсчета");
+            ui->canvas_A->yAxis->setLabel("A");
+
+            isSetupDoneA = true;
         }
-        else continue;
+    }
+    else if(canvas_index == 1)
+    {
+        if (!isSetupDoneV || from_ui)
+        {
+            // Проверяем, созданы ли графики и их количество, если нет - создаем
+            if (ui->canvas_V->graphCount() < 4)
+            {
+                ui->canvas_V->addGraph();  // График для Виброскорости
+                ui->canvas_V->addGraph();  // График для Виброскорости
+                ui->canvas_V->addGraph();  // График для Виброскорости
+                ui->canvas_V->addGraph();  // График для Виброскорости
+            }
+
+            ui->canvas_V->legend->setVisible(true);
+            QFont legendFont = font();
+            legendFont.setPointSize(8);
+            ui->canvas_V->legend->setFont(legendFont);
+            ui->canvas_V->legend->setBrush(QBrush(QColor(255,255,255,230)));
+
+            ui->canvas_V->graph(0)->setName("Виброскорость X (СКЗ)");
+            ui->canvas_V->graph(0)->setPen(QPen(Qt::blue));
+            ui->canvas_V->graph(0)->rescaleAxes(true);
+
+            ui->canvas_V->graph(1)->setName("Виброскорость Y (СКЗ)");
+            ui->canvas_V->graph(1)->setPen(QPen(Qt::red));
+            ui->canvas_V->graph(1)->rescaleAxes(true);
+
+            ui->canvas_V->graph(2)->setName("Виброскорость Z (СКЗ)");
+            ui->canvas_V->graph(2)->setPen(QPen(Qt::green));
+            ui->canvas_V->graph(2)->rescaleAxes(true);
+
+            ui->canvas_V->graph(3)->setName("Виброскорость XYZ (СКЗ)");
+            ui->canvas_V->graph(3)->setPen(QPen(Qt::black));
+            ui->canvas_V->graph(3)->rescaleAxes(true);
+
+            /* Настройка холста, на котором будет отрисовываться график
+                   Разрешаем зум и перемещение по графику */
+            ui->canvas_V->setInteraction(QCP::iRangeDrag, true);
+            ui->canvas_V->setInteraction(QCP::iRangeZoom, true);
+            ui->canvas_V->xAxis->setLabel("Точки отсчета");
+            ui->canvas_V->yAxis->setLabel("V");
+
+            isSetupDoneV = true;
+        }
     }
 
-    if(flagMeasureDone == 2)
+}
+
+void MainWindow::plotGraph(int canvas_index, int graphIndex, float_t value)
+{
+    if(canvas_index == 0)
     {
-        flagMeasureDone = 0;
+        static int callCounter = 0;
+        static int counter = 0;
 
-        if(ui->checkBox_need_plot->isChecked() == false) return;
-        counter++;
+        // Настройка графиков, если это не было сделано ранее
+        setupGraphsOnce(0);
 
-        if(ui->canvas->graphCount() < 2)
+        // Добавляем данные на указанный график
+        ui->canvas_A->graph(graphIndex)->rescaleAxes(true);
+        ui->canvas_A->graph(graphIndex)->addData(counter, value);
+
+        // Перерисовываем график
+        ui->canvas_A->replot();
+        callCounter++;
+        if(callCounter == ui->canvas_A->graphCount())
         {
-            ui->canvas->addGraph();
-            ui->canvas->addGraph();
+            callCounter = 0;
+            counter++;
         }
 
-        ui->canvas->legend->setVisible(true);
-        QFont legendFont = font();
-        legendFont.setPointSize(8);
-        ui->canvas->legend->setFont(legendFont);
-        ui->canvas->legend->setBrush(QBrush(QColor(255,255,255,230)));
+    }
+    else if(canvas_index == 1)
+    {
+        static int callCounter = 0;
+        static int counter = 0;
 
-        ui->canvas->graph(0)->setName("Виброускорение (СКЗ)");
-        ui->canvas->graph(0)->setPen(QPen(Qt::blue));
-        ui->canvas->graph(0)->addData(counter, valueA);
-        ui->canvas->graph(0)->rescaleAxes(true);
+        // Настройка графиков, если это не было сделано ранее
+        setupGraphsOnce(1);
 
-        ui->canvas->graph(1)->setName("Виброскорость (СКЗ)");
-        ui->canvas->graph(1)->setPen(QPen(Qt::red));
-        ui->canvas->graph(1)->addData(counter, valueV);
-        ui->canvas->graph(1)->rescaleAxes(true);
+        // Добавляем данные на указанный график
+        ui->canvas_V->graph(graphIndex)->rescaleAxes(true);
+        ui->canvas_V->graph(graphIndex)->addData(counter, value);
 
-        ui->canvas->replot();
+        // Перерисовываем график
+        ui->canvas_V->replot();
+        callCounter++;
+        if(callCounter == ui->canvas_V->graphCount())
+        {
+            callCounter = 0;
+            counter++;
+        }
     }
 }
 
-void MainWindow::slotResetCanvas(void)
+
+void MainWindow::slotResetCanvas()
 {
-    ui->canvas->rescaleAxes();
-    ui->canvas->replot();
+    if (activeCanvas)
+    {
+        activeCanvas->rescaleAxes();
+        activeCanvas->replot();
+    }
 }
 
 void MainWindow::slotSavePlotPNG()
 {
+    if (!activeCanvas) return;
+
     QString file_name = QFileDialog::getSaveFileName(this,
                                                      tr("Сохранить изображение"),
-                                                     QCoreApplication::applicationDirPath () + "/VD17",
+                                                     QCoreApplication::applicationDirPath() + "/VD17",
                                                      tr("Изображение (*.png)"));
-    ui->canvas->savePng(file_name);
+    if (!file_name.isEmpty())
+        activeCanvas->savePng(file_name);
 }
 
-void MainWindow::slotSaveDataFromPlot(void)
+void MainWindow::slotSaveDataFromPlot()
 {
+    if (!activeCanvas) return;
+
     QString file_name = QFileDialog::getSaveFileName(this,
                                                      tr("Сохранить данные"),
-                                                     QCoreApplication::applicationDirPath () + "/VD17",
+                                                     QCoreApplication::applicationDirPath() + "/VD17",
                                                      tr("Данные (*.txt)"));
-
-    const QCPGraph *graph1 = qobject_cast<const QCPGraph*>(ui->canvas->graph(0));
-    const QCPGraph *graph2 = qobject_cast<const QCPGraph*>(ui->canvas->graph(1));
+    if (file_name.isEmpty()) return;
 
     QFile file(file_name);
-    if(file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         QTextStream writeStream(&file);
-
-        if(graph1 && graph2)
+        for (int i = 0; i < activeCanvas->graphCount(); ++i)
         {
-            QSharedPointer<QCPDataContainer<QCPGraphData> > plotData1 = graph1->data();
-            QSharedPointer<QCPDataContainer<QCPGraphData> > plotData2 = graph2->data();
-            QCPDataContainer<QCPGraphData>::const_iterator it1 = plotData1->constBegin();
-            QCPDataContainer<QCPGraphData>::const_iterator it2 = plotData2->constBegin();
-
-            while(it1 != plotData1->constEnd() && it2 != plotData2->constEnd())
+            const QCPGraph *graph = qobject_cast<const QCPGraph*>(activeCanvas->graph(i));
+            if (graph)
             {
-                double y1 = it1->value;
-                double y2 = it2->value;
-                writeStream << QString("%1,%2\n").arg(QString::number(y1, 'f', 2)).arg(QString::number(y2, 'f', 2));
-
-                ++it1;
-                ++it2;
+                QSharedPointer<QCPDataContainer<QCPGraphData>> plotData = graph->data();
+                for (auto it = plotData->constBegin(); it != plotData->constEnd(); ++it)
+                {
+                    writeStream << QString("%1,%2\n").arg(it->key).arg(it->value, 0, 'f', 2);
+                }
+                writeStream << "\n"; // Separate data sets by a newline
             }
         }
         file.close();
     }
-    else return;
 }
 

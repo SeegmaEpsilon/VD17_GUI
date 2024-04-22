@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
     cbA(32),            // Кольцевой буфер на 32 элемента
     cbV(32),            // Кольцевой буфер на 32 элемента
     cbT(32),            // Кольцевой буфер на 32 элемента
-    counter(0),         // Счетчик принятых значений
     valueA(0),          // Текущее значение виброускорения
     valueV(0),          // Текущее значение виброскорости
     flagMeasureDone(0), // Флаг, показывающий, что текущее измерение закончено
@@ -29,10 +28,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmb_axis_measuring->lineEdit()->setReadOnly(true);
     ui->cmb_axis_measuring->lineEdit()->setAlignment(Qt::AlignCenter);
 
+    ui->cmb_constant_component->setEditable(true);
+    ui->cmb_constant_component->lineEdit()->setReadOnly(true);
+    ui->cmb_constant_component->lineEdit()->setAlignment(Qt::AlignCenter);
+
     initializeConnects();
     initializeAppSettings();
     initializeMenu();
-    initializeCanvas();
 
     /* Инициализация таймера, по которому будут сканироваться COM-порты */
     /* Первое сканирование на наличие COM-портов */
@@ -128,27 +130,90 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
 void MainWindow::receiveMessage()
 {
-    QByteArray dataBA = serialPort->readAll();
-    QString data(dataBA);
+    QByteArray data = serialPort->readAll();
     serialBuffer.append(data);
 
-    int indexBootloader = serialBuffer.indexOf("timeout...");
-    if (indexBootloader != -1)
+    // Обработка полных сообщений в буфере
+    while (!serialBuffer.isEmpty())
     {
-        serialBuffer.clear();
-        return;
+        int endIndex = serialBuffer.indexOf('\n'); // Предположим, что сообщения заканчиваются символом новой строки
+        if (endIndex == -1) break; // Если нет полного сообщения, выходим из цикла
+
+        QString message = serialBuffer.left(endIndex); // Извлекаем сообщение
+        serialBuffer.remove(0, endIndex + 1); // Удаляем обработанное сообщение из буфера
+
+        processMessage(message); // Обработка извлеченного сообщения
     }
+}
 
-    int index = serialBuffer.indexOf(messageCode_);
-    if (index == -1)
-        return;
-
-    QString message = serialBuffer.mid(0, index);
-    serialBuffer.remove(0, index + messageCode_.size());
-
+void MainWindow::processMessage(const QString & message)
+{
     if (message.contains("[DEBUG]", Qt::CaseInsensitive))
     {
-        plotGraph(message);
+        if (message.contains("x_mg", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_x_mg, message);
+        }
+        else if (message.contains("y_mg", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_y_mg, message);
+        }
+        else if (message.contains("z_mg", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_z_mg, message);
+        }
+        else if (message.contains("A_x", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_A_x, message);
+            plotGraph(0, 0, ui->lineEdit_RMS_A_x->text().toFloat());
+        }
+        else if (message.contains("A_y", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_A_y, message);
+            plotGraph(0, 1, ui->lineEdit_RMS_A_y->text().toFloat());
+        }
+        else if (message.contains("A_z", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_A_z, message);
+            plotGraph(0, 2, ui->lineEdit_RMS_A_z->text().toFloat());
+        }
+        else if (message.contains("A_m", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_A_xyz, message);
+            plotGraph(0, 3, ui->lineEdit_RMS_A_xyz->text().toFloat());
+        }
+        else if (message.contains("V_x", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_V_x, message);
+            plotGraph(1, 0, ui->lineEdit_RMS_V_x->text().toFloat());
+        }
+        else if (message.contains("V_y", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_V_y, message);
+            plotGraph(1, 1, ui->lineEdit_RMS_V_y->text().toFloat());
+        }
+        else if (message.contains("V_z", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_V_z, message);
+            plotGraph(1, 2, ui->lineEdit_RMS_V_z->text().toFloat());
+        }
+        else if (message.contains("V_m", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_V_xyz, message);
+            plotGraph(1, 3, ui->lineEdit_RMS_V_xyz->text().toFloat());
+        }
+        else if (message.contains("current_buffer", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_current_buffer, message);
+        }
+        else if (message.contains("current_samples", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_samples_reserve, message);
+        }
+        else if (message.contains("T_rms", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_RMS_T, message);
+        }
     }
     else if (message.contains("[INIT]", Qt::CaseInsensitive))
     {
@@ -191,6 +256,7 @@ void MainWindow::handleInitMessage(const QString &message)
     else if (message.contains("Measuring axis", Qt::CaseInsensitive))
     {
         updateComboBoxValue(ui->cmb_axis_measuring, message);
+        updateComboBoxValue(ui->cmb_axis, message);
     }
     else if (message.contains("Thermo slope", Qt::CaseInsensitive))
     {
@@ -207,6 +273,10 @@ void MainWindow::handleInitMessage(const QString &message)
     else if (message.contains("Constant velocity", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_constant_value, message);
+    }
+    else if (message.contains("Constant component", Qt::CaseInsensitive))
+    {
+        updateComboBoxValue(ui->cmb_constant_component, message);
     }
     else
     {
@@ -261,8 +331,3 @@ void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
-
-
-
-
-
