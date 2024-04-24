@@ -139,6 +139,10 @@ private slots:
 
     void setupGraphsOnce(int canvas_index, bool from_ui = false);
     void plotGraph(int canvas_index, int graphIndex, float_t value);
+    void on_pushButton_measuring_parameter_set_clicked();
+
+    void on_pushButton_measuring_parameter_write_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
@@ -153,6 +157,9 @@ private:
     double valueA;
     double valueV;
     double valueT;
+
+    int counterA;
+    int counterV;
 
     uint8_t flagMeasureDone;
     uint8_t buttonState;

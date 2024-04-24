@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
     cbA(32),            // Кольцевой буфер на 32 элемента
     cbV(32),            // Кольцевой буфер на 32 элемента
     cbT(32),            // Кольцевой буфер на 32 элемента
+    counterA(0),        // Счетчик на графике для ускорения
+    counterV(0),        // Счетчик на графике для скорости
     valueA(0),          // Текущее значение виброускорения
     valueV(0),          // Текущее значение виброскорости
     flagMeasureDone(0), // Флаг, показывающий, что текущее измерение закончено
@@ -31,6 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmb_constant_component->setEditable(true);
     ui->cmb_constant_component->lineEdit()->setReadOnly(true);
     ui->cmb_constant_component->lineEdit()->setAlignment(Qt::AlignCenter);
+
+    ui->cmb_measuring_parameter->setEditable(true);
+    ui->cmb_measuring_parameter->lineEdit()->setReadOnly(true);
+    ui->cmb_measuring_parameter->lineEdit()->setAlignment(Qt::AlignCenter);
 
     initializeConnects();
     initializeAppSettings();
@@ -214,6 +220,10 @@ void MainWindow::processMessage(const QString & message)
         {
             updateLineEditValue(ui->lineEdit_RMS_T, message);
         }
+        else if (message.contains("PWM_value", Qt::CaseInsensitive))
+        {
+            updateLineEditValue(ui->lineEdit_PWM_value, message);
+        }
     }
     else if (message.contains("[INIT]", Qt::CaseInsensitive))
     {
@@ -245,7 +255,7 @@ void MainWindow::handleInitMessage(const QString &message)
     {
         updateSpinBoxValue(ui->lineEdit_UL_value, message);
     }
-    else if (message.contains("Max velocity", Qt::CaseInsensitive))
+    else if (message.contains("Max parameter value", Qt::CaseInsensitive))
     {
         updateLineEditValue(ui->lineEdit_mmpersec_value, message);
     }
@@ -257,6 +267,10 @@ void MainWindow::handleInitMessage(const QString &message)
     {
         updateComboBoxValue(ui->cmb_axis_measuring, message);
         updateComboBoxValue(ui->cmb_axis, message);
+    }
+    else if (message.contains("Measuring parameter", Qt::CaseInsensitive))
+    {
+        updateComboBoxValue(ui->cmb_measuring_parameter, message);
     }
     else if (message.contains("Thermo slope", Qt::CaseInsensitive))
     {
@@ -331,3 +345,5 @@ void MainWindow::on_pushButton_settings_clicked()
 {
     settingsUI_.show();
 }
+
+

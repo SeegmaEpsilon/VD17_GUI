@@ -56,7 +56,7 @@ void MainWindow::slotMouseRelease(QMouseEvent *event)
         isMouseHold_ = false;
 
         // Проверяем, сколько времени была зажата правая кнопка мыши
-        if (mouseHoldTimer_.elapsed() >= 100)
+        if (mouseHoldTimer_.elapsed() >= 250)
         {
             // Если кнопка была зажата более 100 мс, то не показываем контекстное меню
             return;

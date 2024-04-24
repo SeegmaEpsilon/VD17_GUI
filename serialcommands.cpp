@@ -115,7 +115,7 @@ void MainWindow::on_pushButton_mmpersec_calibration_clicked()
     ui->lineEdit_mmpersec_value->setEnabled(true);
     ui->pushButton_mmpersec_write->setEnabled(true);
 
-    serialPort->write(CMD_MM_PER_SEC_SET);
+    serialPort->write(CMD_MAX_PARAMETER_VALUE_SET);
 }
 
 void MainWindow::on_pushButton_mmpersec_write_clicked()
@@ -233,6 +233,23 @@ void MainWindow::on_pushButton_constant_component_set_clicked()
 void MainWindow::on_pushButton_constant_component_write_clicked()
 {
     QString constantComponent = QString::number(ui->cmb_constant_component->currentIndex());
+
+    const char* pcData = constantComponent.toStdString().c_str();
+    serialPort->write(pcData);
+}
+
+void MainWindow::on_pushButton_measuring_parameter_set_clicked()
+{
+    disable_all_widgets();
+    ui->cmb_measuring_parameter->setEnabled(true);
+    ui->pushButton_measuring_parameter_write->setEnabled(true);
+
+    serialPort->write(CMD_CHANGE_MEASURING_PARAMETER_SET);
+}
+
+void MainWindow::on_pushButton_measuring_parameter_write_clicked()
+{
+    QString constantComponent = QString::number(ui->cmb_measuring_parameter->currentIndex());
 
     const char* pcData = constantComponent.toStdString().c_str();
     serialPort->write(pcData);

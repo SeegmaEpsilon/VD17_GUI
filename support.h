@@ -8,19 +8,20 @@
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "DL" // calibration of down limit current loop (4mA)
 #define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "UL"   // calibration of up limit current loop (20mA)
 #define CMD_DYNAMIC_MODE_SET "DR"                    // setting dynamic range of accelerometer
-#define CMD_MM_PER_SEC_SET "MV"                      // setting max mm/s of device
+#define CMD_MAX_PARAMETER_VALUE_SET "MV"             // setting max mm/s of device
 #define CMD_CALIBRATE_DEVICE "CD"                    // calibrate the device (10.1 m/s^2)
 #define CMD_THERMOSLOPE_SET "TS"                     // settings thermoslope for device
 #define CMD_THERMOINTERCEPT_SET "TI"                 // settings thermointercept for device
 #define CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET "LT"  // settings constant value at low temperature
 #define CMD_CONSTANT_VALUE_SET "CV"                  // settings constant value for device
 #define CMD_DEFAULT_SETTINGS_SET "DS"                // settings default settings
-#define CMD_CHANGE_MEASURING_AXIS_SET "AS"
+#define CMD_CHANGE_MEASURING_AXIS_SET "MA"
+#define CMD_CHANGE_MEASURING_PARAMETER_SET "MP"
 #define CMD_REMOVE_CONSTANT_COMPONENT_SET "CC"
 
 #define CMD_CURRENT_LOOP_WRITE "DONE"
 
-#define SOFTWARE_VERSION QString("2.6.0")
+#define SOFTWARE_VERSION QString("2.6.1")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500

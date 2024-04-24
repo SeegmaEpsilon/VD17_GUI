@@ -34,7 +34,7 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
             ui->canvas_A->graph(1)->rescaleAxes(true);
 
             ui->canvas_A->graph(2)->setName("Виброускорение Z (СКЗ)");
-            ui->canvas_A->graph(2)->setPen(QPen(Qt::green));
+            ui->canvas_A->graph(2)->setPen(QPen(Qt::darkGreen));
             ui->canvas_A->graph(2)->rescaleAxes(true);
 
             ui->canvas_A->graph(3)->setName("Виброускорение XYZ (СКЗ)");
@@ -79,7 +79,7 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
             ui->canvas_V->graph(1)->rescaleAxes(true);
 
             ui->canvas_V->graph(2)->setName("Виброскорость Z (СКЗ)");
-            ui->canvas_V->graph(2)->setPen(QPen(Qt::green));
+            ui->canvas_V->graph(2)->setPen(QPen(Qt::darkGreen));
             ui->canvas_V->graph(2)->rescaleAxes(true);
 
             ui->canvas_V->graph(3)->setName("Виброскорость XYZ (СКЗ)");
@@ -104,14 +104,13 @@ void MainWindow::plotGraph(int canvas_index, int graphIndex, float_t value)
     if(canvas_index == 0)
     {
         static int callCounter = 0;
-        static int counter = 0;
 
         // Настройка графиков, если это не было сделано ранее
         setupGraphsOnce(0);
 
         // Добавляем данные на указанный график
         ui->canvas_A->graph(graphIndex)->rescaleAxes(true);
-        ui->canvas_A->graph(graphIndex)->addData(counter, value);
+        ui->canvas_A->graph(graphIndex)->addData(counterA, value);
 
         // Перерисовываем график
         ui->canvas_A->replot();
@@ -119,21 +118,20 @@ void MainWindow::plotGraph(int canvas_index, int graphIndex, float_t value)
         if(callCounter == ui->canvas_A->graphCount())
         {
             callCounter = 0;
-            counter++;
+            counterA++;
         }
 
     }
     else if(canvas_index == 1)
     {
         static int callCounter = 0;
-        static int counter = 0;
 
         // Настройка графиков, если это не было сделано ранее
         setupGraphsOnce(1);
 
         // Добавляем данные на указанный график
         ui->canvas_V->graph(graphIndex)->rescaleAxes(true);
-        ui->canvas_V->graph(graphIndex)->addData(counter, value);
+        ui->canvas_V->graph(graphIndex)->addData(counterV, value);
 
         // Перерисовываем график
         ui->canvas_V->replot();
@@ -141,7 +139,7 @@ void MainWindow::plotGraph(int canvas_index, int graphIndex, float_t value)
         if(callCounter == ui->canvas_V->graphCount())
         {
             callCounter = 0;
-            counter++;
+            counterV++;
         }
     }
 }

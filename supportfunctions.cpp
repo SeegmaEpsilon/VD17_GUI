@@ -45,6 +45,10 @@ void MainWindow::disable_all_widgets()
     ui->pushButton_constant_component_set->setEnabled(false);
     ui->cmb_constant_component->setEnabled(false);
     ui->pushButton_constant_component_write->setEnabled(false);
+
+    ui->pushButton_measuring_parameter_set->setEnabled(false);
+    ui->cmb_measuring_parameter->setEnabled(false);
+    ui->pushButton_measuring_parameter_write->setEnabled(false);
 }
 
 void MainWindow::reset_all_widgets()
@@ -63,6 +67,7 @@ void MainWindow::reset_all_widgets()
     ui->pushButton_default_settings_set->setEnabled(true);
     ui->pushButton_measuring_axis_set->setEnabled(true);
     ui->pushButton_constant_component_set->setEnabled(true);
+    ui->pushButton_measuring_parameter_set->setEnabled(true);
 }
 
 
@@ -82,6 +87,8 @@ void MainWindow::slotClearCanvas()
     valueA = 0;
     valueV = 0;
     valueT = 0;
+    counterA = 0;
+    counterV = 0;
     serialBuffer.clear();
 
     ui->canvas_A->clearGraphs();
@@ -101,6 +108,7 @@ void MainWindow::slotClearCanvas()
     ui->lineEdit_current_buffer->clear();
     ui->lineEdit_samples_reserve->clear();
     ui->lineEdit_RMS_T->clear();
+    ui->lineEdit_PWM_value->clear();
 
     ui->lineEdit_RMS_A_x->clear();
     ui->lineEdit_RMS_A_y->clear();
