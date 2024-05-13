@@ -2,75 +2,6 @@
 #include <ui_mainwindow.h>
 
 
-void MainWindow::disable_all_widgets()
-{
-    ui->pushButton_DL_calibration->setEnabled(false);
-    ui->pushButton_DL_multimeter->setEnabled(false);
-    ui->pushButton_DL_write->setEnabled(false);
-    ui->pushButton_UL_calibration->setEnabled(false);
-    ui->pushButton_UL_multimeter->setEnabled(false);
-    ui->pushButton_UL_write->setEnabled(false);
-    ui->pushButton_dynamic_range_set->setEnabled(false);
-    ui->pushButton_dynamic_range_write->setEnabled(false);
-    ui->pushButton_mmpersec_calibration->setEnabled(false);
-    ui->pushButton_mmpersec_write->setEnabled(false);
-    ui->pushButton_calibrate_device->setEnabled(false);
-    ui->pushButton_axis_write->setEnabled(false);
-    ui->pushButton_thermoslope_set->setEnabled(false);
-    ui->pushButton_thermoslope_write->setEnabled(false);
-    ui->pushButton_thermointercept_set->setEnabled(false);
-    ui->pushButton_thermointercept_write->setEnabled(false);
-    ui->pushButton_thermo_lowTemperature_constant_set->setEnabled(false);
-    ui->pushButton_thermo_lowTemperature_constant_write->setEnabled(false);
-    ui->pushButton_constant_value_set->setEnabled(false);
-    ui->pushButton_constant_value_write->setEnabled(false);
-    ui->pushButton_default_settings_set->setEnabled(false);
-
-
-    ui->lineEdit_DL_value->setEnabled(false);
-    ui->lineEdit_UL_value->setEnabled(false);
-    ui->lineEdit_mmpersec_value->setEnabled(false);
-    ui->lineEdit_thermoslope->setEnabled(false);
-    ui->lineEdit_thermointercept->setEnabled(false);
-    ui->lineEdit_thermo_lowTemperature_constant->setEnabled(false);
-    ui->lineEdit_constant_value->setEnabled(false);
-
-    ui->cmb_dynamic_ranges->setEnabled(false);
-    ui->cmb_axis->setEnabled(false);
-
-    ui->pushButton_measuring_axis_set->setEnabled(false);
-    ui->cmb_axis_measuring->setEnabled(false);
-    ui->pushButton_measuring_axis_write->setEnabled(false);
-
-    ui->pushButton_constant_component_set->setEnabled(false);
-    ui->cmb_constant_component->setEnabled(false);
-    ui->pushButton_constant_component_write->setEnabled(false);
-
-    ui->pushButton_measuring_parameter_set->setEnabled(false);
-    ui->cmb_measuring_parameter->setEnabled(false);
-    ui->pushButton_measuring_parameter_write->setEnabled(false);
-}
-
-void MainWindow::reset_all_widgets()
-{
-    disable_all_widgets();
-
-    ui->pushButton_DL_calibration->setEnabled(true);
-    ui->pushButton_UL_calibration->setEnabled(true);
-    ui->pushButton_mmpersec_calibration->setEnabled(true);
-    ui->pushButton_dynamic_range_set->setEnabled(true);
-    ui->pushButton_thermoslope_set->setEnabled(true);
-    ui->pushButton_thermointercept_set->setEnabled(true);
-    ui->pushButton_thermo_lowTemperature_constant_set->setEnabled(true);
-    ui->pushButton_constant_value_set->setEnabled(true);
-    ui->pushButton_calibrate_device->setEnabled(true);
-    ui->pushButton_default_settings_set->setEnabled(true);
-    ui->pushButton_measuring_axis_set->setEnabled(true);
-    ui->pushButton_constant_component_set->setEnabled(true);
-    ui->pushButton_measuring_parameter_set->setEnabled(true);
-}
-
-
 void MainWindow::printConsole(const QString& string)
 {
     QString message = string;
@@ -319,17 +250,6 @@ void MainWindow::initializeConnects()
     connect(this, SIGNAL(setSettingsUI(appSettingsStruct)), &settingsUI_, SLOT(setVisibleSettings(appSettingsStruct)));
 
     connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
-}
-
-// Debug
-void MainWindow::serialGetConfig()
-{
-    // Successfully connected
-    qDebug() << "baudRate:" << serialPort->baudRate();
-    qDebug() << "parity:" << serialPort->parity();
-    qDebug() << "stopBits:" << serialPort->stopBits();
-    qDebug() << "dataBits:" << serialPort->dataBits();
-    qDebug() << "flowControl:" << serialPort->flowControl();
 }
 
 void MainWindow::on_pushButton_thermohelp_clicked()

@@ -44,35 +44,23 @@ private slots:
 
     void printConsole(const QString& string);
 
-    void on_pushButton_DL_calibration_clicked();
-
-    void disable_all_widgets();
-
-    void reset_all_widgets();
-
     void on_pushButton_DL_write_clicked();
-
-    void on_pushButton_DL_multimeter_clicked();
-
-    void on_pushButton_UL_calibration_clicked();
-
-    void on_pushButton_UL_multimeter_clicked();
-
     void on_pushButton_UL_write_clicked();
-
-    void on_pushButton_mmpersec_calibration_clicked();
-
     void on_pushButton_mmpersec_write_clicked();
-
-    void on_pushButton_calibrate_device_clicked();
-
     void on_pushButton_COM_connect_clicked();
+    void on_pushButton_dynamic_range_write_clicked();
+    void on_pushButton_thermoslope_write_clicked();
+    void on_pushButton_thermointercept_write_clicked();
+    void on_pushButton_constant_value_write_clicked();
+    void on_pushButton_default_settings_set_clicked();
+    void on_pushButton_get_config_clicked();
+    void on_pushButton_thermo_lowTemperature_constant_write_clicked();
+    void on_pushButton_measuring_axis_write_clicked();
+    void on_pushButton_constant_component_write_clicked();
+    void on_pushButton_measuring_parameter_write_clicked();
+    void on_pushButton_axis_write_clicked();
 
     void receiveMessage();
-
-    void on_pushButton_dynamic_range_set_clicked();
-
-    void on_pushButton_dynamic_range_write_clicked();
 
     void on_pushButton_manual_clicked();
 
@@ -97,29 +85,9 @@ private slots:
 
     void on_pushButton_userCommand_clicked();
 
-    void serialGetConfig();
-
     void slotClearCanvas();
     void slotClearConsole();
     void slotClearAll();
-
-    void on_pushButton_thermoslope_set_clicked();
-
-    void on_pushButton_thermoslope_write_clicked();
-
-    void on_pushButton_constant_value_set_clicked();
-
-    void on_pushButton_thermointercept_set_clicked();
-
-    void on_pushButton_thermointercept_write_clicked();
-
-    void on_pushButton_constant_value_write_clicked();
-
-    void on_pushButton_default_settings_set_clicked();
-
-    void on_pushButton_thermo_lowTemperature_constant_set_clicked();
-
-    void on_pushButton_thermo_lowTemperature_constant_write_clicked();
 
     void on_pushButton_thermohelp_clicked();
 
@@ -127,22 +95,19 @@ private slots:
     void updateLineEditValue(QLineEdit *lineEdit, const QString &message);
     void handleInitMessage(const QString &message);
     void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
-    void on_pushButton_axis_write_clicked();
-
-    void on_pushButton_measuring_axis_set_clicked();
-
-    void on_pushButton_measuring_axis_write_clicked();
-
-    void on_pushButton_constant_component_set_clicked();
-
-    void on_pushButton_constant_component_write_clicked();
 
     void setupGraphsOnce(int canvas_index, bool from_ui = false);
     void plotGraph(int canvas_index, int graphIndex, float_t value);
-    void on_pushButton_measuring_parameter_set_clicked();
 
-    void on_pushButton_measuring_parameter_write_clicked();
+    void writeToSerial(const char* command);
+    // Обработчик для отправки параметризированных команд с использованием QLineEdit
+    void sendCommand(const char* commandBase, QLineEdit* lineEdit);
+    void sendCommand(const char* commandBase, QComboBox* comboBox);
+    void sendCommand(const char* commandBase, QSpinBox* spinBox);
 
+    void on_cmb_graph_selector_currentIndexChanged(int index);
+
+    void handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;

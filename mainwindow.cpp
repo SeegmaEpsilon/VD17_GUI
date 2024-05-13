@@ -7,10 +7,10 @@ MainWindow::MainWindow(QWidget *parent) :
     cbA(32),            // Кольцевой буфер на 32 элемента
     cbV(32),            // Кольцевой буфер на 32 элемента
     cbT(32),            // Кольцевой буфер на 32 элемента
-    counterA(0),        // Счетчик на графике для ускорения
-    counterV(0),        // Счетчик на графике для скорости
     valueA(0),          // Текущее значение виброускорения
     valueV(0),          // Текущее значение виброскорости
+    counterA(0),        // Счетчик на графике для ускорения
+    counterV(0),        // Счетчик на графике для скорости
     flagMeasureDone(0), // Флаг, показывающий, что текущее измерение закончено
     buttonState(0),     // Состояние кнопки подключиться/отключиться
     isMouseHold_(false) // Отслеживает, зажата ли ЛКМ или нет (для графика)
@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->cmb_measuring_parameter->lineEdit()->setReadOnly(true);
     ui->cmb_measuring_parameter->lineEdit()->setAlignment(Qt::AlignCenter);
 
+    on_cmb_graph_selector_currentIndexChanged(ui->cmb_graph_selector->currentIndex());
+
     initializeConnects();
     initializeAppSettings();
     initializeMenu();
@@ -46,8 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
     /* Первое сканирование на наличие COM-портов */
     serialPortCheckout();
     serialTimer.start(MS_SERIAL_TIMEOUT);
-
-    disable_all_widgets();
 }
 
 MainWindow::~MainWindow()
@@ -129,7 +129,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
         buttonState = COM_PORT_DISCONNECTED;
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
-        disable_all_widgets();
         ui->pushButton_userCommand->setEnabled(false);
     }
 }
@@ -142,7 +141,7 @@ void MainWindow::receiveMessage()
     // Обработка полных сообщений в буфере
     while (!serialBuffer.isEmpty())
     {
-        int endIndex = serialBuffer.indexOf('\n'); // Предположим, что сообщения заканчиваются символом новой строки
+        int endIndex = serialBuffer.indexOf(messageCode_); // Предположим, что сообщения заканчиваются символом новой строки
         if (endIndex == -1) break; // Если нет полного сообщения, выходим из цикла
 
         QString message = serialBuffer.left(endIndex); // Извлекаем сообщение
@@ -152,150 +151,83 @@ void MainWindow::receiveMessage()
     }
 }
 
-void MainWindow::processMessage(const QString & message)
+void MainWindow::processMessage(const QString &message)
 {
+    // Маппинг ключевых фраз на методы и соответствующие элементы UI для сообщений отладки
+    const std::map<QString, std::function<void()>> debugActions =
+    {
+        {"x_mg", [this, &message](){ updateLineEditValue(ui->lineEdit_x_mg, message); }},
+        {"y_mg", [this, &message](){ updateLineEditValue(ui->lineEdit_y_mg, message); }},
+        {"z_mg", [this, &message](){ updateLineEditValue(ui->lineEdit_z_mg, message); }},
+        {"A_x", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_x, 0, 0); }},
+        {"A_y", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_y, 0, 1); }},
+        {"A_z", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_z, 0, 2); }},
+        {"A_m", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_xyz, 0, 3); }},
+        {"V_x", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_x, 1, 0); }},
+        {"V_y", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_y, 1, 1); }},
+        {"V_z", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_z, 1, 2); }},
+        {"V_m", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_xyz, 1, 3); }},
+        {"current_buffer", [this, &message](){ updateLineEditValue(ui->lineEdit_current_buffer, message); }},
+        {"current_samples", [this, &message](){ updateLineEditValue(ui->lineEdit_samples_reserve, message); }},
+        {"T_rms", [this, &message](){ updateLineEditValue(ui->lineEdit_RMS_T, message); }},
+        {"PWM_value", [this, &message](){ updateLineEditValue(ui->lineEdit_PWM_value, message); }}
+    };
+
     if (message.contains("[DEBUG]", Qt::CaseInsensitive))
     {
-        if (message.contains("x_mg", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_x_mg, message);
-        }
-        else if (message.contains("y_mg", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_y_mg, message);
-        }
-        else if (message.contains("z_mg", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_z_mg, message);
-        }
-        else if (message.contains("A_x", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_A_x, message);
-            plotGraph(0, 0, ui->lineEdit_RMS_A_x->text().toFloat());
-        }
-        else if (message.contains("A_y", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_A_y, message);
-            plotGraph(0, 1, ui->lineEdit_RMS_A_y->text().toFloat());
-        }
-        else if (message.contains("A_z", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_A_z, message);
-            plotGraph(0, 2, ui->lineEdit_RMS_A_z->text().toFloat());
-        }
-        else if (message.contains("A_m", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_A_xyz, message);
-            plotGraph(0, 3, ui->lineEdit_RMS_A_xyz->text().toFloat());
-        }
-        else if (message.contains("V_x", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_V_x, message);
-            plotGraph(1, 0, ui->lineEdit_RMS_V_x->text().toFloat());
-        }
-        else if (message.contains("V_y", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_V_y, message);
-            plotGraph(1, 1, ui->lineEdit_RMS_V_y->text().toFloat());
-        }
-        else if (message.contains("V_z", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_V_z, message);
-            plotGraph(1, 2, ui->lineEdit_RMS_V_z->text().toFloat());
-        }
-        else if (message.contains("V_m", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_V_xyz, message);
-            plotGraph(1, 3, ui->lineEdit_RMS_V_xyz->text().toFloat());
-        }
-        else if (message.contains("current_buffer", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_current_buffer, message);
-        }
-        else if (message.contains("current_samples", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_samples_reserve, message);
-        }
-        else if (message.contains("T_rms", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_RMS_T, message);
-        }
-        else if (message.contains("PWM_value", Qt::CaseInsensitive))
-        {
-            updateLineEditValue(ui->lineEdit_PWM_value, message);
+        for (const auto& action : debugActions) {
+            if (message.contains(action.first, Qt::CaseInsensitive))
+            {
+                action.second();
+                return;
+            }
         }
     }
     else if (message.contains("[INIT]", Qt::CaseInsensitive))
     {
         handleInitMessage(message);
-    }
-    else
-    {
+    } else {
         printConsole(message);
     }
 }
 
+void MainWindow::handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn)
+{
+    updateLineEditValue(lineEdit, message);
+    plotGraph(graphRow, graphColumn, lineEdit->text().toFloat());
+}
+
 void MainWindow::handleInitMessage(const QString &message)
 {
-    if (message.contains("Waiting for a command", Qt::CaseInsensitive))
+    // Маппинг ключевых фраз на методы и соответствующие элементы UI
+    const std::map<QString, std::function<void(const QString&)>> actionMap =
     {
-        printConsole(message);
-        reset_all_widgets();
-    }
-    else if (message.contains("Sensor started", Qt::CaseInsensitive) || message.contains("Restarting MCU", Qt::CaseInsensitive))
+        {"Sensor started", [this](const QString& msg) { printConsole(msg); }},
+        {"Restarting MCU", [this](const QString& msg) { printConsole(msg); }},
+        {"Code 4mA", [this](const QString& msg) { updateSpinBoxValue(ui->lineEdit_DL_value, msg); }},
+        {"Code 20mA", [this](const QString& msg) { updateSpinBoxValue(ui->lineEdit_UL_value, msg); }},
+        {"Max parameter value", [this](const QString& msg) { updateLineEditValue(ui->lineEdit_mmpersec_value, msg); }},
+        {"Dynamic range", [this](const QString& msg) { updateComboBoxValue(ui->cmb_dynamic_ranges, msg); }},
+        {"Measuring axis", [this](const QString& msg) { updateComboBoxValue(ui->cmb_axis_measuring, msg); }},
+        {"Last calibrated axis", [this](const QString& msg) { updateComboBoxValue(ui->cmb_axis, msg); }},
+        {"Measuring parameter", [this](const QString& msg) { updateComboBoxValue(ui->cmb_measuring_parameter, msg); }},
+        {"Thermo slope", [this](const QString& msg) { updateLineEditValue(ui->lineEdit_thermoslope, msg); }},
+        {"Thermo intercept", [this](const QString& msg) { updateLineEditValue(ui->lineEdit_thermointercept, msg); }},
+        {"Thermo low", [this](const QString& msg) { updateLineEditValue(ui->lineEdit_thermo_lowTemperature_constant, msg); }},
+        {"Constant velocity", [this](const QString& msg) { updateLineEditValue(ui->lineEdit_constant_value, msg); }},
+        {"Constant component", [this](const QString& msg) { updateComboBoxValue(ui->cmb_constant_component, msg); }}
+    };
+
+    for (auto it = actionMap.begin(); it != actionMap.end(); ++it)
     {
-        printConsole(message);
-        disable_all_widgets();
+        if (message.contains(it->first, Qt::CaseInsensitive))
+        {
+            it->second(message);
+            return;
+        }
     }
-    else if (message.contains("Code 4mA", Qt::CaseInsensitive))
-    {
-        updateSpinBoxValue(ui->lineEdit_DL_value, message);
-    }
-    else if (message.contains("Code 20mA", Qt::CaseInsensitive))
-    {
-        updateSpinBoxValue(ui->lineEdit_UL_value, message);
-    }
-    else if (message.contains("Max parameter value", Qt::CaseInsensitive))
-    {
-        updateLineEditValue(ui->lineEdit_mmpersec_value, message);
-    }
-    else if (message.contains("Dynamic range", Qt::CaseInsensitive))
-    {
-        updateComboBoxValue(ui->cmb_dynamic_ranges, message);
-    }
-    else if (message.contains("Measuring axis", Qt::CaseInsensitive))
-    {
-        updateComboBoxValue(ui->cmb_axis_measuring, message);
-        updateComboBoxValue(ui->cmb_axis, message);
-    }
-    else if (message.contains("Measuring parameter", Qt::CaseInsensitive))
-    {
-        updateComboBoxValue(ui->cmb_measuring_parameter, message);
-    }
-    else if (message.contains("Thermo slope", Qt::CaseInsensitive))
-    {
-        updateLineEditValue(ui->lineEdit_thermoslope, message);
-    }
-    else if (message.contains("Thermo intercept", Qt::CaseInsensitive))
-    {
-        updateLineEditValue(ui->lineEdit_thermointercept, message);
-    }
-    else if (message.contains("Thermo low", Qt::CaseInsensitive))
-    {
-        updateLineEditValue(ui->lineEdit_thermo_lowTemperature_constant, message);
-    }
-    else if (message.contains("Constant velocity", Qt::CaseInsensitive))
-    {
-        updateLineEditValue(ui->lineEdit_constant_value, message);
-    }
-    else if (message.contains("Constant component", Qt::CaseInsensitive))
-    {
-        updateComboBoxValue(ui->cmb_constant_component, message);
-    }
-    else
-    {
-        printConsole(message);
-    }
+
+    printConsole(message);
 }
 
 void MainWindow::updateLineEditValue(QLineEdit *lineEdit, const QString &message)
@@ -346,4 +278,21 @@ void MainWindow::on_pushButton_settings_clicked()
     settingsUI_.show();
 }
 
-
+void MainWindow::on_cmb_graph_selector_currentIndexChanged(int index)
+{
+    if(index == 0)
+    {
+        ui->canvas_A->setVisible(true);
+        ui->canvas_V->setVisible(false);
+    }
+    else if(index == 1)
+    {
+        ui->canvas_A->setVisible(false);
+        ui->canvas_V->setVisible(true);
+    }
+    else if(index == 2)
+    {
+        ui->canvas_A->setVisible(true);
+        ui->canvas_V->setVisible(true);
+    }
+}

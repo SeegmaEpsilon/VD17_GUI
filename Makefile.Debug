@@ -2928,7 +2928,6 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QPushButton \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QInputDialog \
 		ui_mainwindow.h \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QCheckBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
@@ -2938,7 +2937,8 @@ debug/mainwindow.o: mainwindow.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\mainwindow.o mainwindow.cpp
 
 debug/qcustomplot.o: qcustomplot.cpp qcustomplot.h \
@@ -3991,7 +3991,6 @@ debug/serialcommands.o: serialcommands.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QPushButton \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QInputDialog \
 		ui_mainwindow.h \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QCheckBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
@@ -4001,7 +4000,8 @@ debug/serialcommands.o: serialcommands.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\serialcommands.o serialcommands.cpp
 
 debug/supportfunctions.o: supportfunctions.cpp mainwindow.h \
@@ -4539,7 +4539,6 @@ debug/supportfunctions.o: supportfunctions.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QPushButton \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QInputDialog \
 		ui_mainwindow.h \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QCheckBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
@@ -4549,7 +4548,8 @@ debug/supportfunctions.o: supportfunctions.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\supportfunctions.o supportfunctions.cpp
 
 debug/mouseprocessing.o: mouseprocessing.cpp mainwindow.h \
@@ -5087,7 +5087,6 @@ debug/mouseprocessing.o: mouseprocessing.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QPushButton \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QInputDialog \
 		ui_mainwindow.h \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QCheckBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
@@ -5097,7 +5096,8 @@ debug/mouseprocessing.o: mouseprocessing.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\mouseprocessing.o mouseprocessing.cpp
 
 debug/plotprocessing.o: plotprocessing.cpp mainwindow.h \
@@ -5635,7 +5635,6 @@ debug/plotprocessing.o: plotprocessing.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QPushButton \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QInputDialog \
 		ui_mainwindow.h \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QCheckBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QComboBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QFrame \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QGridLayout \
@@ -5645,7 +5644,8 @@ debug/plotprocessing.o: plotprocessing.cpp mainwindow.h \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpacerItem \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QSpinBox \
 		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QStatusBar \
-		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QTextEdit \
+		../../Tool/Qt\ (added)/Qt5_14_2/5.14.2/mingw73_32/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\plotprocessing.o plotprocessing.cpp
 
 debug/appsettings.o: appsettings.cpp appsettings.h \
