@@ -40,7 +40,18 @@ signals:
     void setSettingsUI(appSettingsStruct settings);
 
 private slots:
+    bool serialPortCheckout();
+    void receiveMessage();
     void processMessage(const QString & message);
+
+    void writeToSerial(const char* command);
+    void sendCommand(const char* commandBase, QLineEdit* lineEdit);
+    void sendCommand(const char* commandBase, QComboBox* comboBox);
+    void sendCommand(const char* commandBase, QSpinBox* spinBox);
+
+    void handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn);
+    void handleDebugMessage(const QString &message);
+    void handleInitMessage(const QString &message);
 
     void printConsole(const QString& string);
 
@@ -60,11 +71,10 @@ private slots:
     void on_pushButton_measuring_parameter_write_clicked();
     void on_pushButton_axis_write_clicked();
 
-    void receiveMessage();
-
     void on_pushButton_manual_clicked();
-
-    bool serialPortCheckout();
+    void on_pushButton_settings_clicked();
+    void on_pushButton_userCommand_clicked();
+    void on_pushButton_thermohelp_clicked();
 
     void slotMouseMove(QMouseEvent * event);
     void slotMouseDoubleClick(QMouseEvent * event);
@@ -75,7 +85,9 @@ private slots:
     void slotResetCanvas();
     void slotSaveDataFromPlot();
 
-    void on_pushButton_settings_clicked();
+    void slotClearCanvas();
+    void slotClearConsole();
+    void slotClearAll();
 
     void initializeConnects();
     void initializeAppSettings();
@@ -83,31 +95,15 @@ private slots:
 
     void saveAppSettings(appSettingsStruct tempSettings);
 
-    void on_pushButton_userCommand_clicked();
-
-    void slotClearCanvas();
-    void slotClearConsole();
-    void slotClearAll();
-
-    void on_pushButton_thermohelp_clicked();
-
     void updateComboBoxValue(QComboBox *comboBox, const QString &message);
     void updateLineEditValue(QLineEdit *lineEdit, const QString &message);
-    void handleInitMessage(const QString &message);
     void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
 
     void setupGraphsOnce(int canvas_index, bool from_ui = false);
     void plotGraph(int canvas_index, int graphIndex, float_t value);
 
-    void writeToSerial(const char* command);
-    // Обработчик для отправки параметризированных команд с использованием QLineEdit
-    void sendCommand(const char* commandBase, QLineEdit* lineEdit);
-    void sendCommand(const char* commandBase, QComboBox* comboBox);
-    void sendCommand(const char* commandBase, QSpinBox* spinBox);
-
     void on_cmb_graph_selector_currentIndexChanged(int index);
 
-    void handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn);
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;

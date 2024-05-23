@@ -115,7 +115,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
         connect(serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
         buttonState = COM_PORT_CONNECTED;
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
-        ui->pushButton_userCommand->setEnabled(true);
     }
     else if (buttonState == COM_PORT_CONNECTED)
     {
@@ -129,7 +128,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
         buttonState = COM_PORT_DISCONNECTED;
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
-        ui->pushButton_userCommand->setEnabled(false);
     }
 }
 
@@ -153,48 +151,50 @@ void MainWindow::receiveMessage()
 
 void MainWindow::processMessage(const QString &message)
 {
-    // Маппинг ключевых фраз на методы и соответствующие элементы UI для сообщений отладки
-    const std::map<QString, std::function<void()>> debugActions =
-    {
-        {"x_mg", [this, &message](){ updateLineEditValue(ui->lineEdit_x_mg, message); }},
-        {"y_mg", [this, &message](){ updateLineEditValue(ui->lineEdit_y_mg, message); }},
-        {"z_mg", [this, &message](){ updateLineEditValue(ui->lineEdit_z_mg, message); }},
-        {"A_x", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_x, 0, 0); }},
-        {"A_y", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_y, 0, 1); }},
-        {"A_z", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_z, 0, 2); }},
-        {"A_m", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_A_xyz, 0, 3); }},
-        {"V_x", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_x, 1, 0); }},
-        {"V_y", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_y, 1, 1); }},
-        {"V_z", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_z, 1, 2); }},
-        {"V_m", [this, &message](){ handleAxis(message, ui->lineEdit_RMS_V_xyz, 1, 3); }},
-        {"current_buffer", [this, &message](){ updateLineEditValue(ui->lineEdit_current_buffer, message); }},
-        {"current_samples", [this, &message](){ updateLineEditValue(ui->lineEdit_samples_reserve, message); }},
-        {"T_rms", [this, &message](){ updateLineEditValue(ui->lineEdit_RMS_T, message); }},
-        {"PWM_value", [this, &message](){ updateLineEditValue(ui->lineEdit_PWM_value, message); }}
-    };
-
     if (message.contains("[DEBUG]", Qt::CaseInsensitive))
     {
-        for (const auto& action : debugActions) {
-            if (message.contains(action.first, Qt::CaseInsensitive))
-            {
-                action.second();
-                return;
-            }
-        }
+        handleDebugMessage(message);
     }
     else if (message.contains("[INIT]", Qt::CaseInsensitive))
     {
         handleInitMessage(message);
-    } else {
+    }
+    else
+    {
         printConsole(message);
     }
 }
 
-void MainWindow::handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn)
+void MainWindow::handleDebugMessage(const QString &message)
 {
-    updateLineEditValue(lineEdit, message);
-    plotGraph(graphRow, graphColumn, lineEdit->text().toFloat());
+    // Маппинг ключевых фраз на методы и соответствующие элементы UI для сообщений отладки
+    const std::map<QString, std::function<void(const QString&)>> actionMap =
+    {
+        {"x_mg", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_x_mg, msg); }},
+        {"y_mg", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_y_mg, msg); }},
+        {"z_mg", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_z_mg, msg); }},
+        {"A_x", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_x, 0, 0); }},
+        {"A_y", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_y, 0, 1); }},
+        {"A_z", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_z, 0, 2); }},
+        {"A_m", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_xyz, 0, 3); }},
+        {"V_x", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_x, 1, 0); }},
+        {"V_y", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_y, 1, 1); }},
+        {"V_z", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_z, 1, 2); }},
+        {"V_m", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_xyz, 1, 3); }},
+        {"current_buffer", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_current_buffer, msg); }},
+        {"current_samples", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_samples_reserve, msg); }},
+        {"T_rms", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_RMS_T, msg); }},
+        {"PWM_value", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_PWM_value, msg); }}
+    };
+
+    for (auto it = actionMap.begin(); it != actionMap.end(); ++it)
+    {
+        if (message.contains(it->first, Qt::CaseInsensitive))
+        {
+            it->second(message);
+            return;
+        }
+    }
 }
 
 void MainWindow::handleInitMessage(const QString &message)
@@ -228,6 +228,12 @@ void MainWindow::handleInitMessage(const QString &message)
     }
 
     printConsole(message);
+}
+
+void MainWindow::handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn)
+{
+    updateLineEditValue(lineEdit, message);
+    plotGraph(graphRow, graphColumn, lineEdit->text().toFloat());
 }
 
 void MainWindow::updateLineEditValue(QLineEdit *lineEdit, const QString &message)

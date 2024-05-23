@@ -47,7 +47,7 @@ void MainWindow::sendCommand(const char* commandBase, QComboBox* comboBox)
     }
 }
 
-// Обработчики для команд, задаваемых через QComboBox
+// Обработчики для команд, задаваемых через QSpinBox
 void MainWindow::sendCommand(const char* commandBase, QSpinBox* spinBox)
 {
     if (spinBox)
@@ -55,13 +55,6 @@ void MainWindow::sendCommand(const char* commandBase, QSpinBox* spinBox)
         QString fullCommand = QString(commandBase) + QString::number(spinBox->value());
         writeToSerial(fullCommand.toUtf8().constData());
     }
-}
-
-void MainWindow::on_pushButton_dynamic_range_write_clicked()
-{
-    static QMap<QString, QString> map = {{"2g", "0"}, {"4g", "1"}, {"8g", "2"}, {"16g", "3"}};
-    QString dynamicRange = QString(CMD_DYNAMIC_MODE_SET) + map.value(ui->cmb_dynamic_ranges->currentText());
-    writeToSerial(dynamicRange.toUtf8().constData());
 }
 
 // Обработчик нажатия кнопки для установки настроек по умолчанию
@@ -98,6 +91,11 @@ void MainWindow::on_pushButton_default_settings_set_clicked()
 void MainWindow::on_pushButton_get_config_clicked()
 {
     writeToSerial(CMD_GET_CONFIG);
+}
+
+void MainWindow::on_pushButton_dynamic_range_write_clicked()
+{
+    sendCommand(CMD_DYNAMIC_MODE_SET, ui->cmb_dynamic_ranges);
 }
 
 // Обработчики для различных параметризированных команд
