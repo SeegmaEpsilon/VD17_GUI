@@ -76,7 +76,7 @@ void appSettings::setVisibleSettings(appSettingsStruct settings)
 void appSettings::on_pushButton_defaultSettings_clicked()
 {
     ui->lineEdit_bufferSize->setText("32");
-    ui->lineEdit_messageCode->setText("***");
+    ui->lineEdit_messageCode->setText("\n");
 
     ui->comboBox_UART_dataBits->setCurrentIndex(0);
     ui->comboBox_UART_flowControl->setCurrentIndex(0);

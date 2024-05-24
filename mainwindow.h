@@ -40,43 +40,41 @@ signals:
     void setSettingsUI(appSettingsStruct settings);
 
 private slots:
+    bool serialPortCheckout();
+    void receiveMessage();
+    void processMessage(const QString & message);
+
+    void writeToSerial(const char* command);
+    void sendCommand(const char* commandBase, QLineEdit* lineEdit);
+    void sendCommand(const char* commandBase, QComboBox* comboBox);
+    void sendCommand(const char* commandBase, QSpinBox* spinBox);
+
+    void handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn);
+    void handleDebugMessage(const QString &message);
+    void handleInitMessage(const QString &message);
+
     void printConsole(const QString& string);
 
-    void on_pushButton_DL_calibration_clicked();
-
-    void disable_all_widgets();
-
-    void reset_all_widgets();
-
     void on_pushButton_DL_write_clicked();
-
-    void on_pushButton_DL_multimeter_clicked();
-
-    void on_pushButton_UL_calibration_clicked();
-
-    void on_pushButton_UL_multimeter_clicked();
-
     void on_pushButton_UL_write_clicked();
-
-    void on_pushButton_mmpersec_calibration_clicked();
-
     void on_pushButton_mmpersec_write_clicked();
-
-    void on_pushButton_calibrate_device_clicked();
-
     void on_pushButton_COM_connect_clicked();
-
-    void receiveMessage();
-
-    void plotGraph(QString& msg);
-
-    void on_pushButton_dynamic_range_set_clicked();
-
     void on_pushButton_dynamic_range_write_clicked();
+    void on_pushButton_thermoslope_write_clicked();
+    void on_pushButton_thermointercept_write_clicked();
+    void on_pushButton_constant_value_write_clicked();
+    void on_pushButton_default_settings_set_clicked();
+    void on_pushButton_get_config_clicked();
+    void on_pushButton_thermo_lowTemperature_constant_write_clicked();
+    void on_pushButton_measuring_axis_write_clicked();
+    void on_pushButton_constant_component_write_clicked();
+    void on_pushButton_measuring_parameter_write_clicked();
+    void on_pushButton_axis_write_clicked();
 
     void on_pushButton_manual_clicked();
-
-    bool serialPortCheckout();
+    void on_pushButton_settings_clicked();
+    void on_pushButton_userCommand_clicked();
+    void on_pushButton_thermohelp_clicked();
 
     void slotMouseMove(QMouseEvent * event);
     void slotMouseDoubleClick(QMouseEvent * event);
@@ -87,47 +85,25 @@ private slots:
     void slotResetCanvas();
     void slotSaveDataFromPlot();
 
-    void on_pushButton_settings_clicked();
-
-    void initializeConnects();
-    void initializeAppSettings();
-    void initializeMenu();
-    void initializeCanvas();
-
-    void saveAppSettings(appSettingsStruct tempSettings);
-
-    void on_pushButton_userCommand_clicked();
-
-    void serialGetConfig();
-
     void slotClearCanvas();
     void slotClearConsole();
     void slotClearAll();
 
-    void on_pushButton_thermoslope_set_clicked();
+    void initializeConnects();
+    void initializeAppSettings();
+    void initializeMenu();
 
-    void on_pushButton_thermoslope_write_clicked();
-
-    void on_pushButton_constant_value_set_clicked();
-
-    void on_pushButton_thermointercept_set_clicked();
-
-    void on_pushButton_thermointercept_write_clicked();
-
-    void on_pushButton_constant_value_write_clicked();
-
-    void on_pushButton_default_settings_set_clicked();
-
-    void on_pushButton_thermo_lowTemperature_constant_set_clicked();
-
-    void on_pushButton_thermo_lowTemperature_constant_write_clicked();
-
-    void on_pushButton_thermohelp_clicked();
+    void saveAppSettings(appSettingsStruct tempSettings);
 
     void updateComboBoxValue(QComboBox *comboBox, const QString &message);
     void updateLineEditValue(QLineEdit *lineEdit, const QString &message);
-    void handleInitMessage(const QString &message);
     void updateSpinBoxValue(QSpinBox *spinBox, const QString &message);
+
+    void setupGraphsOnce(int canvas_index, bool from_ui = false);
+    void plotGraph(int canvas_index, int graphIndex, float_t value);
+
+    void on_cmb_graph_selector_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
@@ -139,11 +115,12 @@ private:
     CircularBuffer cbV;
     CircularBuffer cbT;
 
-    uint32_t counter;
-
     double valueA;
     double valueV;
     double valueT;
+
+    int counterA;
+    int counterV;
 
     uint8_t flagMeasureDone;
     uint8_t buttonState;
@@ -170,6 +147,8 @@ private:
     QSerialPort::FlowControl flowControl_;
 
     QTextEdit thermoHelp;
+
+    QCustomPlot *activeCanvas;  // Указатель на активный канвас
 };
 
 #endif // MAINWINDOW_H
