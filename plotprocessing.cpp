@@ -6,7 +6,7 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
     static bool isSetupDoneA = false;
     static bool isSetupDoneV = false;
 
-    if(canvas_index == 0)
+    if(canvas_index == DRAW_ACCELERATION)
     {
         if (!isSetupDoneA || from_ui)
         {
@@ -51,7 +51,7 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
             isSetupDoneA = true;
         }
     }
-    else if(canvas_index == 1)
+    else if(canvas_index == DRAW_VELOCITY)
     {
         if (!isSetupDoneV || from_ui)
         {
@@ -101,47 +101,37 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
 
 void MainWindow::plotGraph(int canvas_index, int graphIndex, float_t value)
 {
-    if(canvas_index == 0)
+    static const int maxDataPoints = 500;   // Максимальное количество точек данных для отображения
+
+    QCustomPlot* canvas = nullptr;
+    int* counter = nullptr;
+
+    // Выбор соответствующего холста и счетчика
+    if (canvas_index == DRAW_ACCELERATION)
     {
-        static int callCounter = 0;
-
-        // Настройка графиков, если это не было сделано ранее
-        setupGraphsOnce(0);
-
-        // Добавляем данные на указанный график
-        ui->canvas_A->graph(graphIndex)->rescaleAxes(true);
-        ui->canvas_A->graph(graphIndex)->addData(counterA, value);
-
-        // Перерисовываем график
-        ui->canvas_A->replot();
-        callCounter++;
-        if(callCounter == ui->canvas_A->graphCount())
-        {
-            callCounter = 0;
-            counterA++;
-        }
-
+        canvas = ui->canvas_A;
+        counter = &counterA;
     }
-    else if(canvas_index == 1)
+    else if (canvas_index == DRAW_VELOCITY)
     {
-        static int callCounter = 0;
-
-        // Настройка графиков, если это не было сделано ранее
-        setupGraphsOnce(1);
-
-        // Добавляем данные на указанный график
-        ui->canvas_V->graph(graphIndex)->rescaleAxes(true);
-        ui->canvas_V->graph(graphIndex)->addData(counterV, value);
-
-        // Перерисовываем график
-        ui->canvas_V->replot();
-        callCounter++;
-        if(callCounter == ui->canvas_V->graphCount())
-        {
-            callCounter = 0;
-            counterV++;
-        }
+        canvas = ui->canvas_V;
+        counter = &counterV;
     }
+
+    setupGraphsOnce(canvas_index); // Настройка графиков, если это не было сделано ранее
+
+    canvas->graph(graphIndex)->addData(*counter, value); // Добавляем данные на указанный график
+
+    // Удаляем старые данные, если их количество превышает maxDataPoints
+    if (canvas->graph(graphIndex)->data()->size() > maxDataPoints)
+    {
+        canvas->graph(graphIndex)->data()->removeBefore(*counter - maxDataPoints);
+    }
+
+    canvas->graph(graphIndex)->rescaleKeyAxis();
+    canvas->replot(); // Масштабируем оси и перерисовываем график
+
+    (*counter)++; // Увеличиваем счетчик для новой точки
 }
 
 

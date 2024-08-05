@@ -20,16 +20,22 @@
 #define CMD_REMOVE_CONSTANT_COMPONENT_SET "CC"
 #define CMD_GET_CONFIG "GC"
 
-#define SOFTWARE_VERSION QString("2.7.0")
+#define SOFTWARE_VERSION QString("2.7.1")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500
 
-enum BUTTON_STATE
+typedef enum
 {
     COM_PORT_DISCONNECTED = 0,
     COM_PORT_CONNECTED = 1
-};
+} button_state_t;
+
+typedef enum
+{
+    DRAW_ACCELERATION = 0,
+    DRAW_VELOCITY = 1
+} canvas_t;
 
 struct appSettingsStruct
 {

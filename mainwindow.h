@@ -41,7 +41,6 @@ signals:
 
 private slots:
     bool serialPortCheckout();
-    void receiveMessage();
     void processMessage(const QString & message);
 
     void writeToSerial(const char* command);

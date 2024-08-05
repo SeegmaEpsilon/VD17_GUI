@@ -112,7 +112,46 @@ void MainWindow::on_pushButton_COM_connect_clicked()
             return;
         }
 
-        connect(serialPort, SIGNAL(readyRead()), this, SLOT(receiveMessage()));
+        connect(serialPort, &QSerialPort::readyRead, [this]()
+        {
+            QByteArray data = serialPort->readAll();
+            serialBuffer.append(data);
+
+            // Обработка полных сообщений в буфере
+            while (!serialBuffer.isEmpty())
+            {
+                int endIndexR = serialBuffer.indexOf('\r'); // Поиск символа возврата каретки
+                int endIndexN = serialBuffer.indexOf('\n'); // Поиск символа новой строки
+
+                int endIndex = -1;
+                bool isDoubleEnd = false;
+
+                if (endIndexR != -1 && (endIndexR < endIndexN || endIndexN == -1))
+                {
+                    endIndex = endIndexR;
+                    if (endIndexN == endIndexR + 1) // Проверка на '\r\n'
+                    {
+                        isDoubleEnd = true;
+                    }
+                }
+                else if (endIndexN != -1 && (endIndexN < endIndexR || endIndexR == -1))
+                {
+                    endIndex = endIndexN;
+                    if (endIndexR == endIndexN + 1) // Проверка на '\n\r'
+                    {
+                        isDoubleEnd = true;
+                    }
+                }
+
+                if (endIndex == -1) break; // Если нет полного сообщения, выходим из цикла
+
+                QString message = serialBuffer.left(endIndex); // Извлекаем сообщение
+                serialBuffer.remove(0, endIndex + (isDoubleEnd ? 2 : 1)); // Удаляем обработанное сообщение из буфера
+
+                processMessage(message); // Обработка извлеченного сообщения
+            }
+        });
+
         buttonState = COM_PORT_CONNECTED;
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Отключиться"));
     }
@@ -128,24 +167,6 @@ void MainWindow::on_pushButton_COM_connect_clicked()
 
         buttonState = COM_PORT_DISCONNECTED;
         ui->pushButton_COM_connect->setText(QString::fromUtf8("Подключиться"));
-    }
-}
-
-void MainWindow::receiveMessage()
-{
-    QByteArray data = serialPort->readAll();
-    serialBuffer.append(data);
-
-    // Обработка полных сообщений в буфере
-    while (!serialBuffer.isEmpty())
-    {
-        int endIndex = serialBuffer.indexOf(messageCode_); // Предположим, что сообщения заканчиваются символом новой строки
-        if (endIndex == -1) break; // Если нет полного сообщения, выходим из цикла
-
-        QString message = serialBuffer.left(endIndex); // Извлекаем сообщение
-        serialBuffer.remove(0, endIndex + 1); // Удаляем обработанное сообщение из буфера
-
-        processMessage(message); // Обработка извлеченного сообщения
     }
 }
 
@@ -173,14 +194,14 @@ void MainWindow::handleDebugMessage(const QString &message)
         {"x_mg", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_x_mg, msg); }},
         {"y_mg", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_y_mg, msg); }},
         {"z_mg", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_z_mg, msg); }},
-        {"A_x", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_x, 0, 0); }},
-        {"A_y", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_y, 0, 1); }},
-        {"A_z", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_z, 0, 2); }},
-        {"A_m", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_xyz, 0, 3); }},
-        {"V_x", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_x, 1, 0); }},
-        {"V_y", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_y, 1, 1); }},
-        {"V_z", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_z, 1, 2); }},
-        {"V_m", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_xyz, 1, 3); }},
+        {"A_x", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_x, DRAW_ACCELERATION, 0); }},
+        {"A_y", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_y, DRAW_ACCELERATION, 1); }},
+        {"A_z", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_z, DRAW_ACCELERATION, 2); }},
+        {"A_m", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_A_xyz, DRAW_ACCELERATION, 3); }},
+        {"V_x", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_x, DRAW_VELOCITY, 0); }},
+        {"V_y", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_y, DRAW_VELOCITY, 1); }},
+        {"V_z", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_z, DRAW_VELOCITY, 2); }},
+        {"V_m", [this](const QString& msg){ handleAxis(msg, ui->lineEdit_RMS_V_xyz, DRAW_VELOCITY, 3); }},
         {"current_buffer", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_current_buffer, msg); }},
         {"current_samples", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_samples_reserve, msg); }},
         {"T_rms", [this](const QString& msg){ updateLineEditValue(ui->lineEdit_RMS_T, msg); }},
@@ -286,17 +307,17 @@ void MainWindow::on_pushButton_settings_clicked()
 
 void MainWindow::on_cmb_graph_selector_currentIndexChanged(int index)
 {
-    if(index == 0)
+    if(index == DRAW_ACCELERATION)
     {
         ui->canvas_A->setVisible(true);
         ui->canvas_V->setVisible(false);
     }
-    else if(index == 1)
+    else if(index == DRAW_VELOCITY)
     {
         ui->canvas_A->setVisible(false);
         ui->canvas_V->setVisible(true);
     }
-    else if(index == 2)
+    else
     {
         ui->canvas_A->setVisible(true);
         ui->canvas_V->setVisible(true);
