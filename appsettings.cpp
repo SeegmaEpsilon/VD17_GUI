@@ -22,17 +22,12 @@ void appSettings::on_buttonBox_accepted()
 {
     appSettingsStruct tempSettings;
 
-    QString bufferSize = ui->lineEdit_bufferSize->text();
-    QString messageCode = ui->lineEdit_messageCode->text();
-
     QString baudRate = ui->comboBox_UART_speed->currentText();
     QString dataBits = ui->comboBox_UART_dataBits->currentText();
     QString parityControl = ui->comboBox_UART_parity->currentText();
     QString stopBits = ui->comboBox_UART_stopBits->currentText();
     QString flowControl = ui->comboBox_UART_flowControl->currentText();
 
-    tempSettings.bufferSize = bufferSize;
-    tempSettings.messageCode = messageCode;
     tempSettings.baudRate = baudRate;
     tempSettings.dataBits = dataBits;
     tempSettings.parityControl = parityControl;
@@ -44,9 +39,6 @@ void appSettings::on_buttonBox_accepted()
 
 void appSettings::setVisibleSettings(appSettingsStruct settings)
 {
-    ui->lineEdit_bufferSize->setText(settings.bufferSize);
-    ui->lineEdit_messageCode->setText(settings.messageCode);
-
     ui->comboBox_UART_speed->setCurrentIndex(ui->comboBox_UART_speed->findText(settings.baudRate));
     ui->comboBox_UART_dataBits->setCurrentIndex(ui->comboBox_UART_dataBits->findText(settings.dataBits));
 
@@ -75,9 +67,6 @@ void appSettings::setVisibleSettings(appSettingsStruct settings)
 
 void appSettings::on_pushButton_defaultSettings_clicked()
 {
-    ui->lineEdit_bufferSize->setText("32");
-    ui->lineEdit_messageCode->setText("\n");
-
     ui->comboBox_UART_dataBits->setCurrentIndex(0);
     ui->comboBox_UART_flowControl->setCurrentIndex(0);
     ui->comboBox_UART_parity->setCurrentIndex(0);

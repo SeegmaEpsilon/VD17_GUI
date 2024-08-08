@@ -41,8 +41,6 @@ struct appSettingsStruct
 {
     void print()
     {
-      qDebug() << "buffer size is " << bufferSize;
-      qDebug() << "message code is " << messageCode;
       qDebug() << "baud rate is " << baudRate;
       qDebug() << "data bits is" << dataBits;
       qDebug() << "parity control is " << parityControl;
@@ -51,8 +49,6 @@ struct appSettingsStruct
       qDebug() << "__________________________________";
     }
 
-    QString bufferSize;
-    QString messageCode;
     QString baudRate;
     QString dataBits;
     QString parityControl;

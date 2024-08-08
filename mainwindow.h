@@ -110,10 +110,6 @@ private:
 
     QString serialBuffer;
 
-    CircularBuffer cbA;
-    CircularBuffer cbV;
-    CircularBuffer cbT;
-
     double valueA;
     double valueV;
     double valueT;

@@ -162,8 +162,6 @@ void MainWindow::saveAppSettings(appSettingsStruct tempSettings)
 
     settingsQt.beginGroup("settings");
     settingsQt.setValue("baudRate", tempSettings.baudRate);
-    settingsQt.setValue("bufferSize", tempSettings.bufferSize);
-    settingsQt.setValue("messageCode", tempSettings.messageCode);
     settingsQt.setValue("dataBits", tempSettings.dataBits);
     settingsQt.setValue("parityControl", tempSettings.parityControl);
     settingsQt.setValue("stopBits", tempSettings.stopBits);
@@ -207,13 +205,7 @@ void MainWindow::initializeAppSettings()
 
     settingsQt.endGroup();
 
-    cbA.resize(bufferSize_);
-    cbV.resize(bufferSize_);
-    cbT.resize(bufferSize_);
-
     tempStruct.baudRate = QString::number(baudRate_);
-    tempStruct.bufferSize = QString::number(bufferSize_);
-    tempStruct.messageCode = QString(messageCode_);
     tempStruct.dataBits = QString::number(dataBits_);
     tempStruct.parityControl = QString::number(parityControl_);
     tempStruct.stopBits = QString::number(stopBits_);
