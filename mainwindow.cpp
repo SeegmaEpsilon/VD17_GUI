@@ -254,6 +254,9 @@ void MainWindow::handleInitMessage(const QString &message)
 void MainWindow::handleAxis(const QString &message, QLineEdit *lineEdit, int graphRow, int graphColumn)
 {
     updateLineEditValue(lineEdit, message);
+
+    if(ui->checkBox_needGraph->isChecked() == false) return;
+
     plotGraph(graphRow, graphColumn, lineEdit->text().toFloat());
 }
 
