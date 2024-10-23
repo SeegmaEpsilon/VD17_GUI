@@ -85,35 +85,5 @@ void MainWindow::on_pushButton_default_settings_set_clicked()
   }
 }
 
-void MainWindow::on_pushButton_get_config_clicked() { writeToSerial(CMD_GET_CONFIG); }
 
-void MainWindow::on_pushButton_dynamic_range_write_clicked() { sendCommand(CMD_DYNAMIC_MODE_SET, ui->cmb_dynamic_ranges); }
 
-// Обработчики для различных параметризированных команд
-void MainWindow::on_pushButton_DL_write_clicked() { sendCommand(CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION, ui->lineEdit_DL_value); }
-
-void MainWindow::on_pushButton_UL_write_clicked() { sendCommand(CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION, ui->lineEdit_UL_value); }
-
-void MainWindow::on_pushButton_mmpersec_write_clicked() { sendCommand(CMD_MAX_PARAMETER_VALUE_SET, ui->lineEdit_mmpersec_value); }
-
-void MainWindow::on_pushButton_thermoslope_write_clicked() { sendCommand(CMD_THERMOSLOPE_SET, ui->lineEdit_thermoslope); }
-
-void MainWindow::on_pushButton_thermointercept_write_clicked() { sendCommand(CMD_THERMOINTERCEPT_SET, ui->lineEdit_thermointercept); }
-
-void MainWindow::on_pushButton_thermo_lowTemperature_constant_write_clicked() { sendCommand(CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET, ui->lineEdit_thermo_lowTemperature_constant); }
-
-void MainWindow::on_pushButton_constant_value_write_clicked() { sendCommand(CMD_CONSTANT_VALUE_SET, ui->lineEdit_constant_value); }
-
-void MainWindow::on_pushButton_axis_write_clicked() { sendCommand(CMD_CALIBRATE_DEVICE, ui->cmb_axis); }
-
-void MainWindow::on_pushButton_measuring_axis_write_clicked() { sendCommand(CMD_CHANGE_MEASURING_AXIS_SET, ui->cmb_axis_measuring); }
-
-void MainWindow::on_pushButton_constant_component_write_clicked() { sendCommand(CMD_REMOVE_CONSTANT_COMPONENT_SET, ui->cmb_constant_component); }
-
-void MainWindow::on_pushButton_measuring_parameter_write_clicked() { sendCommand(CMD_CHANGE_MEASURING_PARAMETER_SET, ui->cmb_measuring_parameter); }
-
-void MainWindow::on_pushButton_integration_beta_clicked() { sendCommand(CMD_SET_INTEGRATION_BETA, ui->lineEdit_integration_beta); }
-
-void MainWindow::on_pushButton_reference_value_clicked() { sendCommand(CMD_SET_REFERENCE_VALUE, ui->lineEdit_reference_value); }
-
-void MainWindow::on_pushButton_ratio_transform_clicked() { sendCommand(CMD_SET_RATIO_TRANSFORM, ui->lineEdit_ratio_transform); }

@@ -64,8 +64,28 @@ void MainWindow::slotClearCanvas()
 
 void MainWindow::slotClearConsole() { ui->UART_output->clear(); }
 
+void MainWindow::slotClearConfig()
+{
+  ui->lineEdit_DL_value->setValue(0);
+  ui->lineEdit_UL_value->setValue(0);
+  ui->cmb_measuring_parameter->setCurrentIndex(-1);
+  ui->cmb_axis_measuring->setCurrentIndex(-1);
+  ui->lineEdit_mmpersec_value->setText("");
+  ui->cmb_dynamic_ranges->setCurrentIndex(-1);
+  ui->lineEdit_thermointercept->setText("");
+  ui->lineEdit_thermoslope->setText("");
+  ui->lineEdit_thermo_lowTemperature_constant->setText("");
+  ui->lineEdit_constant_value->setText("");
+  ui->cmb_constant_component->setCurrentIndex(-1);
+  ui->cmb_axis->setCurrentIndex(-1);
+  ui->lineEdit_integration_beta->setText("");
+  ui->lineEdit_reference_value->setText("");
+  ui->lineEdit_ratio_transform->setText("");
+}
+
 void MainWindow::slotClearAll()
 {
+  slotClearConfig();
   slotClearCanvas();
   slotClearConsole();
 }
@@ -226,6 +246,7 @@ void MainWindow::initializeMenu()
 {
   /* Меню для взаимодействия с графиком */
   QMenu* menuClear = new QMenu(tr("Меню взаимодействия с графиком"));
+  menuClear->addAction(tr("Очистить конфигурацию"), this, SLOT(slotClearConfig()));
   menuClear->addAction(tr("Очистить консоль"), this, SLOT(slotClearConsole()));
   menuClear->addAction(tr("Очистить графики"), this, SLOT(slotClearCanvas()));
   menuClear->addAction(tr("Очистить всё"), this, SLOT(slotClearAll()));
@@ -252,32 +273,88 @@ void MainWindow::initializeConnects()
   connect(&serialTimer, SIGNAL(timeout()), this, SLOT(serialPortCheckout()));
 }
 
+
+void MainWindow::setupCommandMappings()
+{
+    QList<CommandMapping> mappings =
+    {
+        {ui->pushButton_get_config, nullptr, CMD_GET_CONFIG},
+        {ui->pushButton_dynamic_range_write, ui->cmb_dynamic_ranges, CMD_DYNAMIC_MODE_SET},
+        {ui->pushButton_DL_write, ui->lineEdit_DL_value, CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION},
+        {ui->pushButton_UL_write, ui->lineEdit_UL_value, CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION},
+        {ui->pushButton_mmpersec_write, ui->lineEdit_mmpersec_value, CMD_MAX_PARAMETER_VALUE_SET},
+        {ui->pushButton_thermoslope_write, ui->lineEdit_thermoslope, CMD_THERMOSLOPE_SET},
+        {ui->pushButton_thermointercept_write, ui->lineEdit_thermointercept, CMD_THERMOINTERCEPT_SET},
+        {ui->pushButton_thermo_lowTemperature_constant_write, ui->lineEdit_thermo_lowTemperature_constant, CMD_THERMO_LOWTEMPERATURE_CONSTANT_SET},
+        {ui->pushButton_constant_value_write, ui->lineEdit_constant_value, CMD_CONSTANT_VALUE_SET},
+        {ui->pushButton_axis_write, ui->cmb_axis, CMD_CALIBRATE_DEVICE},
+        {ui->pushButton_measuring_axis_write, ui->cmb_axis_measuring, CMD_CHANGE_MEASURING_AXIS_SET},
+        {ui->pushButton_constant_component_write, ui->cmb_constant_component, CMD_REMOVE_CONSTANT_COMPONENT_SET},
+        {ui->pushButton_measuring_parameter_write, ui->cmb_measuring_parameter, CMD_CHANGE_MEASURING_PARAMETER_SET},
+        {ui->pushButton_integration_beta_write, ui->lineEdit_integration_beta, CMD_SET_INTEGRATION_BETA},
+        {ui->pushButton_reference_value_write, ui->lineEdit_reference_value, CMD_SET_REFERENCE_VALUE},
+        {ui->pushButton_ratio_transform_write, ui->lineEdit_ratio_transform, CMD_SET_RATIO_TRANSFORM}
+    };
+
+    for (const auto& mapping : mappings)
+    {
+        connect(mapping.button, &QPushButton::clicked, this, [this, mapping]()
+        {
+            handleCommand(mapping);
+        });
+    }
+}
+
+void MainWindow::handleCommand(const CommandMapping& mapping)
+{
+    if (!mapping.widget)
+    {
+        // Если виджет не используется, просто отправляем команду
+        writeToSerial(mapping.command);
+    }
+    else if (QLineEdit* lineEdit = qobject_cast<QLineEdit*>(mapping.widget))
+    {
+        // Если виджет это QLineEdit
+        sendCommand(mapping.command, lineEdit);
+    }
+    else if (QComboBox* comboBox = qobject_cast<QComboBox*>(mapping.widget))
+    {
+        // Если виджет это QComboBox
+        sendCommand(mapping.command, comboBox);
+    }
+    else if (QSpinBox* spinBox = qobject_cast<QSpinBox*>(mapping.widget))
+    {
+        // Если виджет это QSpinBox
+        sendCommand(mapping.command, spinBox);
+    }
+}
+
 void MainWindow::on_pushButton_thermohelp_clicked()
 {
-  thermoHelp.setReadOnly(true);
-  QString htmlString = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-                       "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-                       "p, li { white-space: pre-wrap; }\n"
-                       "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
-                       "-50 до +10 °C формула:</span></p>\n"
-                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">        </span><span "
-                       "style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = "
-                       "наклон • температура + смещение + ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p>\n"
-                       "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; "
-                       "vertical-align:sub;\"><br /></p>\n"
-                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
-                       "-50 °C и ниже:<br />        </span><span style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; "
-                       "vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = константа + ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p>\n"
-                       "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; "
-                       "vertical-align:sub;\"><br /></p>\n"
-                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
-                       "+10 °C и выше:</span></p>\n"
-                       "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">        </span><span "
-                       "style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = "
-                       "ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p></body></html>";
-  thermoHelp.setFixedWidth(420);
-  thermoHelp.setFixedHeight(160);
-  thermoHelp.setHtml(htmlString);
-  thermoHelp.show();
+    thermoHelp.setReadOnly(true);
+    QString htmlString = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                         "p, li { white-space: pre-wrap; }\n"
+                         "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
+                         "-50 до +10 °C формула:</span></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">        </span><span "
+                         "style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = "
+                         "наклон • температура + смещение + ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p>\n"
+                         "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; "
+                         "vertical-align:sub;\"><br /></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
+                         "-50 °C и ниже:<br />        </span><span style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; "
+                         "vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = константа + ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p>\n"
+                         "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; "
+                         "vertical-align:sub;\"><br /></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
+                         "+10 °C и выше:</span></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">        </span><span "
+                         "style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = "
+                         "ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p></body></html>";
+    thermoHelp.setFixedWidth(420);
+    thermoHelp.setFixedHeight(160);
+    thermoHelp.setHtml(htmlString);
+    thermoHelp.show();
 }

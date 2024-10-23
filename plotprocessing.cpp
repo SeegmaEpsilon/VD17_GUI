@@ -19,6 +19,7 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
         ui->canvas_A->addGraph(); // График для Виброускорения
       }
 
+      ui->canvas_A->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft|Qt::AlignTop);
       ui->canvas_A->legend->setVisible(true);
       QFont legendFont = font();
       legendFont.setPointSize(8);
@@ -64,6 +65,7 @@ void MainWindow::setupGraphsOnce(int canvas_index, bool from_ui)
         ui->canvas_V->addGraph(); // График для Виброскорости
       }
 
+      ui->canvas_V->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignLeft|Qt::AlignTop);
       ui->canvas_V->legend->setVisible(true);
       QFont legendFont = font();
       legendFont.setPointSize(8);
@@ -128,6 +130,7 @@ void MainWindow::plotGraph(int canvas_index, int graphIndex, float_t value)
   }
 
   canvas->graph(graphIndex)->rescaleKeyAxis();
+  if(ui->checkBox_autoscale->isChecked()) { canvas->rescaleAxes(); }
   canvas->replot(); // Масштабируем оси и перерисовываем график
 
   (*counter)++; // Увеличиваем счетчик для новой точки

@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget* parent)
   initializeConnects();
   initializeAppSettings();
   initializeMenu();
+  setupCommandMappings();
 
   /* Инициализация таймера, по которому будут сканироваться COM-порты */
   /* Первое сканирование на наличие COM-портов */
@@ -215,7 +216,8 @@ void MainWindow::handleDebugMessage(const QString& message)
 void MainWindow::handleInitMessage(const QString& message)
 {
   // Маппинг ключевых фраз на методы и соответствующие элементы UI
-  const std::map<QString, std::function<void(const QString&)>> actionMap = {
+  const std::map<QString, std::function<void(const QString&)>> actionMap =
+  {
       {"Sensor started", [this](const QString& msg) { printConsole(msg); }},
       {"Restarting MCU", [this](const QString& msg) { printConsole(msg); }},
       {"Code 4mA", [this](const QString& msg) { updateSpinBoxValue(ui->lineEdit_DL_value, msg); }},
@@ -318,4 +320,33 @@ void MainWindow::on_cmb_graph_selector_currentIndexChanged(int index)
     ui->canvas_A->setVisible(true);
     ui->canvas_V->setVisible(true);
   }
+}
+void MainWindow::on_pushButton_thermohelp_clicked()
+{
+    thermoHelp.setReadOnly(true);
+    QString htmlString = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                         "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                         "p, li { white-space: pre-wrap; }\n"
+                         "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
+                         "-50 до +10 °C формула:</span></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">        </span><span "
+                         "style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = "
+                         "наклон • температура + смещение + ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p>\n"
+                         "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; "
+                         "vertical-align:sub;\"><br /></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
+                         "-50 °C и ниже:<br />        </span><span style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; "
+                         "vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = константа + ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p>\n"
+                         "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:10pt; "
+                         "vertical-align:sub;\"><br /></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">При температуре от "
+                         "+10 °C и выше:</span></p>\n"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt;\">        </span><span "
+                         "style=\" font-size:10pt; font-weight:600;\">ШИМ</span><span style=\" font-size:10pt; font-weight:600; vertical-align:sub;\">выход</span><span style=\" font-size:10pt;\"> = "
+                         "ШИМ</span><span style=\" font-size:10pt; vertical-align:sub;\">расчетный</span></p></body></html>";
+    thermoHelp.setFixedWidth(420);
+    thermoHelp.setFixedHeight(160);
+    thermoHelp.setHtml(htmlString);
+    thermoHelp.show();
 }

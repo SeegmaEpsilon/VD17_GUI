@@ -53,26 +53,11 @@ private slots:
 
   void printConsole(const QString& string);
 
-  void on_pushButton_DL_write_clicked();
-  void on_pushButton_UL_write_clicked();
-  void on_pushButton_mmpersec_write_clicked();
   void on_pushButton_COM_connect_clicked();
-  void on_pushButton_dynamic_range_write_clicked();
-  void on_pushButton_thermoslope_write_clicked();
-  void on_pushButton_thermointercept_write_clicked();
-  void on_pushButton_constant_value_write_clicked();
-  void on_pushButton_default_settings_set_clicked();
-  void on_pushButton_get_config_clicked();
-  void on_pushButton_thermo_lowTemperature_constant_write_clicked();
-  void on_pushButton_measuring_axis_write_clicked();
-  void on_pushButton_constant_component_write_clicked();
-  void on_pushButton_measuring_parameter_write_clicked();
-  void on_pushButton_axis_write_clicked();
 
   void on_pushButton_manual_clicked();
   void on_pushButton_settings_clicked();
   void on_pushButton_userCommand_clicked();
-  void on_pushButton_thermohelp_clicked();
 
   void slotMouseMove(QMouseEvent* event);
   void slotMouseDoubleClick(QMouseEvent* event);
@@ -83,6 +68,7 @@ private slots:
   void slotResetCanvas();
   void slotSaveDataFromPlot();
 
+  void slotClearConfig();
   void slotClearCanvas();
   void slotClearConsole();
   void slotClearAll();
@@ -102,13 +88,15 @@ private slots:
 
   void on_cmb_graph_selector_currentIndexChanged(int index);
 
-  void on_pushButton_integration_beta_clicked();
+  void on_pushButton_thermohelp_clicked();
 
-  void on_pushButton_reference_value_clicked();
-
-  void on_pushButton_ratio_transform_clicked();
+  void handleCommand(const CommandMapping &mapping);
+  void setupCommandMappings();
+  void on_pushButton_default_settings_set_clicked();
 
 private:
+
+
   Ui::MainWindow* ui;
   QSerialPort* serialPort;
   QSerialPortInfo info;
