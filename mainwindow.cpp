@@ -321,4 +321,3 @@ void MainWindow::on_cmb_graph_selector_currentIndexChanged(int index)
     ui->canvas_V->setVisible(true);
   }
 }
-

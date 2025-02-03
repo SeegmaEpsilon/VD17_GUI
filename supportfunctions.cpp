@@ -248,7 +248,7 @@ void MainWindow::initializeMenu()
   QMenu* menuClear = new QMenu(tr("Меню взаимодействия с графиком"));
   menuClear->addAction(tr("Очистить конфигурацию"), this, SLOT(slotClearConfig()));
   menuClear->addAction(tr("Очистить консоль"), this, SLOT(slotClearConsole()));
-  menuClear->addAction(tr("Очистить графики"), this, SLOT(slotClearCanvas()));
+  menuClear->addAction(tr("Очистить данные"), this, SLOT(slotClearCanvas()));
   menuClear->addAction(tr("Очистить всё"), this, SLOT(slotClearAll()));
   ui->menuClear->setMenu(menuClear);
 }

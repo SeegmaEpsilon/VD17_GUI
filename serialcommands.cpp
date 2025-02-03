@@ -85,5 +85,9 @@ void MainWindow::on_pushButton_default_settings_set_clicked()
   }
 }
 
-
+void MainWindow::on_pushButton_start_configure_clicked()
+{
+  QString fullCommand = QString(PASSWORD_CONFIG);
+  writeToSerial(fullCommand.toUtf8().constData());
+}
 

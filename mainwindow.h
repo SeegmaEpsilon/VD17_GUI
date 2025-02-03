@@ -94,6 +94,8 @@ private slots:
   void setupCommandMappings();
   void on_pushButton_default_settings_set_clicked();
 
+  void on_pushButton_start_configure_clicked();
+
 private:
 
 

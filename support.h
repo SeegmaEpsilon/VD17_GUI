@@ -6,6 +6,7 @@
 #include <vector>
 #include <QPushButton>
 
+#define PASSWORD_CONFIG "FalloutNewVegasStalkerGammaTerrariaFactorio"
 #define CMD_DOWN_LIMIT_CURRENT_LOOP_CALIBRATION "DL" // calibration of down limit current loop (4mA)
 #define CMD_UP_LIMIT_CURRENT_LOOP_CALIBRATION "UL"   // calibration of up limit current loop (20mA)
 #define CMD_DYNAMIC_MODE_SET "DR"                    // setting dynamic range of accelerometer
@@ -24,7 +25,7 @@
 #define CMD_SET_REFERENCE_VALUE "RV"
 #define CMD_SET_RATIO_TRANSFORM "RT"
 
-#define SOFTWARE_VERSION QString("2.8.1")
+#define SOFTWARE_VERSION QString("2.8.2")
 
 #define MS_DATA_TIMEOUT 5000
 #define MS_SERIAL_TIMEOUT 2500
