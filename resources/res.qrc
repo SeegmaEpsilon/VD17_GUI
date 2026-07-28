@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>support/MX_png.png</file>
+        <file>support/MX_png_icon.png</file>
+		<file>support/app.qss</file>
+		<file>support/oscilloscope.ico</file>
+		
+		<file>support/arrow_up_soft.svg</file>
+		<file>support/arrow_down_soft.svg</file>
+		<file>support/arrow_combo_soft.svg</file>
+    </qresource>
+</RCC>

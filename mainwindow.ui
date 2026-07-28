@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1045</width>
-    <height>731</height>
+    <height>735</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -357,6 +357,11 @@ QPushButton:hover
           <item>
            <property name="text">
             <string>Z</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Максимум из осей</string>
            </property>
           </item>
          </widget>

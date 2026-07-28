@@ -26,6 +26,9 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     appsettings.ui
 
+RESOURCES += \
+    resources/res.qrc
+
 win32 {
     RC_FILE = myicon.rc
 }
